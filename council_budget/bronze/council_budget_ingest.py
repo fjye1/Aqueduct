@@ -3,7 +3,7 @@ import pandas as pd
 raw_csv = "Council_Budgets.xlsx"
 
 def flattern_csv(file_path):
-    df = pd.read_excel(file_path, sheet_name=3, header=None)  # sheet_name=3 is the 4th sheet (0-indexed)
+    df = pd.read_excel(file_path, sheet_name=3, header=None)
 
     print(f"Total rows: {len(df)}")
     print(f"Total cols: {len(df.columns)}")
@@ -12,7 +12,7 @@ def flattern_csv(file_path):
 
     df = pd.read_excel(raw_csv, sheet_name=3, header=None)
 
-    # Extract the 3 header rows
+    # Extract the multi header columns
     row_category = df.iloc[7].ffill()  # forward fill blanks
     row_code = df.iloc[8].ffill()  # forward fill blanks
     row_name = df.iloc[9]
@@ -27,7 +27,7 @@ def flattern_csv(file_path):
         col = f"{cat}_{code}_{name}"
         flat_columns.append(col)
 
-    # Apply to actual data (everything after row 3)
+    # Apply to actual data (everything after row 10)
     data = df.iloc[10:].reset_index(drop=True)
     data.columns = flat_columns
 
