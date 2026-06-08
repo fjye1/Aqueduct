@@ -1,6 +1,6 @@
 import pandas as pd
 from google.cloud import bigquery
-from dotenv import load_dotenv
+
 
 def ingestion_excel(file_path, sheet_target, sheet_name_label=None):
     """Ingests an Excel sheet using either its 0-based index or its string name.
@@ -56,9 +56,22 @@ def ingestion_excel(file_path, sheet_target, sheet_name_label=None):
 #     file_path=RAW_FILE, sheet_target=SHEET_INDEX, sheet_name_label=SHEET_NAME
 # )
 
-def load_into_bigquery(project_id, layer, table_name, df ):
-    client = bigquery.Client(project=project_id)
+def load_into_bigquery(
+        project_id: str,
+        layer: str,
+        table_name: str,
+        df: pd.DataFrame,
+        dry_run: bool,
+) -> None:
     table_id = f"{project_id}.{layer}.{table_name}"
+
+    if dry_run:
+        print(f"[DRY RUN] Would load {len(df)} rows into {table_id}")
+        print(f"[DRY RUN] Columns: {list(df.columns)}")
+        print(f"[DRY RUN] Sample:\n{df.head(4)}")
+        return
+
+    client = bigquery.Client(project=project_id)  # only created when needed
 
     # Force all columns to STRING explicitly in the schema
     job_config = bigquery.LoadJobConfig(
@@ -78,9 +91,3 @@ def load_into_bigquery(project_id, layer, table_name, df ):
     job.result()
 
     print(f"Loaded {job.output_rows} rows to {table_id}")
-
-
-
-
-
-
