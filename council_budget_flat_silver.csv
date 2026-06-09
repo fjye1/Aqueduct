@@ -1,0 +1,414 @@
+ons_code,local_authority,total_education_services,total_highways_and_transport_services,_source_file,_sheet_name,_ingested_at,_row_number
+E09000033,Westminster,128468,-55517,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,402
+E09000020,Kensington & Chelsea,106785,-28458,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,188
+E09000022,Lambeth,328563,-24917,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,198
+E09000013,Hammersmith & Fulham,119098,-21407,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,156
+E09000007,Camden,247852,-17522,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,61
+E09000019,Islington,209172,-16040,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,187
+E09000025,Newham,320158,-12089,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,240
+E06000006,Halton,113655,-9979,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,155
+E07000209,Guildford,0,-7479,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,153
+E07000041,Exeter,0,-6716,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,134
+E07000106,Canterbury,0,-5790,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,63
+E07000148,Norwich,0,-5230,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,264
+E07000225,Chichester,0,-5121,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,75
+E07000070,Chelmsford,0,-5013,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,67
+E07000008,Cambridge,0,-4475,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,56
+E06000043,Brighton & Hove,274282,-4449,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,44
+E07000216,Waverley,0,-4417,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,382
+E07000138,Lincoln,0,-4056,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,213
+E07000045,Teignbridge,0,-3540,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,352
+E07000040,East Devon,0,-3473,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,113
+E07000078,Cheltenham,0,-3247,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,68
+E07000227,Horsham,0,-3067,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,177
+E07000240,St Albans,0,-2986,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,325
+E07000146,King's Lynn & West Norfolk,0,-2966,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,192
+E07000116,Tunbridge Wells,0,-2900,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,369
+E07000094,Winchester,0,-2792,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,407
+E07000241,Welwyn Hatfield,0,-2706,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,384
+E07000245,West Suffolk,0,-2689,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,397
+E07000222,Warwick,0,-2644,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,378
+E07000147,North Norfolk,0,-2614,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,251
+E07000091,New Forest,0,-2605,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,235
+E07000207,Elmbridge,0,-2444,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,126
+E07000208,Epsom & Ewell,0,-2433,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,129
+E07000043,North Devon,0,-2428,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,243
+E07000079,Cotswold,0,-2337,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,82
+E07000121,Lancaster,0,-2328,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,203
+E07000111,Sevenoaks,0,-2251,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,300
+E07000237,Worcester,0,-2161,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,413
+E07000044,South Hams,0,-2152,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,311
+E07000202,Ipswich,0,-2010,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,184
+E07000242,East Hertfordshire,0,-1922,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,115
+E07000178,Oxford,0,-1905,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,272
+E07000035,Derbyshire Dales,0,-1820,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,96
+E09000002,Barking & Dagenham,355850,-1791,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,18
+E07000081,Gloucester,0,-1781,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,143
+E07000229,Worthing,0,-1778,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,415
+E07000085,East Hampshire,0,-1740,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,114
+E07000217,Woking,0,-1740,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,410
+E07000071,Colchester,0,-1702,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,80
+E07000064,Rother,0,-1702,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,290
+E07000243,Stevenage,0,-1698,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,332
+E09000030,Tower Hamlets,543913,-1685,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,367
+E07000110,Maidstone,0,-1531,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,218
+E26000011,Lake District National Park,0,-1530,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,197
+E07000210,Mole Valley,0,-1511,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,234
+E07000137,East Lindsey,0,-1498,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,116
+E07000221,Stratford-on-Avon,0,-1446,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,336
+E07000115,Tonbridge & Malling,0,-1431,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,364
+E07000228,Mid Sussex,0,-1393,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,231
+E07000194,Lichfield,0,-1379,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,212
+E08000012,Liverpool,519400,-1363,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,216
+E07000114,Thanet,0,-1340,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,358
+E07000108,Dover,0,-1323,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,106
+E07000211,Reigate & Banstead,0,-1206,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,284
+E07000113,Swale,0,-1164,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,346
+E09000001,City of London,5388,-1153,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,77
+E09000017,Hillingdon,257773,-1152,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,175
+E07000037,High Peak,0,-1079,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,174
+E07000224,Arun,0,-1047,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,12
+E07000244,East Suffolk,0,-968,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,121
+E07000090,Havant,0,-932,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,167
+E07000062,Hastings,0,-912,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,166
+E07000109,Gravesham,0,-887,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,147
+E07000077,Uttlesford,0,-857,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,371
+E07000112,Folkestone & Hythe,0,-828,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,138
+E07000145,Great Yarmouth,0,-824,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,148
+E07000046,Torridge,0,-817,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,366
+E07000011,Huntingdonshire,0,-803,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,182
+E07000096,Dacorum,0,-755,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,89
+E07000176,Rushcliffe,0,-749,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,294
+E26000012,Yorkshire Dales National Park Authority,0,-744,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,421
+E07000074,Maldon,0,-731,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,219
+E07000099,North Hertfordshire,0,-704,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,247
+E07000105,Ashford,0,-694,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,14
+E26000005,North York Moors National Park Authority,0,-674,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,257
+E07000131,Harborough,0,-646,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,160
+E07000199,Tamworth,0,-629,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,349
+E07000141,South Kesteven,0,-605,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,313
+E07000098,Hertsmere,0,-598,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,173
+E07000127,West Lancashire,0,-594,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,387
+E07000135,Oadby & Wigston,0,-578,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,270
+E07000175,Newark & Sherwood,0,-563,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,237
+E07000083,Tewkesbury,0,-548,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,356
+E07000088,Gosport,0,-522,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,146
+E07000042,Mid Devon,0,-518,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,229
+E07000067,Braintree,0,-506,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,40
+E07000061,Eastbourne,0,-490,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,124
+E07000238,Wychavon,0,-468,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,416
+E09000014,Haringey,282705,-465,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,161
+E07000063,Lewes,0,-447,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,210
+E07000036,Erewash,0,-443,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,130
+E07000136,Boston,0,-400,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,36
+E07000179,South Oxfordshire,0,-369,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,315
+E07000198,Staffordshire Moorlands,0,-335,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,330
+E06000022,Bath & North East Somerset,102430,-325,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,24
+E07000171,Bassetlaw,0,-323,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,23
+E26000004,Northumberland National Park Authority,0,-320,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,261
+E07000214,Surrey Heath,0,-318,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,342
+E07000195,Newcastle-under-Lyme,0,-312,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,239
+E07000086,Eastleigh,0,-302,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,125
+E07000075,Rochford,0,-294,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,288
+E07000119,Fylde,0,-292,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,140
+E07000213,Spelthorne,0,-280,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,324
+E07000087,Fareham,0,-270,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,136
+E07000082,Stroud,0,-258,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,337
+E07000223,Adur,0,-256,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,10
+E07000047,West Devon,0,-236,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,386
+E07000068,Brentwood,0,-197,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,43
+E07000066,Basildon,0,-195,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,21
+E07000089,Hart,0,-191,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,164
+E07000117,Burnley,0,-189,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,53
+E26000001,Dartmoor National Park Authority,0,-189,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,92
+E07000192,Cannock Chase,0,-179,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,62
+E07000038,North East Derbyshire,0,-169,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,244
+E07000235,Malvern Hills,0,-162,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,220
+E07000200,Babergh,0,-145,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,17
+E09000024,Merton,267368,-144,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,228
+E07000140,South Holland,0,-125,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,312
+E07000124,Ribble Valley,0,-120,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,285
+E07000219,Nuneaton & Bedworth,0,-98,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,269
+E26000002,Exmoor National Park Authority,0,-85,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,135
+E07000133,Melton,0,-84,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,224
+E26000006,Peak District National Park Authority,0,-46,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,274
+E07000203,Mid Suffolk,0,-17,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,230
+E07000118,Chorley,0,-3,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,76
+E23000036,Avon & Somerset Police and Crime Commissioner and Chief Constable,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,15
+E31000001,Avon Combined Fire and Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,16
+E31000002,Bedfordshire Combined Fire Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,26
+E23000026,Bedfordshire Police and Crime Commissioner and Chief Constable,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,27
+E31000003,Royal Berkshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,28
+E31000004,Buckinghamshire & Milton Keynes Combined Fire Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,51
+E31000005,Cambridgeshire Combined Fire Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,59
+E23000023,Cambridgeshire Police and Crime Commissioner and Chief Constable,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,60
+E31000006,Cheshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,70
+E23000006,Cheshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,72
+E31000007,Cleveland Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,78
+E23000013,Cleveland Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,79
+E31000009,Cumbria PFCC - Fire,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,87
+E23000002,Cumbria PFCC - Police,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,88
+E31000010,Derbyshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,95
+E23000018,Derbyshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,97
+E23000035,Devon & Cornwall Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,98
+E31000011,Devon & Somerset Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,99
+E47000015,Devon & Torbay Combined County Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,100
+E31000047,Dorset and Wiltshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,103
+E23000039,Dorset Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,104
+E31000013,Durham Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,108
+E23000008,Durham Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,109
+E50000001,East London Waste Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,117
+E31000014,East Sussex Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,123
+E31000015,"Essex Police, Fire and Crime Commissioner - Fire",0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,132
+E23000028,"Essex Police, Fire and Crime Commissioner - Police",0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,133
+E23000037,Gloucestershire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,145
+E31000048,Hampshire and Isle of Wight Fire and Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,157
+E23000030,Hampshire Police and Crime Commissioner and Chief Constable,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,159
+E31000018,Hereford & Worcester Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,169
+E23000027,Hertfordshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,172
+E31000020,Humberside Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,180
+E23000012,Humberside Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,181
+E31000022,Kent Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,190
+E23000032,Kent Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,191
+E31000023,Lancashire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,201
+E23000003,Lancashire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,202
+E6803,Lee Valley Regional Park Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,204
+E31000024,Leicestershire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,208
+E23000021,Leicestershire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,209
+E23000020,Lincolnshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,215
+E31000041,Merseyside Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,225
+E23000004,Merseyside Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,226
+E50000006,Merseyside Recycling and Waste Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,227
+E23000024,Norfolk Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,242
+E50000002,North London Waste Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,250
+E23000022,"Northamptonshire Police, Fire and Crime Commissioner - Police",0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,259
+E31000028,"Northamptonshire Police, Fire and Crime Commissioner - Fire",0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,260
+E23000007,Northumbria Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,263
+E31000030,Nottinghamshire Fire & Rescue Service,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,267
+E23000019,Nottinghamshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,268
+E31000032,Shropshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,302
+E26000010,South Downs National Park Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,309
+E31000042,South Yorkshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,319
+E31000033,"Staffordshire Police, Fire and Crime Commissioner - Fire",0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,329
+E23000015,"Staffordshire Police, Fire and Crime Commissioner - Police",0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,331
+E23000025,Suffolk Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,339
+E23000031,Surrey Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,343
+E23000033,Sussex Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,344
+E23000029,Thames Valley Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,357
+E26000007,The Broads Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,359
+E31000043,Tyne and Wear Fire and Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,370
+E23000017,Warwickshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,380
+E50000003,West London Waste Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,389
+E23000016,West Mercia Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,390
+E31000044,West Midlands Fire and Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,392
+E23000014,West Midlands Police,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,393
+E31000045,West Yorkshire Fire & Rescue Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,399
+E23000010,West Yorkshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,400
+E50000004,Western Riverside Waste Authority,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,401
+E23000038,Wiltshire Police and Crime Commissioner,0,0,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,405
+E07000142,West Lindsey,0,17,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,388
+E06000042,Milton Keynes,197529,20,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,233
+E07000177,Cherwell,0,21,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,69
+E08000021,Newcastle upon Tyne,238291,21,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,238
+E07000215,Tandridge,0,34,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,350
+E07000149,South Norfolk,0,43,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,314
+E07000080,Forest of Dean,0,46,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,139
+E07000126,South Ribble,0,47,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,316
+E26000009,New Forest National Park,0,54,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,236
+E06000053,Isles of Scilly,500,60,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,186
+E07000180,Vale of White Horse,0,65,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,372
+E07000144,Broadland,0,84,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,46
+E07000129,Blaby,0,86,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,31
+E07000212,Runnymede,0,86,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,293
+E47000018,Lancashire Combined County Authority,0,92,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,200
+E07000039,South Derbyshire,0,104,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,308
+E07000226,Crawley,0,108,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,84
+E07000093,Test Valley,0,115,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,355
+E07000107,Dartford,0,124,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,91
+E07000173,Gedling,0,138,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,142
+E07000084,Basingstoke & Deane,0,173,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,22
+E07000196,South Staffordshire,0,173,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,317
+E07000012,South Cambridgeshire,0,191,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,307
+E07000218,North Warwickshire,0,200,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,255
+E07000193,East Staffordshire,0,204,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,120
+E07000220,Rugby,0,209,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,292
+E07000076,Tendring,0,212,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,354
+E07000172,Broxtowe,0,253,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,50
+E07000181,West Oxfordshire,0,254,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,396
+E07000009,East Cambridgeshire,0,262,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,112
+E07000125,Rossendale,0,273,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,289
+E07000139,North Kesteven,0,295,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,248
+E07000134,North West Leicestershire,0,302,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,256
+E07000032,Amber Valley,0,324,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,11
+E07000132,Hinckley & Bosworth,0,334,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,176
+E07000033,Bolsover,0,376,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,34
+E07000123,Preston,0,391,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,279
+E07000128,Wyre,0,417,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,417
+E07000197,Stafford,0,423,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,327
+E07000120,Hyndburn,0,432,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,183
+E07000122,Pendle,0,454,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,275
+E07000065,Wealden,0,458,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,383
+E07000143,Breckland,0,487,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,41
+E07000092,Rushmoor,0,507,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,295
+E07000069,Castle Point,0,552,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,64
+E07000102,Three Rivers,0,577,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,362
+E07000234,Bromsgrove,0,623,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,48
+E07000130,Charnwood,0,626,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,66
+E47000016,Hull and East Yorkshire Combined County Authority,0,634,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,179
+E07000174,Mansfield,0,666,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,222
+E07000239,Wyre Forest,0,765,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,418
+E07000010,Fenland,0,780,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,137
+E07000073,Harlow,0,863,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,162
+E07000103,Watford,0,989,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,381
+E07000072,Epping Forest,0,1002,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,128
+E07000236,Redditch,0,1200,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,283
+E09000012,Hackney,307599,1233,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,154
+E09000021,Kingston upon Thames,124538,1592,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,193
+E07000170,Ashfield,0,1768,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,13
+E08000003,Manchester,506791,1840,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,221
+E06000038,Reading,148123,2157,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,280
+E07000095,Broxbourne,0,2201,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,49
+E06000040,Windsor & Maidenhead,98907,2951,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,408
+E09000015,Harrow,195487,3738,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,163
+E06000033,Southend-on-Sea,90779,3740,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,322
+E06000031,Peterborough,159954,3777,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,276
+E08000034,Kirklees,353182,4067,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,195
+E47000006,Tees Valley Combined Authority,39094,4673,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,351
+E06000037,West Berkshire,164305,4710,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,385
+E06000058,"Bournemouth, Christchurch & Poole",181146,4878,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,37
+E06000014,York,107416,4907,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,420
+E08000002,Bury,152807,4999,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,54
+E08000038,Barnsley,188392,5056,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,20
+E09000009,Ealing,431899,5080,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,111
+E06000017,Rutland,22013,5398,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,296
+E08000009,Trafford,251524,5479,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,368
+E08000006,Salford,287286,5875,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,297
+E06000002,Middlesbrough,83906,6023,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,232
+E08000037,Gateshead,164024,6257,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,141
+E08000033,Calderdale,153343,6349,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,55
+E06000030,Swindon,123218,6499,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,347
+E06000005,Darlington,49582,6507,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,90
+E06000020,Telford & Wrekin,157128,6573,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,353
+E09000004,Bexley,156870,6592,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,29
+E08000013,St Helens,171313,6726,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,326
+E06000008,Blackburn with Darwen,153840,6793,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,32
+E08000022,North Tyneside,235305,6828,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,254
+E08000001,Bolton,302055,6967,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,35
+E06000001,Hartlepool,65321,6982,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,165
+E08000008,Tameside,201248,7123,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,348
+E08000014,Sefton,250503,7160,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,299
+E06000036,Bracknell Forest,118567,7705,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,38
+E09000008,Croydon,272141,8080,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,85
+E09000029,Sutton,160489,8237,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,345
+E06000045,Southampton,234884,8441,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,321
+E08000023,South Tyneside,160713,8451,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,318
+E08000010,Wigan,336009,8455,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,404
+E08000018,Rotherham,153446,8731,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,291
+E08000036,Wakefield,224272,8777,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,373
+E06000027,Torbay,80649,8906,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,365
+E08000007,Stockport,302930,9050,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,333
+E06000035,Medway Towns,162392,9158,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,223
+E09000031,Waltham Forest,304687,9190,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,375
+E06000009,Blackpool,75658,9438,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,33
+E09000023,Lewisham,374102,9462,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,211
+E47000017,Greater Lincolnshire Combined County Authority,1150,9892,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,149
+E06000032,Luton,221648,10092,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,217
+E08000004,Oldham,227934,10415,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,271
+E06000007,Warrington,153810,10540,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,377
+E08000031,Wolverhampton,205601,10620,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,412
+E08000015,Wirral,294122,10780,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,409
+E06000026,Plymouth,132689,10889,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,277
+E09000016,Havering,257840,11029,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,168
+E08000017,Doncaster,160280,11137,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,102
+E08000028,Sandwell,359598,11175,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,298
+E06000057,Northumberland,228982,11285,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,262
+E08000027,Dudley,236037,11336,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,107
+E06000055,Bedford,133029,11435,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,25
+E06000024,North Somerset,80100,11580,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,253
+E09000010,Enfield,329293,11729,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,127
+E06000015,Derby,201127,11857,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,93
+E08000032,Bradford,408201,11860,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,39
+E09000006,Bromley,171555,12022,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,47
+E06000019,Herefordshire,156086,12031,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,170
+E06000003,Redcar & Cleveland,64572,12255,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,282
+E08000029,Solihull,162753,12542,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,305
+E06000023,Bristol,311526,12933,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,45
+E06000004,Stockton-on-Tees,126626,12978,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,334
+E06000012,North East Lincolnshire,78422,13051,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,245
+E08000005,Rochdale,235967,13202,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,287
+E06000046,Isle of Wight,114677,13579,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,185
+E06000041,Wokingham,142960,13672,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,411
+E09000005,Brent,293140,14182,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,42
+E06000050,Cheshire West & Chester,311075,14332,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,73
+E06000025,South Gloucestershire,204650,14338,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,310
+E09000028,Southwark,262094,14720,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,323
+E06000013,North Lincolnshire,137530,14821,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,249
+E06000056,Central Bedfordshire,206567,14883,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,65
+E06000021,Stoke-on-Trent,135984,15052,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,335
+E08000011,Knowsley,159691,15054,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,196
+E06000051,Shropshire,171378,15180,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,303
+E08000024,Sunderland,150835,15886,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,340
+E06000010,Kingston upon Hull,131131,16624,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,194
+E06000061,North Northamptonshire,194703,17805,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,252
+E06000044,Portsmouth,131637,18156,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,278
+E06000062,West Northamptonshire,266595,18771,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,394
+E08000026,Coventry,293676,19047,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,83
+E06000059,Dorset UA,225094,19612,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,105
+E06000016,Leicester,365163,20001,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,206
+E06000047,Durham,413501,20232,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,110
+E09000003,Barnet,312835,20398,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,19
+E08000030,Walsall,269341,21423,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,374
+E06000064,Westmorland and Furness,191370,22973,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,403
+E06000011,East Riding of Yorkshire,281704,25019,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,119
+E06000066,Somerset,288901,26600,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,306
+E08000035,Leeds,782366,26791,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,205
+E06000049,Cheshire East,288979,27182,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,71
+E10000003,Cambridgeshire,450799,29177,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,58
+E06000065,North Yorkshire,472023,30462,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,258
+E09000018,Hounslow,264192,30919,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,178
+E06000054,Wiltshire,388788,32471,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,406
+E06000052,Cornwall,317741,35576,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,81
+E10000034,Worcestershire,379575,36062,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,414
+E10000031,Warwickshire,428468,39354,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,379
+E10000011,East Sussex,346380,39441,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,122
+E06000060,Buckinghamshire,499710,43159,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,52
+E47000008,Cambridgeshire and Peterborough Combined Authority,25014,43378,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,57
+E10000024,Nottinghamshire,543612,43720,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,266
+E10000029,Suffolk,455547,43822,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,338
+E10000007,Derbyshire,615138,45399,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,94
+E10000025,Oxfordshire,448541,48177,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,273
+E10000020,Norfolk,610883,48448,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,241
+E10000018,Leicestershire,387784,53949,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,207
+E06000018,Nottingham,179381,54776,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,265
+E10000013,Gloucestershire,459632,55536,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,144
+E47000009,West of England Combined Authority,39009,56799,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,395
+E47000013,East Midlands Combined Authority,48362,60874,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,118
+E10000008,Devon,521555,62727,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,101
+E10000017,Lancashire,1260185,65177,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,199
+E10000019,Lincolnshire,503957,65253,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,214
+E10000028,Staffordshire,491610,66389,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,328
+E10000032,West Sussex,717387,70244,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,398
+E08000039,Sheffield,388579,70443,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,301
+E10000014,Hampshire,1404034,77607,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,158
+E47000012,York & North Yorkshire Mayoral Combined Authority,27518,80960,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,419
+E10000015,Hertfordshire,1053137,90087,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,171
+E47000002,South Yorkshire Mayoral Combined Authority,73316,94973,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,320
+E10000016,Kent,1283952,95306,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,189
+E10000012,Essex,915446,98689,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,131
+E10000030,Surrey,849501,102065,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,341
+E08000025,Birmingham,1008528,124243,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,30
+E47000003,West Yorkshire Combined Authority,91714,142309,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,361
+E47000014,North East Combined Authority,97260,194158,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,246
+E47000007,West Midlands Combined Authority,139633,240822,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,391
+E47000004,Liverpool City Region Combined Authority,79973,244743,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,360
+E47000001,Greater Manchester Combined Authority,105021,329939,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,151
+E12000007,Greater London Authority,611722,2025057,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,150
+E92000001,ENGLAND,45778529.11,5992900.882,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,422
+E07000034,Chesterfield,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,74
+E06000063,Cumberland,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,86
+E09000011,Greenwich,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,152
+E09000026,Redbridge,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,281
+E09000027,Richmond upon Thames,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,286
+E06000039,Slough,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,304
+E06000034,Thurrock,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,363
+E09000032,Wandsworth,,,council_budget/bronze/Council_Budgets.xlsx,Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data,2026-06-09 14:44:56.144819+00:00,376

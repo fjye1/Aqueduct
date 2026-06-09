@@ -46,6 +46,7 @@ def ingestion_excel(file_path, sheet_target, sheet_name_label=None):
     print(f"Final shape: {df.shape}")
     print(df.head())
     df.to_csv("Test_output.csv", index=False)
+    df.to_excel("Test_output.xlsx", index=False)
     return df
 
 
