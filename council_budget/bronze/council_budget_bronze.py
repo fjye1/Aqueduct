@@ -21,6 +21,9 @@ def ingestion_excel(file_path, sheet_target, sheet_name_label=None):
     # ── Rename data columns to positional names ───────────────────────────────────
     df.columns = [f"col_{i}" for i in range(df.shape[1])]
 
+    # ── Safely cast all data columns to string ────────────────────────────────────
+    df = df.where(df.isna(), df.astype(str))
+
     # ── Determine what to put in the audit column ─────────────────────────────────
     # If a specific label wasn't passed, use the target we loaded
     sheet_label = (
@@ -42,7 +45,7 @@ def ingestion_excel(file_path, sheet_target, sheet_name_label=None):
 
     print(f"Final shape: {df.shape}")
     print(df.head())
-
+    df.to_csv("Test_output.csv", index=False)
     return df
 
 
@@ -77,17 +80,29 @@ def load_into_bigquery(
     job_config = bigquery.LoadJobConfig(
         write_disposition="WRITE_TRUNCATE",
         schema=[
-                   bigquery.SchemaField(col, "STRING") for col in df.columns
-                   if not col.startswith("_")
+                   bigquery.SchemaField(col, "STRING",
+                                        description="Raw Excel column — see silver layer for named, transformed equivalent")
+                   for col in df.columns if not col.startswith("_")
                ] + [
-                   bigquery.SchemaField("_source_file", "STRING"),
-                   bigquery.SchemaField("_sheet_name", "STRING"),
-                   bigquery.SchemaField("_ingested_at", "TIMESTAMP"),
-                   bigquery.SchemaField("_row_number", "INTEGER"),
+                   bigquery.SchemaField("_source_file", "STRING", description="Source Excel filename"),
+                   bigquery.SchemaField("_sheet_name", "STRING", description="Source sheet name or label"),
+                   bigquery.SchemaField("_ingested_at", "TIMESTAMP", description="UTC timestamp of ingestion"),
+                   bigquery.SchemaField("_row_number", "INTEGER",
+                                        description="Original Excel row order — use ORDER BY _row_number to restore source sequence"),
                ]
     )
 
     job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
     job.result()
+    # ── Add table description ─────────────────────────────────────────────────
+    table = client.get_table(table_id)
+    table.description = (
+        "Bronze layer raw ingestion from Excel. "
+        "Rows are not guaranteed to be in original order. "
+        "Use ORDER BY _row_number to restore original Excel row sequence."
+    )
+    client.update_table(table, ["description"])
+
+    print(f"Loaded {job.output_rows} rows to {table_id}")
 
     print(f"Loaded {job.output_rows} rows to {table_id}")

@@ -1,8 +1,10 @@
-from council_budget.bronze.council_budget_ingest import ingestion_excel, load_into_bigquery
+from council_budget.bronze.council_budget_bronze import ingestion_excel, load_into_bigquery
 
 from dotenv import load_dotenv
 import os
 
+
+# This main is designed to be changed when new projects are loaded.
 load_dotenv()
 
 project_id = os.getenv("PROJECT_ID")
@@ -19,7 +21,7 @@ df = ingestion_excel(
 
 
 
-load_into_bigquery(project_id,layer,"council_budget",df,dry_run=True)
+# load_into_bigquery(project_id,layer,"council_budget",df,dry_run=False)
 
 
 # pip freeze > requirements.txt
