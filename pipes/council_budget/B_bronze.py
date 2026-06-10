@@ -21,7 +21,8 @@ def run_pipeline(project_root: Path):
         file_path=raw_file,
         sheet_target=SHEET_INDEX,
         pipe_name=PIPE_NAME,
-        sheet_name_label=SHEET_NAME
+        sheet_name_label=SHEET_NAME,
+        output_name= OUTPUT_NAME
     )
     # Upload data to Big query
     load_into_bigquery(

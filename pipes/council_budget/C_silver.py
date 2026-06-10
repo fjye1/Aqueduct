@@ -24,7 +24,10 @@ LAYER = "silver_layer"
 
 def run_pipeline(project_root: Path):
     # extract rows and columns from csv
-    raw_file = project_root / "data" / "B_bronze" / "council_budget" / "ingestion.csv"
+    folder = project_root / "data" / "B_bronze" / "council_budget"
+
+    files = sorted(folder.glob("ingestion-*.csv"))
+    raw_file = files[-1] if files else None
     df = column_row_extractor(
         file_path=raw_file,
         data_row_start=DATA_ROW_START,

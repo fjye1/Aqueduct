@@ -33,8 +33,8 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name,sheet_name_l
     print(f"Final shape: {df.shape}")
     print(df.head())
     date = datetime.now().strftime("%Y-%m-%d")
-    df.to_csv(f"data/1_bronze/{pipe_name}/{output_name}-{date}.csv", index=False)
-    df.to_excel(f"data/1_bronze/{pipe_name}/{output_name}-{date}.xlsx", index=False)
+    df.to_csv(f"data/B_bronze/{pipe_name}/{output_name}-{date}.csv", index=False)
+    df.to_excel(f"data/B_bronze/{pipe_name}/{output_name}-{date}.xlsx", index=False)
     return df
 
 
