@@ -1,7 +1,7 @@
 from utils.audit import build_audit_columns
 import pandas as pd
 import os
-
+from datetime import datetime
 
 def ingestion_excel(file_path, sheet_target, pipe_name, output_name,sheet_name_label=None):
     """Ingests an Excel sheet using either its 0-based index or its string name.
@@ -32,8 +32,9 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name,sheet_name_l
 
     print(f"Final shape: {df.shape}")
     print(df.head())
-    df.to_csv(f"data/1_bronze/{pipe_name}/{output_name}.csv", index=False)
-    df.to_excel(f"data/1_bronze/{pipe_name}/{output_name}.xlsx", index=False)
+    date = datetime.now().strftime("%Y-%m-%d")
+    df.to_csv(f"data/1_bronze/{pipe_name}/{output_name}-{date}.csv", index=False)
+    df.to_excel(f"data/1_bronze/{pipe_name}/{output_name}-{date}.xlsx", index=False)
     return df
 
 

@@ -2,7 +2,7 @@ from os import path
 
 import pandas as pd
 from utils.clean_cast import clean_and_cast
-
+from datetime import datetime
 
 def column_row_extractor(
     file_path: path,
@@ -72,10 +72,11 @@ def column_row_extractor(
             col_name=col_name,
         )
 
+
     # 6. Save the Silver Table
     output_file = f"{output_name}.csv"
-    df.to_csv(output_file, index=False)
-    df.to_csv(f"data/C_silver/{pipe_name}/{output_name}.csv", index=False)
+    date = datetime.now().strftime("%Y-%m-%d")
+    df.to_csv(f"data/C_silver/{pipe_name}/{output_name}-{date}.csv", index=False)
 
     print(
         f"Saved {len(df)} rows x {len(df.columns)} columns -> {output_file}"
