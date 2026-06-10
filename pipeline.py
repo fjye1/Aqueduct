@@ -10,7 +10,7 @@ load_dotenv()
 project_id = os.getenv("PROJECT_ID")
 layer = os.getenv("LAYER")
 
-RAW_FILE = "data/1_bronze/council_budget/Council_Budgets.xlsx"
+RAW_FILE = "data/B_bronze/council_budget/Council_Budgets.xlsx"
 SHEET_INDEX = 3
 SHEET_NAME = "Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data"
 

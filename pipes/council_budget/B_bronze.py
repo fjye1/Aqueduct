@@ -3,20 +3,20 @@ from utils.ingestion import ingestion_excel
 from utils.big_query.import_big_query import load_into_bigquery
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent
 
-# ──Test Config ───────────────────────────────────────────────────────────────────
-RAW_FILE = PROJECT_ROOT / "data" / "0_raw" / "council_budget" / "Council_Budgets.xlsx"
+
+# ──pipes/council_budget/B_bronze Config ───────────────────────────────────────────────────────────────────
 SHEET_INDEX = 3
 SHEET_NAME = "Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data"
 PIPE_NAME = "council_budget"
 PROJECT_ID = "roomreview-487913"
 LAYER = "bronze_layer"
+OUTPUT_NAME = "ingestion"
 
 
 def run_pipeline(project_root: Path):
     # Ingest excel sheet
-    raw_file = project_root / "data" / "0_raw" / "council_budget" / "Council_Budgets.xlsx"
+    raw_file = project_root / "data" / "A_raw" / "council_budget" / "Council_Budgets.xlsx"
     df = ingestion_excel(
         file_path=raw_file,
         sheet_target=SHEET_INDEX,

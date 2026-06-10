@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-def ingestion_excel(file_path, sheet_target, pipe_name, sheet_name_label=None):
+def ingestion_excel(file_path, sheet_target, pipe_name, output_name,sheet_name_label=None):
     """Ingests an Excel sheet using either its 0-based index or its string name.
 
         Parameters:
@@ -32,13 +32,13 @@ def ingestion_excel(file_path, sheet_target, pipe_name, sheet_name_label=None):
 
     print(f"Final shape: {df.shape}")
     print(df.head())
-    df.to_csv(f"data/1_bronze/{pipe_name}/ingestion.csv", index=False)
-    df.to_excel(f"data/1_bronze/{pipe_name}/ingestion.xlsx", index=False)
+    df.to_csv(f"data/1_bronze/{pipe_name}/{output_name}.csv", index=False)
+    df.to_excel(f"data/1_bronze/{pipe_name}/{output_name}.xlsx", index=False)
     return df
 
 
 # # ──Test Config ───────────────────────────────────────────────────────────────────
-# RAW_FILE = "/data/0_raw/council_budget/Council_Budgets.xlsx"
+# RAW_FILE = "/data/A_raw/council_budget/Council_Budgets.xlsx"
 # SHEET_INDEX = 3
 # SHEET_NAME = "Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data"
 # PIPE_NAME = "Council_Budgets"
