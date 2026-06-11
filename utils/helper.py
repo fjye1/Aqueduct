@@ -2,8 +2,13 @@ import re
 import pandas as pd
 import numpy as np
 
+
 def sanitise(name):
-    return re.sub(r'[^a-zA-Z0-9._-]', '_', name)
+    cleaned_name = str(name).lower().replace(" ", "_")
+    sanitized = re.sub(r'[^a-zA-Z0-9._-]', '_', cleaned_name)
+
+    # Optional: Collapse multiple consecutive underscores into a single underscore
+    return re.sub(r'_{2,}', '_', sanitized)
 
 
 def clean_and_cast(series, col_type, col_name=None):
