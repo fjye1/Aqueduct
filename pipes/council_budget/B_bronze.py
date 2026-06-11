@@ -1,5 +1,5 @@
 from utils.helper import sanitise
-from utils.ingestion import ingestion_excel, batch_ingestion_excel
+from utils.ingestion import batch_ingestion_excel
 from utils.big_query.import_big_query import load_into_bigquery
 from pathlib import Path
 
@@ -7,7 +7,8 @@ from pathlib import Path
 
 # ──pipes/council_budget/B_bronze Config ───────────────────────────────────────────────────────────────────
 SHEET_INDEX = [3]
-SHEET_NAME = "Worksheet 2: Revenue Account Budget (RA) 2025-26: Revenue Account data"
+SHEET_NAME = "Council_Budgets.xlsx"
+TABLE_NAME = "Council_budget_2026"
 PIPE_NAME = "council_budget"
 PROJECT_ID = "roomreview-487913"
 LAYER = "bronze_layer"
@@ -16,12 +17,13 @@ OUTPUT_NAME = "ingestion"
 
 def run_pipeline(project_root: Path):
     # Ingest excel sheet
-    raw_file = project_root / "data" / "A_raw" / "council_budget" / "Council_Budgets.xlsx"
+    raw_file = project_root / "data" / "A_raw" / f"{PIPE_NAME}" / f"{SHEET_NAME}"
     dfs_to_upload = batch_ingestion_excel(
         file_path=raw_file,
         sheet_targets=SHEET_INDEX,
         pipe_name=PIPE_NAME,
-        output_name=OUTPUT_NAME
+        output_name=OUTPUT_NAME,
+        table_name=TABLE_NAME
     )
 
     # Loop through the dictionary and upload each dataframe to BigQuery

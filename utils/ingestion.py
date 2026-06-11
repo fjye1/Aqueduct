@@ -1,44 +1,11 @@
 from utils.audit import build_audit_columns
+from utils.helper import sanitise
 import pandas as pd
 import os
 from datetime import datetime
 
-# def ingestion_excel(file_path, sheet_target, pipe_name, output_name,sheet_name_label=None):
-#     """Ingests an Excel sheet using either its 0-based index or its string name.
-#
-#         Parameters:
-#         - file_path (str): Path to the Excel file.
-#         - sheet_target (int or str): The sheet name (str) or 0-indexed position
-#         (int) to load.
-#         - sheet_name_label (str, optional): A custom label for the audit column.
-#           If None, it defaults to the sheet_target.
-#         """
-#     print(os.getcwd())
-#     print("Loading file...")
-#     # pd.read_excel natively accepts both integers (index) and strings (name) for sheet_name
-#     df = pd.read_excel(file_path, sheet_name=sheet_target, header=None)
-#     print(f"Loaded — shape: {df.shape}")
-#     # ── Rename data columns to positional names ───────────────────────────────────
-#     df.columns = [f"col_{i}" for i in range(df.shape[1])]
-#     # ── Safely cast all data columns to string ────────────────────────────────────
-#     df = df.where(df.isna(), df.astype(str))
-#     # ── Call audit function to add audit info for logging──────────────────────────
-#     df = build_audit_columns(
-#         df,
-#         file_path=file_path,
-#         sheet_target=sheet_target,
-#         sheet_name_label=sheet_name_label,
-#     )
-#
-#     print(f"Final shape: {df.shape}")
-#     print(df.head())
-#     date = datetime.now().strftime("%Y-%m-%d")
-#     df.to_csv(f"data/B_bronze/{pipe_name}/{output_name}-{date}.csv", index=False)
-#     df.to_excel(f"data/B_bronze/{pipe_name}/{output_name}-{date}.xlsx", index=False)
-#     return df
 
-
-def ingestion_excel(file_path, sheet_target, pipe_name, output_name, sheet_name_label=None):
+def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name):
     print(f"\n--- Processing Sheet: {sheet_target} ---")
     """Ingests an Excel sheet using either its 0-based index or its string name.
 
@@ -50,29 +17,26 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, sheet_name_
               If None, it defaults to the sheet_target.
             """
     # 1. Load the specific sheet
-    df = pd.read_excel(file_path, sheet_name=sheet_target, header=None)
+    df = pd.read_excel(file_path, sheet_name=sheet_target, header=None, dtype=str,)
     print(f"Loaded — shape: {df.shape}")
 
     # 2. Format columns
     df.columns = [f"col_{i}" for i in range(df.shape[1])]
     df = df.where(df.isna(), df.astype(str))
 
-    # 3. Handle labels cleanly
-    label = sheet_name_label if sheet_name_label else str(sheet_target)
 
-    # 4. Audit columns
+    # 3. Audit columns
     df = build_audit_columns(
         df,
-        file_path=file_path,
+        source_file=table_name,
         sheet_target=sheet_target,
-        sheet_name_label=label,
     )
 
-    # 5. Save files with a unique sheet suffix to prevent overwriting
+    # 4. Save files with a unique sheet suffix to prevent overwriting
     date = datetime.now().strftime("%Y-%m-%d")
-    clean_sheet_suffix = str(sheet_target).lower().replace(" ", "_")
+    sheet_target = sanitise(sheet_target)
 
-    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_Sheet_{clean_sheet_suffix}-{date}.csv"
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_Sheet_{sheet_target}-{date}.csv"
 
 
     # Ensure directory exists
@@ -85,7 +49,7 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, sheet_name_
     return df
 
 
-def batch_ingestion_excel(file_path, sheet_targets, pipe_name, output_name):
+def batch_ingestion_excel(file_path, sheet_targets, pipe_name, output_name,table_name):
     """
     Orchestrates the ingestion. Accepts a single sheet (str/int)
     or a list of sheets [str/int].
@@ -108,7 +72,8 @@ def batch_ingestion_excel(file_path, sheet_targets, pipe_name, output_name):
                 file_path=file_path,
                 sheet_target=target,
                 pipe_name=pipe_name,
-                output_name=output_name
+                output_name=output_name,
+                table_name=table_name
             )
 
             # Store it using the sheet target (or name) as the key
@@ -121,6 +86,90 @@ def batch_ingestion_excel(file_path, sheet_targets, pipe_name, output_name):
 
     # Return the entire dictionary of dataframes
     return processed_dfs
+
+
+def ingestion_csv(file_path, pipe_name, output_name, table_name):
+    print(f"\n--- Processing CSV File: {file_path} ---")
+    """Ingests a CSV file.
+
+    Parameters:
+    - file_path (str): Path to the CSV file.
+    - pipe_name (str): Name of the pipeline folder.
+    - output_name (str): Prefix for the output filename.
+    - file_label (str, optional): A custom label for the audit column.
+      If None, it defaults to the base file name.
+    """
+    # 1. Load the CSV file
+    # added keep_default_na=False or similar if you want to match Excel's blank handling,
+    # but header=None is kept to match your original logic.
+    df = pd.read_csv(file_path, header=None, dtype=str,)
+    print(f"Loaded — shape: {df.shape}")
+
+    # 2. Format columns
+    df.columns = [f"col_{i}" for i in range(df.shape[1])]
+    df = df.where(df.isna(), df.astype(str))
+
+
+
+
+    # 3. Audit columns (Updated parameters to reflect file-based tracking)
+    df = build_audit_columns(
+        df,
+        source_file=table_name,
+    )
+
+    # 4. Save files with a unique suffix based on the original file name
+    date = datetime.now().strftime("%Y-%m-%d")
+
+
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}-{date}.csv"
+
+    # Ensure directory exists
+    os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+
+    df.to_csv(csv_path, index=False)
+    print(f"Saved to {csv_path}")
+
+    return df
+
+
+def batch_ingestion_csv(file_paths, pipe_name, output_name, table_name):
+    """
+    Orchestrates the ingestion. Accepts a single file path (str)
+    or a list of file paths [str].
+    """
+
+    # If it's a single entry (not a list/tuple), wrap it in a list so we can loop
+    if not isinstance(file_paths, (list, tuple)):
+        file_paths = [file_paths]
+
+    # Create a dictionary to hold all dataframes
+    processed_dfs = {}
+
+    print(f"Starting pipeline for {len(file_paths)} file(s)...")
+
+    # Loop through every file path targeted
+    for path in file_paths:
+        try:
+            # single ingestion function executes and returns a single dataframe
+            df = ingestion_csv(
+                file_path=path,
+                pipe_name=pipe_name,
+                output_name=output_name,
+                table_name=table_name
+            )
+
+            # Store it using the file path as the key
+            processed_dfs[output_name] = df
+
+        except Exception as e:
+            # If one file fails, log it but keep processing the other files!
+            print(f" Error processing file '{path}': {e}")
+            continue
+
+    # Return the entire dictionary of dataframes
+    return processed_dfs
+
 
 # # ──Test Config ───────────────────────────────────────────────────────────────────
 # RAW_FILE = "/data/A_raw/council_budget/Council_Budgets.xlsx"
