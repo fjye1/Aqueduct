@@ -1,7 +1,7 @@
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.extraction import column_row_extractor
 
@@ -63,8 +63,10 @@ LAYER = "silver_layer"
 # A list of the sheets that you wish to target and append from the previous transformation
 TARGET_SHEETS = [3]
 
+
 def council_pipe_filter(df: pd.DataFrame) -> pd.DataFrame:
-    # Rule 1: Check the values found in 'ons_code'(name you defined for this column above) match the predefined list found in LONDON_BOROUGHS
+    # Rule 1: Check the values found in 'ons_code'(name you defined for this column above)
+    # match the predefined list found in LONDON_BOROUGHS
     ons_codes = LONDON_BOROUGHS
     df = df[df['ons_code'].isin(ons_codes)]
 
@@ -75,25 +77,9 @@ def council_pipe_filter(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# def run_pipeline(project_root: Path):
-#     # extract rows and columns from csv
-#     folder = project_root / "data" / "B_bronze" / "council_budget"
-#
-#     files = sorted(folder.glob("ingestion-*.csv"))
-#     raw_file = files[-1] if files else None
-#     df = column_row_extractor(
-#         file_path=raw_file,
-#         data_row_start=DATA_ROW_START,
-#         data_row_end=DATA_ROW_END,
-#         columns=COLUMNS,
-#         output_name=OUTPUT_NAME,
-#         pipe_name=PIPE_NAME,
-#         function_filter=council_pipe_filter,
-#     )
-
 def run_pipeline(project_root: Path):
     folder = project_root / "data" / "B_bronze" / "council_budget"
-    target_sheets =TARGET_SHEETS
+    target_sheets = TARGET_SHEETS
     # Initialize a list to hold dataframes for each processed sheet
     processed_dfs = []
     # Iterate through the sheets in the exact order provided in the list
@@ -116,6 +102,7 @@ def run_pipeline(project_root: Path):
             output_name=OUTPUT_NAME,
             pipe_name=PIPE_NAME,
             function_filter=council_pipe_filter,
+            sheet=sheet,
         )
         # Optional: Add a column to keep track of which sheet this data came from
         df_sheet["source_sheet"] = sheet
@@ -123,16 +110,22 @@ def run_pipeline(project_root: Path):
     # Combine all the processed sheets into one final DataFrame
     if processed_dfs:
         final_df = pd.concat(processed_dfs, ignore_index=True)
+        date = datetime.now().strftime("%Y-%m-%d")
+        final_df.to_csv(f"data/C_silver/{PIPE_NAME}/{OUTPUT_NAME}_CONCAT-{date}.csv", index=False)
+        # Load into BigQuery after data concatenated
+        print(f"Loading data into BigQuery table: {PIPE_NAME}...")
+        load_into_bigquery(
+            project_id=PROJECT_ID,
+            layer=LAYER,
+            table_name=PIPE_NAME,
+            df=final_df,
+
+            # SET to false when you want to upload to BQ
+            dry_run=True
+        )
         return final_df
     else:
         print("No data was processed.")
         return None
 
     # # Upload data to Big query
-    # load_into_bigquery(
-    #     project_id=PROJECT_ID,
-    #     layer=LAYER,
-    #     table_name=PIPE_NAME,
-    #     df=df,
-    #     dry_run=True
-    # )
