@@ -15,31 +15,58 @@ LAYER = "bronze_layer"
 OUTPUT_NAME = "ingestion"
 
 
+PIPELINES = [
+    {
+        "sources": [
+            {
+                "file": "Council_Budgets.xlsx",
+                "sheet_index": 3
+            }
+        ],
+        "table_name": "Council_budget_2026",
+        "ingestion_function": batch_ingestion_excel,
+    },
+
+]
+
 def run_pipeline(project_root: Path):
-    # Ingest excel sheet
-    raw_file = project_root / "data" / "A_raw" / f"{PIPE_NAME}" / f"{SHEET_NAME}"
-    dfs_to_upload = batch_ingestion_excel(
-        file_path=raw_file,
-        sheet_targets=SHEET_INDEX,
-        pipe_name=PIPE_NAME,
-        output_name=OUTPUT_NAME,
-        table_name=TABLE_NAME
-    )
+    for config in PIPELINES:
+        # 1. Resolve full paths for all sources in this pipeline
+        base_path = project_root / "data" / "A_raw" / PIPE_NAME
 
-    # Loop through the dictionary and upload each dataframe to BigQuery
-    for sheet_name, df in dfs_to_upload.items():
-        # Clean the sheet name for BigQuery compatibility (e.g., "2025 Data" -> "2025_data")
-        clean_sheet_name = sanitise(sheet_name)
+        resolved_sources = []
+        for src in config["sources"]:
+            resolved_sources.append({
+                "file": base_path / src["file"],  # Converts just the filename to a full Path object
+                "sheet_index": src.get("sheet_index", 0)
+            })
 
-        # Combine pipe name and sheet name for a unique Bronze table
-        target_table = f"{PIPE_NAME}__{clean_sheet_name}"
+            dfs_to_upload = config["ingestion_function"](
+                sources=resolved_sources,  # Matches the 'sources' parameter name
+                pipe_name=PIPE_NAME,
+                output_name=OUTPUT_NAME,
+                table_name=config["table_name"],
+            )
+            # Loop through the dictionary and upload each dataframe to BigQuery
+            for sheet_name, df in dfs_to_upload.items():
+                # Clean the sheet name for BigQuery compatibility (e.g., "2025 Data" -> "2025_data")
+                clean_sheet_name = sanitise(sheet_name)
 
-        print(f"Uploading sheet '{sheet_name}' to BigQuery table: {target_table}...")
+                # Combine pipe name and sheet name for a unique Bronze table
+                target_table = f"{PIPE_NAME}__{clean_sheet_name}"
 
-        load_into_bigquery(
-            project_id=PROJECT_ID,
-            layer=LAYER,
-            table_name=target_table,  # Dynamically named per sheet
-            df=df,
-            dry_run=True  # Set to false when you want to test the feature but not upload
-        )
+                print(f"Uploading sheet '{sheet_name}' to BigQuery table: {target_table}...")
+
+                load_into_bigquery(
+                    project_id=PROJECT_ID,
+                    layer=LAYER,
+                    table_name=target_table,  # Dynamically named per sheet
+                    df=df,
+                    dry_run=True  # Set to False when you want to upload to big query
+                )
+
+
+
+
+
+

@@ -1,8 +1,10 @@
-from utils.audit import build_audit_columns
-from utils.helper import sanitise
-import pandas as pd
 import os
 from datetime import datetime
+
+import pandas as pd
+
+from utils.audit import build_audit_columns
+from utils.helper import sanitise
 
 
 def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name):
@@ -17,13 +19,12 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name)
               If None, it defaults to the sheet_target.
             """
     # 1. Load the specific sheet
-    df = pd.read_excel(file_path, sheet_name=sheet_target, header=None, dtype=str,)
+    df = pd.read_excel(file_path, sheet_name=sheet_target, header=None, dtype=str, )
     print(f"Loaded — shape: {df.shape}")
 
     # 2. Format columns
     df.columns = [f"col_{i}" for i in range(df.shape[1])]
     df = df.where(df.isna(), df.astype(str))
-
 
     # 3. Audit columns
     df = build_audit_columns(
@@ -38,7 +39,6 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name)
 
     csv_path = f"data/B_bronze/{pipe_name}/{output_name}_Sheet_{sheet_target}-{date}.csv"
 
-
     # Ensure directory exists
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
 
@@ -49,40 +49,44 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name)
     return df
 
 
-def batch_ingestion_excel(file_path, sheet_targets, pipe_name, output_name,table_name):
-    """
-    Orchestrates the ingestion. Accepts a single sheet (str/int)
-    or a list of sheets [str/int].
-    """
-
-    # If it's a single entry (not a list/tuple), wrap it in a list so we can loop
-    if not isinstance(sheet_targets, (list, tuple)):
-        sheet_targets = [sheet_targets]
-
+def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
     # Create a dictionary to hold all dataframes
     processed_dfs = {}
+    for src in sources:
+        file_path = src["file"]
+        sheet_targets = src.get("sheet_index", 0)
+        """
+            Orchestrates the ingestion. Accepts a single sheet (str/int)
+            or a list of sheets [str/int].
+            """
 
-    print(f"Starting pipeline for {len(sheet_targets)} sheet(s)...")
+        # If it's a single entry (not a list/tuple), wrap it in a list so we can loop
+        if not isinstance(sheet_targets, (list, tuple)):
+            sheet_targets = [sheet_targets]
 
-    # Loop through every sheet targeted
-    for target in sheet_targets:
-        try:
-            # single ingestion function executes and returns a single dataframe
-            df = ingestion_excel(
-                file_path=file_path,
-                sheet_target=target,
-                pipe_name=pipe_name,
-                output_name=output_name,
-                table_name=table_name
-            )
 
-            # Store it using the sheet target (or name) as the key
-            processed_dfs[target] = df
 
-        except Exception as e:
-            # If one sheet fails, log it but keep processing the other sheets!
-            print(f" Error processing sheet '{target}': {e}")
-            continue
+        print(f"Starting pipeline for {len(sheet_targets)} sheet(s)...")
+
+        # Loop through every sheet targeted
+        for target in sheet_targets:
+            try:
+                # single ingestion function executes and returns a single dataframe
+                df = ingestion_excel(
+                    file_path=file_path,
+                    sheet_target=target,
+                    pipe_name=pipe_name,
+                    output_name=output_name,
+                    table_name=table_name
+                )
+
+                # Store it using the sheet target (or name) as the key
+                processed_dfs[target] = df
+
+            except Exception as e:
+                # If one sheet fails, log it but keep processing the other sheets!
+                print(f" Error processing sheet '{target}': {e}")
+                continue
 
     # Return the entire dictionary of dataframes
     return processed_dfs
@@ -102,15 +106,12 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name):
     # 1. Load the CSV file
     # added keep_default_na=False or similar if you want to match Excel's blank handling,
     # but header=None is kept to match your original logic.
-    df = pd.read_csv(file_path, header=None, dtype=str,)
+    df = pd.read_csv(file_path, header=None, dtype=str, )
     print(f"Loaded — shape: {df.shape}")
 
     # 2. Format columns
     df.columns = [f"col_{i}" for i in range(df.shape[1])]
     df = df.where(df.isna(), df.astype(str))
-
-
-
 
     # 3. Audit columns (Updated parameters to reflect file-based tracking)
     df = build_audit_columns(
@@ -120,7 +121,6 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name):
 
     # 4. Save files with a unique suffix based on the original file name
     date = datetime.now().strftime("%Y-%m-%d")
-
 
     csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}-{date}.csv"
 
@@ -133,43 +133,36 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name):
     return df
 
 
-def batch_ingestion_csv(file_paths, pipe_name, output_name, table_name):
+def batch_ingestion_csv(sources, pipe_name, output_name, table_name):
     """
-    Orchestrates the ingestion. Accepts a single file path (str)
-    or a list of file paths [str].
+    Ingest multiple CSV sources and return dict of dataframes.
+    Each source is expected to be:
+    {"file": "path/to/file.csv"}
     """
 
-    # If it's a single entry (not a list/tuple), wrap it in a list so we can loop
-    if not isinstance(file_paths, (list, tuple)):
-        file_paths = [file_paths]
-
-    # Create a dictionary to hold all dataframes
     processed_dfs = {}
 
-    print(f"Starting pipeline for {len(file_paths)} file(s)...")
+    print(f"Starting CSV pipeline for {len(sources)} file(s)...")
 
-    # Loop through every file path targeted
-    for path in file_paths:
+    for src in sources:
+        file_path = src["file"]
+
         try:
-            # single ingestion function executes and returns a single dataframe
             df = ingestion_csv(
-                file_path=path,
+                file_path=file_path,
                 pipe_name=pipe_name,
                 output_name=output_name,
                 table_name=table_name
             )
 
-            # Store it using the file path as the key
-            processed_dfs[output_name] = df
+            # key by file so nothing gets overwritten
+            processed_dfs[file_path] = df
 
         except Exception as e:
-            # If one file fails, log it but keep processing the other files!
-            print(f" Error processing file '{path}': {e}")
+            print(f"Error processing file '{file_path}': {e}")
             continue
 
-    # Return the entire dictionary of dataframes
     return processed_dfs
-
 
 # # ──Test Config ───────────────────────────────────────────────────────────────────
 # RAW_FILE = "/data/A_raw/council_budget/Council_Budgets.xlsx"

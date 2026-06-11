@@ -19,7 +19,7 @@ def build_audit_columns(
 
     audit["_source_file"] = source_file
     audit["_sheet_name"] = sheet_target  # will be na if no sheet number/ name provided
-    audit["_ingested_at"] = pd.Timestamp.now(tz="UTC").tz_convert(None)
+    audit["_ingested_at"] = pd.Timestamp.now(tz="UTC").tz_convert(None).normalize()
     audit["_row_number"] = df.index
 
     if existing:
