@@ -41,29 +41,29 @@ def run_pipeline(project_root: Path):
                 "sheet_index": src.get("sheet_index", 0)
             })
 
-            dfs_to_upload = config["ingestion_function"](
-                sources=resolved_sources,  # Matches the 'sources' parameter name
-                pipe_name=PIPE_NAME,
-                output_name=OUTPUT_NAME,
-                table_name=config["table_name"],
+        dfs_to_upload = config["ingestion_function"](
+            sources=resolved_sources,  # Matches the 'sources' parameter name
+            pipe_name=PIPE_NAME,
+            output_name=OUTPUT_NAME,
+            table_name=config["table_name"],
+        )
+        # Loop through the dictionary and upload each dataframe to BigQuery
+        for sheet_name, df in dfs_to_upload.items():
+            # Clean the sheet name for BigQuery compatibility (e.g., "2025 Data" -> "2025_data")
+            clean_sheet_name = sanitise(sheet_name)
+
+            # Combine pipe name and sheet name for a unique Bronze table
+            target_table = f"{PIPE_NAME}__{clean_sheet_name}"
+
+            print(f"Uploading sheet '{sheet_name}' to BigQuery table: {target_table}...")
+
+            load_into_bigquery(
+                project_id=PROJECT_ID,
+                layer=LAYER,
+                table_name=target_table,  # Dynamically named per sheet
+                df=df,
+                dry_run=True  # Set to False when you want to upload to big query
             )
-            # Loop through the dictionary and upload each dataframe to BigQuery
-            for sheet_name, df in dfs_to_upload.items():
-                # Clean the sheet name for BigQuery compatibility (e.g., "2025 Data" -> "2025_data")
-                clean_sheet_name = sanitise(sheet_name)
-
-                # Combine pipe name and sheet name for a unique Bronze table
-                target_table = f"{PIPE_NAME}__{clean_sheet_name}"
-
-                print(f"Uploading sheet '{sheet_name}' to BigQuery table: {target_table}...")
-
-                load_into_bigquery(
-                    project_id=PROJECT_ID,
-                    layer=LAYER,
-                    table_name=target_table,  # Dynamically named per sheet
-                    df=df,
-                    dry_run=True  # Set to False when you want to upload to big query
-                )
 
 
 

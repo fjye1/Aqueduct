@@ -7,11 +7,19 @@ from utils.ingestion import batch_ingestion_csv, batch_ingestion_excel
 # ──pipes/market_pressure_index/B_bronze Config ───────────────────────────────────────────────────────────────────
 # average-prices-2026,dwelling_stock_local
 
+#"sources" refers to the different sources within a document
+#"file" refers to the file path
+#"table_name" is a short name for the source doc
+#"ingestion_function" is the function you want to use either CSV or Excel
+#PIPE_NAME is the pipe project
+#OUTPUT_NAME refers to the stage of data transformation.
+
 PIPELINES = [
     {
         "sources": [
             {
-                "file": "Average-prices-2026-03(Average-Price(national)).csv"
+                "file": "Average-prices-2026-03(Average-Price(national)).csv",
+                "sheet_index": "na"
             }
         ],
         "table_name": "average_prices_2026_03",
@@ -21,7 +29,11 @@ PIPELINES = [
         "sources": [
             {
                 "file": "LiveTable100(Dwelling-stock(Local)).ods",
-                "sheet_index": 3
+                "sheet_index": "2024"
+            },
+            {
+                "file": "LiveTable100(Dwelling-stock(Local)).ods",
+                "sheet_index": "2025"
             }
         ],
         "table_name": "dwelling_stock_local",
@@ -48,28 +60,26 @@ def run_pipeline(project_root: Path):
                 "sheet_index": src.get("sheet_index", 0)
             })
 
-            dfs_to_upload = config["ingestion_function"](
-                sources=resolved_sources,  # Matches the 'sources' parameter name
-                pipe_name=PIPE_NAME,
-                output_name=OUTPUT_NAME,
-                table_name=config["table_name"],
+        dfs_to_upload = config["ingestion_function"](
+            sources=resolved_sources,  # Matches the 'sources' parameter name
+            pipe_name=PIPE_NAME,
+            output_name=OUTPUT_NAME,
+            table_name=config["table_name"],
+        )
+        for sheet_name, df in dfs_to_upload.items():
+            clean_table_name = sanitise(config["table_name"])
+
+            target_table = f"{PIPE_NAME}_{clean_table_name}_{sheet_name}"
+
+            print(
+                f"Uploading sheet '{sheet_name}' "
+                f"to BigQuery table: {target_table}..."
             )
-            for sheet_name, df in dfs_to_upload.items():
-                clean_table_name = sanitise(config["table_name"])
 
-                target_table = f"{PIPE_NAME}__{clean_table_name}"
-
-                print(
-                    f"Uploading sheet '{sheet_name}' "
-                    f"to BigQuery table: {target_table}..."
-                )
-
-                load_into_bigquery(
-                    project_id=PROJECT_ID,
-                    layer=LAYER,
-                    table_name=target_table,
-                    df=df,
-                    dry_run=True  # Set to false when you want to upload
-                )
-
-
+            load_into_bigquery(
+                project_id=PROJECT_ID,
+                layer=LAYER,
+                table_name=target_table,
+                df=df,
+                dry_run=True  # Set to false when you want to upload
+            )

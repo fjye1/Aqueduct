@@ -37,7 +37,7 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name)
     date = datetime.now().strftime("%Y-%m-%d")
     sheet_target = sanitise(sheet_target)
 
-    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_Sheet_{sheet_target}-{date}.csv"
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}_Sheetid_{sheet_target}-{date}.csv"
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
@@ -156,7 +156,7 @@ def batch_ingestion_csv(sources, pipe_name, output_name, table_name):
             )
 
             # key by file so nothing gets overwritten
-            processed_dfs[file_path] = df
+            processed_dfs[table_name] = df
 
         except Exception as e:
             print(f"Error processing file '{file_path}': {e}")

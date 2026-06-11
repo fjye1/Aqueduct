@@ -8,6 +8,8 @@ This function imports data from your local machine up to big query.
 local machine -> Big query. 
 """
 
+# TODO Read up on pandas-gbq to see if that is a better method
+
 def load_into_bigquery(
         project_id: str,
         layer: str,
@@ -21,6 +23,7 @@ def load_into_bigquery(
         print(f"[DRY RUN] Would load {len(df)} rows into {table_id}")
         print(f"[DRY RUN] Columns: {list(df.columns)}")
         print(f"[DRY RUN] Sample:\n{df.head(4)}")
+        print(f"[DRY RUN] table_id:\n{table_id}")
         return
 
     client = bigquery.Client(project=project_id)  # only created when needed
