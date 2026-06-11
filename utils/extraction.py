@@ -14,7 +14,6 @@ def column_row_extractor(
         data_row_end: int,
         columns: list[dict],
         output_name: str,
-        sheet: int,
         function_filter: Optional[Callable[[pd.DataFrame], pd.DataFrame]] = None,
 
 ) -> pd.DataFrame:
@@ -89,7 +88,7 @@ def column_row_extractor(
     # 7. Save the Silver Table
     output_file = f"{output_name}.csv"
     date = datetime.now().strftime("%Y-%m-%d")
-    df.to_csv(f"data/C_silver/{pipe_name}/{output_name}_{sheet}-{date}.csv", index=False)
+    df.to_csv(f"data/C_silver/{pipe_name}/{output_name}-{date}.csv", index=False)
 
     print(
         f"Saved {len(df)} rows x {len(df.columns)} columns -> {output_file}"
