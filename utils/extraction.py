@@ -1,16 +1,19 @@
-from os import path
-
-import pandas as pd
-from utils.clean_cast import clean_and_cast
 from datetime import datetime
+from os import path
+from typing import Callable, Optional, Union, List
+import pandas as pd
+
+from utils.clean_cast import clean_and_cast
+
 
 def column_row_extractor(
-    file_path: path,
-    pipe_name: str,
-    data_row_start: int,
-    data_row_end: int,
-    columns: list[dict],
-    output_name: str,
+        file_path: path,
+        pipe_name: str,
+        data_row_start: int,
+        data_row_end: int,
+        columns: list[dict],
+        output_name: str,
+        function_filter: Optional[Callable[[pd.DataFrame], pd.DataFrame]] = None,
 ) -> pd.DataFrame:
     """Select specific columns from a bronze CSV, clean them,
 
@@ -28,6 +31,9 @@ def column_row_extractor(
         List of dictionaries defining 'col', 'name', and 'type'.
     output_name : str
         Output filename without extension.
+    function_filter : Optional[Callable[[pd.DataFrame], pd.DataFrame]], optional
+        A custom function to filter the rows (e.g., matching specific dates
+        or column values) before saving. Must accept and return a DataFrame.
     """
     print(f"Loading {file_path}")
 
@@ -71,9 +77,13 @@ def column_row_extractor(
             col_type=col_type,
             col_name=col_name,
         )
+    # 6. Apply Custom Filtering
+    if function_filter:
+        initial_rows = len(df)
+        df = function_filter(df)
+        print(f"Filtered dataframe: {initial_rows} rows -> {len(df)} rows")
 
-
-    # 6. Save the Silver Table
+    # 7. Save the Silver Table
     output_file = f"{output_name}.csv"
     date = datetime.now().strftime("%Y-%m-%d")
     df.to_csv(f"data/C_silver/{pipe_name}/{output_name}-{date}.csv", index=False)

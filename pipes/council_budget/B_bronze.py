@@ -39,13 +39,5 @@ def run_pipeline(project_root: Path):
             layer=LAYER,
             table_name=target_table,  # Dynamically named per sheet
             df=df,
-            dry_run=True  # Toggle to False when ready!
+            dry_run=True  # Set to false when you want to test the feature but not upload
         )
-    # # Upload data to Big query
-    # load_into_bigquery(
-    #     project_id=PROJECT_ID,
-    #     layer=LAYER,
-    #     table_name=PIPE_NAME,
-    #     df=df,
-    #     dry_run=True
-    # )
