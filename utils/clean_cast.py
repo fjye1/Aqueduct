@@ -44,6 +44,16 @@ def clean_and_cast(series, col_type, col_name=None):
 
         # Coerce to numbers (this guarantees a clean float64/int64 array, never 'object')
         numeric = pd.to_numeric(cleaned, errors="coerce")
+        # ── Explicit unsafe-cast: collapse decimals down to whole numbers ──
+        # Source data is more precise than we need (e.g. council data arrives
+        # as a massive float). We intentionally lose that precision here.
+        lossy_mask = numeric.notna() & (numeric % 1 != 0)
+        if lossy_mask.any():
+            print(
+                f"[WARNING] INTEGER cast for '{col_name}' rounded {lossy_mask.sum()} "
+                f"fractional values, e.g. {numeric[lossy_mask].unique()[:5]}"
+            )
+        numeric = numeric.round(0)
 
         # Track items that failed parsing entirely (excluding intentional nulls)
         bad_mask = (
