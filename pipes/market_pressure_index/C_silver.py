@@ -13,11 +13,11 @@ PIPELINES = [
     {
         "sources": [
             {
-                "file": "ingestion_dwelling_stock_local_Sheetid_2024-2026-06-11.csv",
+                "file": "ingestion_dwelling_stock_local_Sheetid_2024-2026-06-13.csv",
 
             },
             {
-                "file": "ingestion_dwelling_stock_local_Sheetid_2025-2026-06-11.csv",
+                "file": "ingestion_dwelling_stock_local_Sheetid_2025-2026-06-13.csv",
             }
         ],
         "table_name": "dwelling_stock_local",
@@ -37,7 +37,7 @@ PIPELINES = [
     {
         "sources": [
             {
-                "file": "ingestion_average_prices_2026_03-2026-06-11.csv",
+                "file": "ingestion_average_prices_2026_03-2026-06-13.csv",
 
             },
 

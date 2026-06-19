@@ -9,7 +9,7 @@ local machine -> Big query.
 """
 
 # TODO Read up on pandas-gbq to see if that is a better method
-
+#TODO Write a test for this function
 def load_into_bigquery(
         project_id: str,
         layer: str,

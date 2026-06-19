@@ -6,7 +6,7 @@ import pandas as pd
 from utils.audit import build_audit_columns
 from utils.helper import sanitise
 
-
+# TODO build Test for this function
 def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name):
     print(f"\n--- Processing Sheet: {sheet_target} ---")
     """Ingests an Excel sheet using either its 0-based index or its string name.
@@ -48,7 +48,7 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name)
 
     return df
 
-
+# TODO build Test for this function
 def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
     # Create a dictionary to hold all dataframes
     processed_dfs = {}
@@ -91,7 +91,7 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
     # Return the entire dictionary of dataframes
     return processed_dfs
 
-
+# TODO build Test for this function
 def ingestion_csv(file_path, pipe_name, output_name, table_name):
     print(f"\n--- Processing CSV File: {file_path} ---")
     """Ingests a CSV file.
@@ -132,7 +132,7 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name):
 
     return df
 
-
+# TODO build Test for this function
 def batch_ingestion_csv(sources, pipe_name, output_name, table_name):
     """
     Ingest multiple CSV sources and return dict of dataframes.

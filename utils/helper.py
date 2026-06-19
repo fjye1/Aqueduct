@@ -2,7 +2,7 @@ import re
 import pandas as pd
 import numpy as np
 
-
+# TODO build Test for this function
 def sanitise(name):
     cleaned_name = str(name).lower().replace(" ", "_")
     sanitized = re.sub(r'[^a-zA-Z0-9._-]', '_', cleaned_name)
@@ -10,7 +10,7 @@ def sanitise(name):
     # Optional: Collapse multiple consecutive underscores into a single underscore
     return re.sub(r'_{2,}', '_', sanitized)
 
-
+# TODO build Test for this function
 def clean_and_cast(series, col_type, col_name=None):
     """Clean and cast a pandas Series to the specified type.
 
@@ -173,7 +173,7 @@ def clean_and_cast(series, col_type, col_name=None):
             f"for column '{col_name}'"
         )
         return series
-
+# TODO build Test for this function
 def find_headers(file_path, sheet_name):
     df = pd.read_excel(file_path, sheet_name, header=None)
 
@@ -181,7 +181,7 @@ def find_headers(file_path, sheet_name):
     print(f"Total cols: {len(df.columns)}")
     print("\n--- First 15 rows ---")
     print(df.iloc[:15].to_string())
-
+# TODO build Test for this function
 def _pandas_dtype_to_bq(dtype) -> str:
     if pd.api.types.is_integer_dtype(dtype):
         return "INTEGER"

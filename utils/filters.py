@@ -37,6 +37,8 @@ LONDON_BOROUGHS_UK = [
     "E09000033"
 ]
 
+
+# TODO build test for this function
 def london_borough_filter(df: pd.DataFrame) -> pd.DataFrame:
     # Rule 1: Check the values found in 'ons_code'(name you defined for this column above)
     # match the predefined list found in LONDON_BOROUGHS
@@ -48,9 +50,9 @@ def london_borough_filter(df: pd.DataFrame) -> pd.DataFrame:
     # df = df[df['created_date'] >= '2026-01-01']
 
     return df
-
+# TODO build test for this function
 def date_filter(df: pd.DataFrame) -> pd.DataFrame:
 
-    df = df[df['date'] >= '2024-01-01']
+    df = df[df['date'].between('2024-01-01', '2025-12-31')]
 
     return df

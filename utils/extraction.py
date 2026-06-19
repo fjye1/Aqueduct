@@ -86,12 +86,10 @@ def column_row_extractor(
         print(f"Filtered dataframe: {initial_rows} rows -> {len(df)} rows")
 
     # 7. Save the Silver Table
-    output_file = f"{output_name}.csv"
-    date = datetime.now().strftime("%Y-%m-%d")
-    df.to_csv(f"data/C_silver/{pipe_name}/{output_name}-{date}.csv", index=False)
+    # Dont Save here it cause a double save
 
     print(
-        f"Saved {len(df)} rows x {len(df.columns)} columns -> {output_file}"
+        f"Saved {len(df)} rows x {len(df.columns)} columns -> "
     )
 
     return df
