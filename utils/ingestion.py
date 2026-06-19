@@ -6,6 +6,7 @@ import pandas as pd
 from utils.audit import build_audit_columns
 from utils.helper import sanitise
 
+
 # TODO build Test for this function
 def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name, year_name):
     print(f"\n--- Processing Sheet: {sheet_target} ---")
@@ -48,6 +49,7 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name,
 
     return df
 
+
 # TODO build Test for this function
 def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
     # Create a dictionary to hold all dataframes
@@ -65,8 +67,6 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
         if not isinstance(sheet_targets, (list, tuple)):
             sheet_targets = [sheet_targets]
 
-
-
         print(f"Starting pipeline for {len(sheet_targets)} sheet(s)...")
 
         # Loop through every sheet targeted
@@ -79,7 +79,7 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
                     pipe_name=pipe_name,
                     output_name=output_name,
                     table_name=table_name,
-                    year_name =year_name
+                    year_name=year_name
                 )
 
                 # Store it using the sheet target (or name) as the key
@@ -93,8 +93,9 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
     # Return the entire dictionary of dataframes
     return processed_dfs
 
+
 # TODO build Test for this function
-def ingestion_csv(file_path, pipe_name, output_name, table_name):
+def ingestion_csv(file_path, pipe_name, output_name, table_name, year_name):
     print(f"\n--- Processing CSV File: {file_path} ---")
     """Ingests a CSV file.
 
@@ -124,7 +125,7 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name):
     # 4. Save files with a unique suffix based on the original file name
     date = datetime.now().strftime("%Y-%m-%d")
 
-    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}-{date}.csv"
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}-{year_name}.csv"
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
@@ -133,6 +134,7 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name):
     print(f"Saved to {csv_path}")
 
     return df
+
 
 # TODO build Test for this function
 def batch_ingestion_csv(sources, pipe_name, output_name, table_name):
@@ -148,13 +150,15 @@ def batch_ingestion_csv(sources, pipe_name, output_name, table_name):
 
     for src in sources:
         file_path = src["file"]
+        year_name = src.get("year_name")
 
         try:
             df = ingestion_csv(
                 file_path=file_path,
                 pipe_name=pipe_name,
                 output_name=output_name,
-                table_name=table_name
+                table_name=table_name,
+                year_name=year_name
             )
 
             # key by file so nothing gets overwritten
