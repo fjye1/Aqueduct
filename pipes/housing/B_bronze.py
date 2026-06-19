@@ -65,13 +65,13 @@ def run_pipeline(project_root: Path):
             table_name=config["table_name"],
 
         )
-        for sheet_name, df in dfs_to_upload.items():
+        for year_name, df in dfs_to_upload.items():
             clean_table_name = sanitise(config["table_name"])
 
-            target_table = f"{PIPE_NAME}_{clean_table_name}_{sheet_name}"
+            target_table = f"{PIPE_NAME}_{clean_table_name}_{year_name}"
 
             print(
-                f"Uploading sheet '{sheet_name}' "
+                f"Uploading sheet '{year_name}' "
                 f"to BigQuery table: {target_table}..."
             )
 

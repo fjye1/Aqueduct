@@ -38,7 +38,7 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name,
     date = datetime.now().strftime("%Y-%m-%d")
     sheet_target = sanitise(sheet_target)
 
-    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}_Sheetid_{sheet_target}-{year_name}.csv"
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}_{year_name}.csv"
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
@@ -83,7 +83,7 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
                 )
 
                 # Store it using the sheet target (or name) as the key
-                processed_dfs[target] = df
+                processed_dfs[year_name] = df
 
             except Exception as e:
                 # If one sheet fails, log it but keep processing the other sheets!
@@ -125,7 +125,7 @@ def ingestion_csv(file_path, pipe_name, output_name, table_name, year_name):
     # 4. Save files with a unique suffix based on the original file name
     date = datetime.now().strftime("%Y-%m-%d")
 
-    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}-{year_name}.csv"
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}_{year_name}.csv"
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
@@ -162,7 +162,7 @@ def batch_ingestion_csv(sources, pipe_name, output_name, table_name):
             )
 
             # key by file so nothing gets overwritten
-            processed_dfs[table_name] = df
+            processed_dfs[year_name] = df
 
         except Exception as e:
             print(f"Error processing file '{file_path}': {e}")
