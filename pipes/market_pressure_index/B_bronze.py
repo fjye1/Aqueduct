@@ -19,7 +19,8 @@ PIPELINES = [
         "sources": [
             {
                 "file": "Average-prices-2026-03(Average-Price(national)).csv",
-                "sheet_index": "na"
+                "sheet_index": "na",
+                "year_name": "1968-2026"
             }
         ],
         "table_name": "average_prices_2026_03",
@@ -29,11 +30,13 @@ PIPELINES = [
         "sources": [
             {
                 "file": "LiveTable100(Dwelling-stock(Local)).ods",
-                "sheet_index": "2024"
+                "sheet_index": "2024",
+                "year_name": "2024"
             },
             {
                 "file": "LiveTable100(Dwelling-stock(Local)).ods",
-                "sheet_index": "2025"
+                "sheet_index": "2025",
+                "year_name": "2025"
             }
         ],
         "table_name": "dwelling_stock_local",
@@ -57,7 +60,8 @@ def run_pipeline(project_root: Path):
         for src in config["sources"]:
             resolved_sources.append({
                 "file": base_path / src["file"],  # Converts just the filename to a full Path object
-                "sheet_index": src.get("sheet_index", 0)
+                "sheet_index": src.get("sheet_index", 0),
+                "year_name": src.get("year_name")
             })
 
         dfs_to_upload = config["ingestion_function"](
@@ -66,13 +70,13 @@ def run_pipeline(project_root: Path):
             output_name=OUTPUT_NAME,
             table_name=config["table_name"],
         )
-        for sheet_name, df in dfs_to_upload.items():
+        for year_name, df in dfs_to_upload.items():
             clean_table_name = sanitise(config["table_name"])
 
-            target_table = f"{PIPE_NAME}_{clean_table_name}_{sheet_name}"
+            target_table = f"{PIPE_NAME}_{clean_table_name}_{year_name}"
 
             print(
-                f"Uploading sheet '{sheet_name}' "
+                f"Uploading sheet '{year_name}' "
                 f"to BigQuery table: {target_table}..."
             )
 
