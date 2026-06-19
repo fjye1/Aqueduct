@@ -1,4 +1,3 @@
-from datetime import datetime
 from os import path
 from typing import Callable, Optional
 
@@ -14,6 +13,7 @@ def column_row_extractor(
         data_row_end: int,
         columns: list[dict],
         output_name: str,
+        year_name: str,
         function_filter: Optional[Callable[[pd.DataFrame], pd.DataFrame]] = None,
 
 ) -> pd.DataFrame:
@@ -85,8 +85,7 @@ def column_row_extractor(
         df = function_filter(df)
         print(f"Filtered dataframe: {initial_rows} rows -> {len(df)} rows")
 
-    # 7. Save the Silver Table
-    # Dont Save here it cause a double save
+    df["year_name"] = year_name
 
     print(
         f"Saved {len(df)} rows x {len(df.columns)} columns -> "
