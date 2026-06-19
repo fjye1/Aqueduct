@@ -112,7 +112,7 @@ def clean_and_cast(series, col_type, col_name=None):
     # ── DATE / DATETIME / TIMESTAMP ───────────────────────────
     elif col_type in ("DATE", "DATETIME", "TIMESTAMP"):
         try:
-            parsed = pd.to_datetime(series, errors="coerce")
+            parsed = pd.to_datetime(series, errors="coerce", dayfirst=True)
             bad_mask = (
                 parsed.isna()
                 & original.notna()

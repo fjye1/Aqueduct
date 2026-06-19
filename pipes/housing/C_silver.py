@@ -19,45 +19,81 @@ from utils.filters import london_borough_filter, date_filter
 # ──pipes/housing/C_silver Config ───────────────────────────────────────────────────────────────────
 PIPELINES = [
 
+    # {
+    #     "sources": [
+    #         {
+    #             "file": "ingestion_dwelling_stock_local_2021.csv",
+    #             "year_name": "2021"
+    #         },
+    #         {
+    #             "file": "ingestion_dwelling_stock_local_2022.csv",
+    #             "year_name": "2022"
+    #         },
+    #         {
+    #             "file": "ingestion_dwelling_stock_local_2023.csv",
+    #             "year_name": "2023"
+    #         },
+    #         {
+    #             "file": "ingestion_dwelling_stock_local_2024.csv",
+    #             "year_name": "2024"
+    #         },
+    #         {
+    #             "file": "ingestion_dwelling_stock_local_2025.csv",
+    #             "year_name": "2025"
+    #         }
+    #     ],
+    #     "table_name": "housing_stock",
+    #     "extraction_functions": [london_borough_filter],
+    #     "data_row_start": 6,
+    #     "data_row_end": 336,
+    #     "columns": [
+    #         {"col": 1, "name": "ons_code", "type": "STRING"},
+    #         {"col": 2, "name": "Area", "type": "STRING"},
+    #         {"col": 3, "name": "local_authority", "type": "FLOAT"},
+    #         {"col": 4, "name": "private_registered_provider", "type": "FLOAT"},
+    #         {"col": 5, "name": "Other public sector ", "type": "FLOAT"},
+    #         {"col": 6, "name": "private_sector", "type": "FLOAT"},
+    #         {"col": 7, "name": "total_dwellings", "type": "FLOAT"},
+    #         {"col": 8, "name": "_source_file", "type": "STRING"},
+    #         {"col": 9, "name": "_sheet_name", "type": "STRING"},
+    #         {"col": 10, "name": "_ingested_at", "type": "DATETIME"},
+    #         {"col": 11, "name": "_row_number", "type": "INTEGER"},
+    #     ]
+    # },
     {
         "sources": [
             {
-                "file": "ingestion_dwelling_stock_local_2021.csv",
+                "file": "ingestion_Affordable_housing_net_additions_local_2021.csv",
                 "year_name": "2021"
             },
             {
-                "file": "ingestion_dwelling_stock_local_2022.csv",
+                "file": "ingestion_Affordable_housing_net_additions_local_2022.csv",
                 "year_name": "2022"
             },
             {
-                "file": "ingestion_dwelling_stock_local_2023.csv",
+                "file": "ingestion_Affordable_housing_net_additions_local_2023.csv",
                 "year_name": "2023"
             },
             {
-                "file": "ingestion_dwelling_stock_local_2024.csv",
+                "file": "ingestion_Affordable_housing_net_additions_local_2024.csv",
                 "year_name": "2024"
             },
             {
-                "file": "ingestion_dwelling_stock_local_2025.csv",
+                "file": "ingestion_Affordable_housing_net_additions_local_2025.csv",
                 "year_name": "2025"
             }
         ],
-        "table_name": "housing_stock",
+        "table_name": "affordable_stock_additions",
         "extraction_functions": [london_borough_filter],
-        "data_row_start": 6,
-        "data_row_end": 336,
+        "data_row_start": 12,
+        "data_row_end": 300,
         "columns": [
-            {"col": 1, "name": "ons_code", "type": "STRING"},
-            {"col": 2, "name": "Area", "type": "STRING"},
-            {"col": 3, "name": "local_authority", "type": "FLOAT"},
-            {"col": 4, "name": "private_registered_provider", "type": "FLOAT"},
-            {"col": 5, "name": "Other public sector ", "type": "FLOAT"},
-            {"col": 6, "name": "private_sector", "type": "FLOAT"},
-            {"col": 7, "name": "total_dwellings", "type": "FLOAT"},
-            {"col": 8, "name": "_source_file", "type": "STRING"},
-            {"col": 9, "name": "_sheet_name", "type": "STRING"},
-            {"col": 10, "name": "_ingested_at", "type": "DATETIME"},
-            {"col": 11, "name": "_row_number", "type": "INTEGER"},
+            {"col": 0, "name": "ons_code", "type": "STRING"},
+            {"col": 20, "name": "total", "type": "INTEGER"},
+            {"col": 21, "name": "_source_file", "type": "STRING"},
+            {"col": 22, "name": "_sheet_name", "type": "STRING"},
+            {"col": 23, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 24, "name": "_row_number", "type": "INTEGER"},
         ]
     }
 ]
