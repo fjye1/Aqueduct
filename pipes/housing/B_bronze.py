@@ -1,6 +1,7 @@
 from pathlib import Path
-from utils.helper import sanitise
+
 from utils.big_query.import_big_query import load_into_bigquery
+from utils.helper import sanitise
 from utils.ingestion import batch_ingestion_excel
 
 PIPELINES = [
@@ -34,6 +35,92 @@ PIPELINES = [
             }
         ],
         "table_name": "Affordable_housing_net_additions_local",
+        "ingestion_function": batch_ingestion_excel,
+    },
+    {
+        "sources": [
+            {
+                "file": "Average_Price_National.xlsx",
+                "sheet_index": "Average-prices-2026-03",
+                "year_name": "1968-2026"
+            }
+        ],
+        "table_name": "average_house_prices",
+        "ingestion_function": batch_ingestion_excel,
+    },
+    {
+        "sources": [
+            {
+                "file": "Net_Additional_Dwelling_Local.xlsx",
+                "sheet_index": "LT_122",
+                "year_name": "2001-2025"
+            }
+        ],
+        "table_name": "net_additional_dwelling_local",
+        "ingestion_function": batch_ingestion_excel,
+    },
+    {
+        "sources": [
+            {
+                "file": "Council_Tax_Bands.xlsx",
+                "sheet_index": "2024-25",
+                "year_name": "2025"
+            },
+            {
+                "file": "Council_Tax_Bands.xlsx",
+                "sheet_index": "2023-24",
+                "year_name": "2024"
+            },
+            {
+                "file": "Council_Tax_Bands.xlsx",
+                "sheet_index": "2022-23",
+                "year_name": "2023"
+            },
+            {
+                "file": "Council_Tax_Bands.xlsx",
+                "sheet_index": "2021-22",
+                "year_name": "2022"
+            },
+            {
+                "file": "Council_Tax_Bands.xlsx",
+                "sheet_index": "2020-21",
+                "year_name": "2021"
+            },
+        ],
+        "table_name": "Council_tax",
+        "ingestion_function": batch_ingestion_excel,
+    },
+
+    {
+        "sources": [
+            {
+                "file": "Dwelling_Stock_Local.xlsx",
+                "sheet_index": "2025",
+                "year_name": "2025"
+            },
+            {
+                "file": "Dwelling_Stock_Local.xlsx",
+                "sheet_index": "2024",
+                "year_name": "2024"
+            },
+            {
+                "file": "Dwelling_Stock_Local.xlsx",
+                "sheet_index": "2023",
+                "year_name": "2023"
+            },
+            {
+                "file": "Dwelling_Stock_Local.xlsx",
+                "sheet_index": "2022",
+                "year_name": "2022"
+            },
+            {
+                "file": "Dwelling_Stock_Local.xlsx",
+                "sheet_index": "2021",
+                "year_name": "2021"
+            },
+
+        ],
+        "table_name": "dwelling_stock_local",
         "ingestion_function": batch_ingestion_excel,
     },
 
