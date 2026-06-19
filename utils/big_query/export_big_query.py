@@ -7,7 +7,7 @@ This function exports data from Big Query down to your local machine
 
 Big query -> local machine. 
 """
-
+#TODO Write a test for this function
 def export_big_query(project_id: str, layer: str, table_name: str) -> None:
     """
     Exports a BigQuery table to a sanitized, timestamped CSV.
