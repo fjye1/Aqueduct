@@ -13,7 +13,7 @@ def column_row_extractor(
         data_row_end: int,
         columns: list[dict],
         output_name: str,
-        year_name: str,
+        year_name: Optional[str] = None,
         function_filter: Optional[Callable[[pd.DataFrame], pd.DataFrame]] = None,
 
 ) -> pd.DataFrame:

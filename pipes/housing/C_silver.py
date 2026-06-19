@@ -8,8 +8,8 @@ from utils.filters import london_borough_filter
 
 # tables each borough appearing 5 times
 
-# silver_council_tax_bands
-# silver_avg_house_price
+# silver_council_tax_bands X
+# silver_avg_house_price X
 # silver_housing_stock X
 # silver_housing_stock_additions
 # silver_affordable_housing X
@@ -96,48 +96,97 @@ PIPELINES = [
     #         {"col": 24, "name": "_row_number", "type": "INTEGER"},
     #     ]
     # },
+    # {
+    #     "sources": [
+    #         {
+    #             "file": "ingestion_Council_tax_2021.csv",
+    #             "year_name": "2021"
+    #         },
+    #         {
+    #             "file": "ingestion_Council_tax_2022.csv",
+    #             "year_name": "2022"
+    #         },
+    #         {
+    #             "file": "ingestion_Council_tax_2023.csv",
+    #             "year_name": "2023"
+    #         },
+    #         {
+    #             "file": "ingestion_Council_tax_2024.csv",
+    #             "year_name": "2024"
+    #         },
+    #         {
+    #             "file": "ingestion_Council_tax_2025.csv",
+    #             "year_name": "2025"
+    #         }
+    #     ],
+    #     "table_name": "council_tax_bands",
+    #     "extraction_functions": [london_borough_filter],
+    #     "data_row_start": 3,
+    #     "data_row_end": 38,
+    #     "columns": [
+    #         {"col": 0, "name": "ons_code", "type": "STRING"},
+    #         {"col": 1, "name": "Area", "type": "STRING"},
+    #         {"col": 2, "name": "band_a", "type": "INTEGER"},
+    #         {"col": 3, "name": "band_b", "type": "INTEGER"},
+    #         {"col": 4, "name": "band_c", "type": "INTEGER"},
+    #         {"col": 5, "name": "band_d", "type": "INTEGER"},
+    #         {"col": 6, "name": "band_e", "type": "INTEGER"},
+    #         {"col": 7, "name": "band_f", "type": "INTEGER"},
+    #         {"col": 8, "name": "band_g", "type": "INTEGER"},
+    #         {"col": 9, "name": "band_h", "type": "INTEGER"},
+    #         {"col": 10, "name": "_source_file", "type": "STRING"},
+    #         {"col": 11, "name": "_sheet_name", "type": "STRING"},
+    #         {"col": 12, "name": "_ingested_at", "type": "DATETIME"},
+    #         {"col": 13, "name": "_row_number", "type": "INTEGER"},
+    #     ]
+    #
+    # },
+    # {
+    #     "sources": [
+    #         {
+    #             "file": "ingestion_average_house_prices_1968-2026.csv",
+    #             "year_name": "9"
+    #         }
+    #     ],
+    #     "table_name": "average_house_price",
+    #     "extraction_functions": [london_borough_filter, date_filter],
+    #     "data_row_start": 6,
+    #     "data_row_end": 150302,
+    #     "columns": [
+    #         {"col": 0, "name": "date", "type": "DATETIME"},
+    #         {"col": 1, "name": "Area", "type": "STRING"},
+    #         {"col": 2, "name": "ons_code", "type": "STRING"},
+    #         {"col": 3, "name": "average_price", "type": "FLOAT"},
+    #         {"col": 7, "name": "_source_file", "type": "STRING"},
+    #         {"col": 8, "name": "_sheet_name", "type": "STRING"},
+    #         {"col": 9, "name": "_ingested_at", "type": "DATETIME"},
+    #         {"col": 10, "name": "_row_number", "type": "INTEGER"},
+    #     ]
+    #
+    # },
     {
         "sources": [
             {
-                "file": "ingestion_Council_tax_2021.csv",
-                "year_name": "2021"
-            },
-            {
-                "file": "ingestion_Council_tax_2022.csv",
-                "year_name": "2022"
-            },
-            {
-                "file": "ingestion_Council_tax_2023.csv",
-                "year_name": "2023"
-            },
-            {
-                "file": "ingestion_Council_tax_2024.csv",
-                "year_name": "2024"
-            },
-            {
-                "file": "ingestion_Council_tax_2025.csv",
-                "year_name": "2025"
+                "file": "ingestion_net_additional_dwelling_local_2001-2025.csv",
+                "year_name": "9"
             }
         ],
-        "table_name": "council_tax_bands",
+        "table_name": "net_housing_additions",
         "extraction_functions": [london_borough_filter],
-        "data_row_start": 3,
-        "data_row_end": 38,
+        "data_row_start": 7,
+        "data_row_end": 430,
         "columns": [
-            {"col": 0, "name": "ons_code", "type": "STRING"},
-            {"col": 1, "name": "local_authority", "type": "STRING"},
-            {"col": 2, "name": "band_a", "type": "INTEGER"},
-            {"col": 3, "name": "band_b", "type": "INTEGER"},
-            {"col": 4, "name": "band_c", "type": "INTEGER"},
-            {"col": 5, "name": "band_d", "type": "INTEGER"},
-            {"col": 6, "name": "band_e", "type": "INTEGER"},
-            {"col": 7, "name": "band_f", "type": "INTEGER"},
-            {"col": 8, "name": "band_g", "type": "INTEGER"},
-            {"col": 9, "name": "band_h", "type": "INTEGER"},
-            {"col": 10, "name": "_source_file", "type": "STRING"},
-            {"col": 11, "name": "_sheet_name", "type": "STRING"},
-            {"col": 12, "name": "_ingested_at", "type": "DATETIME"},
-            {"col": 13, "name": "_row_number", "type": "INTEGER"},
+            {"col": 3, "name": "Area", "type": "STRING"},
+            {"col": 2, "name": "ons_code", "type": "STRING"},
+            {"col": 23, "name": "2021_additions", "type": "FLOAT"},
+            {"col": 24, "name": "2022_additions", "type": "FLOAT"},
+            {"col": 25, "name": "2023_additions", "type": "FLOAT"},
+            {"col": 26, "name": "2024_additions", "type": "FLOAT"},
+            {"col": 27, "name": "2025_additions", "type": "FLOAT"},
+            {"col": 28, "name": "_source_file", "type": "STRING"},
+            {"col": 29, "name": "_sheet_name", "type": "STRING"},
+            {"col": 30, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 31, "name": "_row_number", "type": "INTEGER"},
         ]
 
     }

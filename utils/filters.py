@@ -50,9 +50,14 @@ def london_borough_filter(df: pd.DataFrame) -> pd.DataFrame:
     # df = df[df['created_date'] >= '2026-01-01']
 
     return df
+
+
 # TODO build test for this function
 def date_filter(df: pd.DataFrame) -> pd.DataFrame:
-
-    df = df[df['date'].between('2024-01-01', '2025-12-31')]
+    a_df = df[df['date'].between('2021-01-01', '2025-12-31')]
+    # Return the date if it is the 1st of jan
+    df = a_df[
+        (a_df["date"].dt.month == 1) &
+        (a_df["date"].dt.day == 1)]
 
     return df
