@@ -7,7 +7,7 @@ from utils.audit import build_audit_columns
 from utils.helper import sanitise
 
 # TODO build Test for this function
-def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name):
+def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name, year_name):
     print(f"\n--- Processing Sheet: {sheet_target} ---")
     """Ingests an Excel sheet using either its 0-based index or its string name.
 
@@ -37,7 +37,7 @@ def ingestion_excel(file_path, sheet_target, pipe_name, output_name, table_name)
     date = datetime.now().strftime("%Y-%m-%d")
     sheet_target = sanitise(sheet_target)
 
-    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}_Sheetid_{sheet_target}-{date}.csv"
+    csv_path = f"data/B_bronze/{pipe_name}/{output_name}_{table_name}_Sheetid_{sheet_target}-{year_name}.csv"
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
@@ -55,6 +55,7 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
     for src in sources:
         file_path = src["file"]
         sheet_targets = src.get("sheet_index", 0)
+        year_name = src.get("year_name")
         """
             Orchestrates the ingestion. Accepts a single sheet (str/int)
             or a list of sheets [str/int].
@@ -77,7 +78,8 @@ def batch_ingestion_excel(sources, pipe_name, output_name, table_name):
                     sheet_target=target,
                     pipe_name=pipe_name,
                     output_name=output_name,
-                    table_name=table_name
+                    table_name=table_name,
+                    year_name =year_name
                 )
 
                 # Store it using the sheet target (or name) as the key
