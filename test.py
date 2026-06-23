@@ -71,32 +71,7 @@ run_pipeline(PROJECT_ROOT)
 # df_joined.to_csv("out3.csv", index=False)
 
 
-# TODO Covert Northing Easting to Lat Long look up
-# ~~~~~~~~~~
-# 18/06/2026 notes for building a shape file for converting tube location data over to borough level data use look up table in silver to convert from lat,long to borough
-# ~~~~~~~~~~
-#
-# from pyproj import Transformer
-#
-# # EPSG:27700 = “British National Grid system” this is the look up method for the values of X and Y
-# transformer = Transformer.from_crs("EPSG:27700", "EPSG:4326")
-#
-# df["lat"], df["lon"] = zip(*df.apply(
-#     lambda row: transformer.transform(row["X"], row["Y"]),
-#     axis=1
-# ))
-#
-# import geopandas as gpd
-#
-# stops = gpd.GeoDataFrame(
-#     df,
-#     geometry=gpd.points_from_xy(df["lon"], df["lat"]),
-#     crs="EPSG:4326"
-# )
-#
-# boroughs = gpd.read_file("london_boroughs.shp")
-#
-# joined = gpd.sjoin(stops, boroughs, how="left", predicate="within")
+
 
 
 # TODO Flatten JSon Crime report into Usable information

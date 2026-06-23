@@ -30,12 +30,119 @@ PIPELINES = [
             {"col": 18, "name": "_row_number", "type": "INTEGER"},
         ]
     },
+    {
+        "sources": [
+            {
+                "file": "ingestion_dlr_stop_data_2025.csv"
+            },
+
+        ],
+        "table_name": "dlr_stop_data",
+        "extraction_functions": [os_to_lat_lon, get_borough_from_lat_lon],
+        "data_row_start": 2,
+        "data_row_end": 48,
+        "columns": [
+            {"col": 0, "name": "X", "type": "FLOAT"},
+            {"col": 1, "name": "Y", "type": "FLOAT"},
+            {"col": 3, "name": "stop_name", "type": "STRING"},
+            {"col": 8, "name": "_source_file", "type": "STRING"},
+            {"col": 9, "name": "_sheet_name", "type": "STRING"},
+            {"col": 10, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 11, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
+    {
+        "sources": [
+            {
+                "file": "ingestion_elizabeth_stop_data_2025.csv"
+            },
+
+        ],
+        "table_name": "elizabeth_stop_data",
+        "extraction_functions": [os_to_lat_lon, get_borough_from_lat_lon],
+        "data_row_start": 2,
+        "data_row_end": 44,
+        "columns": [
+            {"col": 0, "name": "X", "type": "FLOAT"},
+            {"col": 1, "name": "Y", "type": "FLOAT"},
+            {"col": 3, "name": "stop_name", "type": "STRING"},
+            {"col": 8, "name": "_source_file", "type": "STRING"},
+            {"col": 9, "name": "_sheet_name", "type": "STRING"},
+            {"col": 10, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 11, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
+    {
+        "sources": [
+            {
+                "file": "ingestion_overground_stop_data_2025.csv"
+            },
+
+        ],
+        "table_name": "overground_stop_data",
+        "extraction_functions": [os_to_lat_lon, get_borough_from_lat_lon],
+        "data_row_start": 2,
+        "data_row_end": 115,
+        "columns": [
+            {"col": 0, "name": "X", "type": "FLOAT"},
+            {"col": 1, "name": "Y", "type": "FLOAT"},
+            {"col": 3, "name": "stop_name", "type": "STRING"},
+            {"col": 8, "name": "_source_file", "type": "STRING"},
+            {"col": 9, "name": "_sheet_name", "type": "STRING"},
+            {"col": 10, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 11, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
+    {
+        "sources": [
+            {
+                "file": "ingestion_tramlink_stop_data_2025.csv"
+            },
+
+        ],
+        "table_name": "tramlink_stop_data",
+        "extraction_functions": [os_to_lat_lon, get_borough_from_lat_lon],
+        "data_row_start": 2,
+        "data_row_end": 42,
+        "columns": [
+            {"col": 0, "name": "X", "type": "FLOAT"},
+            {"col": 1, "name": "Y", "type": "FLOAT"},
+            {"col": 3, "name": "stop_name", "type": "STRING"},
+            {"col": 8, "name": "_source_file", "type": "STRING"},
+            {"col": 9, "name": "_sheet_name", "type": "STRING"},
+            {"col": 10, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 11, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
+    {
+        "sources": [
+            {
+                "file": "ingestion_tube_stop_data_2025.csv"
+            },
+
+        ],
+        "table_name": "tube_stop_data",
+        "extraction_functions": [os_to_lat_lon, get_borough_from_lat_lon],
+        "data_row_start": 2,
+        "data_row_end": 276,
+        "columns": [
+            {"col": 0, "name": "X", "type": "FLOAT"},
+            {"col": 1, "name": "Y", "type": "FLOAT"},
+            {"col": 3, "name": "stop_name", "type": "STRING"},
+            {"col": 4, "name": "line_name", "type": "STRING"},
+            {"col": 12, "name": "_source_file", "type": "STRING"},
+            {"col": 13, "name": "_sheet_name", "type": "STRING"},
+            {"col": 14, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 15, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
 ]
 
 PIPE_NAME = "infrastructure"
 PROJECT_ID = "roomreview-487913"
 LAYER = "silver_layer"
 OUTPUT_NAME = "extraction"
+
 
 def run_pipeline(project_root: Path):
     folder = project_root / "data" / "B_bronze" / PIPE_NAME
@@ -48,7 +155,6 @@ def run_pipeline(project_root: Path):
 
         for src in config["sources"]:
             raw_file = folder / src["file"]
-
 
             if not raw_file.exists():
                 print(f"  [SKIP] File not found: {raw_file}")
@@ -92,7 +198,6 @@ def run_pipeline(project_root: Path):
         # Concat and upload per pipeline table
         if processed_dfs:
             final_df = pd.concat(processed_dfs, ignore_index=True)
-
 
             out_path = project_root / "data" / "C_silver" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}.csv"
             out_path.parent.mkdir(parents=True, exist_ok=True)
