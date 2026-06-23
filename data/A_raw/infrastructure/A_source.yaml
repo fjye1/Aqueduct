@@ -1,0 +1,12 @@
+https://data.london.gov.uk/dataset/public-transport-accessibility-levels-24rz6 (Borough scores from 2015) ptal_borough_2015.xlsx
+https://gis-tfl.opendata.arcgis.com/datasets/0646faf45243463aa04ca685e598f471/about (MOSA scores from 2023) ptal_mosa_2023.xlsx
+
+https://gis-tfl.opendata.arcgis.com/maps/5dcb79b6817b4bf89732de68a0337312/about (source of stop data)
+bus_stop_data.xlsx
+tube_stop_data.xlsx
+elizabeth_stop_data.xlsx
+overground_stop_data.xlsx
+dlr_stop_data.xlsx
+tramlink_stop_data.xlsx
+
+Scores are updated when there is new major infrastructure projects made.
