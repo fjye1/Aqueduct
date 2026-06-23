@@ -136,6 +136,27 @@ PIPELINES = [
             {"col": 15, "name": "_row_number", "type": "INTEGER"},
         ]
     },
+    {
+        "sources": [
+            {
+                "file": "ingestion_ptal_borough_2015_2015.csv"
+            },
+
+        ],
+        "table_name": "ptal_data",
+        "data_row_start": 1,
+        "data_row_end": 36,
+        "columns": [
+            {"col": 0, "name": "ons_code", "type": "STRING"},
+            {"col": 1, "name": "BOROUGH", "type": "STRING"},
+            {"col": 2, "name": "avg_ptal", "type": "FLOAT"},
+            {"col": 3, "name": "ptal", "type": "STRING"},
+            {"col": 4, "name": "_source_file", "type": "STRING"},
+            {"col": 5, "name": "_sheet_name", "type": "STRING"},
+            {"col": 6, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 7, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
 ]
 
 PIPE_NAME = "infrastructure"

@@ -13,8 +13,9 @@ from pathlib import Path
 # from pipes.housing.C_silver import run_pipeline
 
 #Infrastructure
-from pipes.infrastructure.B_bronze import run_pipeline
-from pipes.infrastructure.C_silver import run_pipeline
+# from pipes.infrastructure.B_bronze import run_pipeline
+# from pipes.infrastructure.C_silver import run_pipeline
+from pipes.infrastructure.D_gold import run_pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
