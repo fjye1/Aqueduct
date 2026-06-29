@@ -144,7 +144,7 @@ PIPELINES = [
 
         ],
         "table_name": "ptal_data",
-        "data_row_start": 1,
+        "data_row_start": 2,
         "data_row_end": 36,
         "columns": [
             {"col": 0, "name": "ons_code", "type": "STRING"},

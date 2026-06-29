@@ -17,16 +17,16 @@ GOLD_PIPELINES = [
             {"file": "extraction_elizabeth_stop_data.csv", "mode": "elizabeth", "count_col": "elizabeth_count"},
             {"file": "extraction_overground_stop_data.csv", "mode": "overground", "count_col": "overground_count"},
             {"file": "extraction_tramlink_stop_data.csv", "mode": "tramlink", "count_col": "tramlink_count"},
-            {"file": "extraction_tube_stop_data.csv", "mode": "tube", "count_col": "tube_count"},
+            # tube is the only source with a text_col, since its lines are explicitly named per row
+            {"file": "extraction_tube_stop_data.csv", "mode": "tube", "count_col": "tube_count", "text_col": "line_name"},
         ]
     }
 ]
 
 
-
 PIPE_NAME = "infrastructure"
 PROJECT_ID = "roomreview-487913"
-LAYER = "gold_layer"
+LAYER = "gold_layer_borough"
 OUTPUT_NAME = "Aggregation"  # Suffix or prefix handler depending on your naming style
 
 
@@ -77,9 +77,23 @@ def run_pipeline(project_root: Path):
             # Process using your existing summary callback logic
             summary_df = count_by_borough(metric_df, metric["count_col"])
 
-            # Define standardisation function inline if not defined globally
-            def standardise_names(series):
-                return series.astype(str).str.lower().str.replace(" and ", " & ", regex=False).str.strip()
+            # If this source declares a text_col, harvest the unique line names per borough.
+            # Cells may contain a comma-joined list of lines (e.g. interchange stations serve
+            # multiple lines), so we split, flatten, and dedupe at the individual-line level
+            # rather than deduping whole combo-strings.
+            if "text_col" in metric:
+                text_col_name = metric["text_col"]
+
+                def unique_lines_for_group(series):
+                    all_lines = []
+                    for cell in series.dropna().astype(str):
+                        all_lines.extend(part.strip() for part in cell.split(","))
+                    unique_sorted = sorted(set(all_lines))
+                    return ", ".join(unique_sorted)
+
+                line_summary = metric_df.groupby("BOROUGH")[text_col_name].agg(unique_lines_for_group).reset_index()
+
+                summary_df = pd.merge(summary_df, line_summary, on="BOROUGH", how="left")
 
             # Create the matching keys
             gold_matrix["merge_key"] = standardise_names(gold_matrix["BOROUGH"])
@@ -97,6 +111,31 @@ def run_pipeline(project_root: Path):
         # 3. Dynamic clean up of missing counts (filling NaN with 0)
         count_columns = [col for col in gold_matrix.columns if "count" in col]
         gold_matrix[count_columns] = gold_matrix[count_columns].fillna(0).astype(int)
+
+        # Ensure line_name column exists (handles edge case if tube file was entirely skipped)
+        if "line_name" not in gold_matrix.columns:
+            gold_matrix["line_name"] = ""
+        else:
+            gold_matrix["line_name"] = gold_matrix["line_name"].fillna("")
+
+        # --- APPEND OTHER NETWORKS INTO LINE_NAME BASED ON COUNT > 0 ---
+        def append_other_networks(row):
+            lines = [row["line_name"]] if row["line_name"] else []
+
+            if row.get("dlr_count", 0) > 0:
+                lines.append("DLR")
+            if row.get("tramlink_count", 0) > 0:
+                lines.append("Tramlink")
+            if row.get("elizabeth_count", 0) > 0:
+                lines.append("Elizabeth")
+            if row.get("overground_count", 0) > 0:
+                lines.append("Overground")
+            if row.get("bus_count", 0) > 0:
+                lines.append("Bus")
+
+            return ", ".join(lines) if lines else "None"
+
+        gold_matrix["line_name"] = gold_matrix.apply(append_other_networks, axis=1)
 
         # 4. Save locally to Gold
         out_path = project_root / "data" / "D_gold" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}.csv"
