@@ -3,8 +3,8 @@ from pathlib import Path
 import pandas as pd
 
 from utils.big_query.import_big_query import load_into_bigquery
-from utils.extraction import column_row_extractor
-from utils.filters import os_to_lat_lon, get_borough_from_lat_lon
+from utils.io.extraction import column_row_extractor
+from utils.transformations.filters import os_to_lat_lon, get_borough_from_lat_lon
 
 PIPELINES = [
 

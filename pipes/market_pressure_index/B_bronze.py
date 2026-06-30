@@ -2,7 +2,7 @@ from pathlib import Path
 
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.helper import sanitise
-from utils.ingestion import batch_ingestion_csv, batch_ingestion_excel
+from utils.io.ingestion import batch_ingestion_csv, batch_ingestion_excel
 
 # ──pipes/market_pressure_index/B_bronze Config ───────────────────────────────────────────────────────────────────
 # average-prices-2026,dwelling_stock_local

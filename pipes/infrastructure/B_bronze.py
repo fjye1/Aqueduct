@@ -2,7 +2,7 @@ from pathlib import Path
 
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.helper import sanitise
-from utils.ingestion import batch_ingestion_excel
+from utils.io.ingestion import batch_ingestion_excel
 
 
 PIPELINES = [

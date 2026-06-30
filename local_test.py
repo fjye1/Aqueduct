@@ -1,9 +1,8 @@
 from pathlib import Path
 import pandas as pd
 from utils.transformations.aggregation import GoldGrain, MetricAggregator, GoldMatrixPostProcessor
-from utils.big_query.import_big_query import load_into_bigquery
 
-
+PROJECT_ROOT = Path(__file__).resolve().parent
 
 # "join_on": { "SKELETON_COLUMN": "METRIC_SHEET_COLUMN" }
 
@@ -25,7 +24,7 @@ GOLD_PIPELINES = {
             "calculate_deviation": {
                 "target_col": "avg_ptal",  # Changed from ptal_score to match keep_cols
                 "new_avg_col": "lon_avg_ptal_score",
-                "new_dev_col": "pct_diff_from_avg",
+                "new_dev_col": "ptal_deviation_from_avg",
             }
         },
         # This file only has ONS Code
@@ -90,41 +89,30 @@ PROJECT_ID = "roomreview-487913"
 LAYER = "gold_layer_borough"
 OUTPUT_NAME = "Aggregation"  # Suffix or prefix handler depending on your naming style
 
-def run_pipeline(PROJECT_ROOT: Path):
-    gold = GoldGrain(project_root=PROJECT_ROOT, pipe_name=PIPE_NAME, grain_columns=["borough_name", "ons_code"])
-    pipeline_config = GOLD_PIPELINES
 
-    # 2. Extract, Transform, and Blend all metrics onto the skeleton
-    for source in pipeline_config["metric_sources"]:
-        folder = PROJECT_ROOT / "data" / "C_silver" / PIPE_NAME
-        table_name = GOLD_PIPELINES["table_name"]
-        metric_df = pd.read_csv(folder / source["file"])
 
-        # Transform current metric file
-        metric_df = MetricAggregator.process(metric_df, source_config=source)
 
-        # Attach cleanly to skeleton
-        gold.merge_metric(other_df=metric_df, join_mapping=source["join_on"], how="left")
 
-    # =========================================================================
-    # 3. Post-Processing (THE NEW STEP CALLED HERE)
-    # =========================================================================
-    print("Finalizing consolidated gold matrix data...")
-    gold.base_df = GoldMatrixPostProcessor.finalize(gold.base_df, text_col="transport_line_name")
+gold = GoldGrain(project_root=PROJECT_ROOT, pipe_name=PIPE_NAME, grain_columns=["borough_name", "ons_code"])
+pipeline_config = GOLD_PIPELINES
 
-    # 4. Save final consolidated table
-    out_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}.csv"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    gold.base_df.to_csv(out_path, index=False)
-    print(f"  Saved Gold matrix to {out_path}")
+# 2. Extract, Transform, and Blend all metrics onto the skeleton
+for source in pipeline_config["metric_sources"]:
+    folder = PROJECT_ROOT / "data" / "C_silver" / PIPE_NAME
+    metric_df = pd.read_csv(folder / source["file"])
 
-    # 5. Upload to BigQuery
-    print(f"  Uploading to BigQuery table: {PIPE_NAME}_{table_name}...")
-    load_into_bigquery(
-        project_id=PROJECT_ID,
-        layer=LAYER,
-        table_name=f"{PIPE_NAME}_{table_name}",
-        df=gold.base_df,
-        dry_run=True  # Switch to False when moving out of testing
-    )
+    # Transform current metric file
+    metric_df = MetricAggregator.process(metric_df, source_config=source)
 
+    # Attach cleanly to skeleton
+    gold.merge_metric(other_df=metric_df, join_mapping=source["join_on"], how="left")
+
+# =========================================================================
+# 3. Post-Processing (THE NEW STEP CALLED HERE)
+# =========================================================================
+print("Finalizing consolidated gold matrix data...")
+gold.base_df = GoldMatrixPostProcessor.finalize(gold.base_df, text_col="transport_line_name")
+
+# 4. Save final consolidated table
+gold.base_df.to_csv("test_test_1", index=False)
+print(gold.base_df)

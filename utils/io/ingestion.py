@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from utils.audit import build_audit_columns
+from utils.operational.audit import build_audit_columns
 from utils.helper import sanitise
 
 

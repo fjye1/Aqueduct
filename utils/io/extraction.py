@@ -3,7 +3,7 @@ from typing import Callable, Optional
 
 import pandas as pd
 
-from utils.clean_cast import clean_and_cast
+from utils.transformations.clean_cast import clean_and_cast
 
 
 def column_row_extractor(
