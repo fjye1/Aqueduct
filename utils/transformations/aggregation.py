@@ -1,7 +1,10 @@
 import functools
 from pathlib import Path
+
 import pandas as pd
+
 from utils.functions import standardise_names
+
 
 def initialize_gold_skeleton(project_root: Path, pipe_name: str, grain_columns: list[str]) -> pd.DataFrame:
     skeleton_path = project_root / "data" / "D_gold" / pipe_name / "_skeleton.csv"
@@ -73,6 +76,87 @@ class MetricAggregator:
         """Main entry point to transform incoming silver metrics."""
         processed_df = df.copy()
 
+        # =========================================================================
+        #  Conditional Aggregations
+        # =========================================================================
+        if "conditional_aggregations" in source_config:
+            cond_rules = source_config["conditional_aggregations"]
+
+            # Convert a single dict setup to a list for uniform processing loop
+            if isinstance(cond_rules, dict):
+                cond_rules = [cond_rules]
+
+            for cond_meta in cond_rules:
+                f_col = cond_meta["filter_column"]
+                f_val = cond_meta["filter_value"]
+                group_by_col = cond_meta["group_by"]
+
+                if f_col in processed_df.columns:
+                    # 1. Filter out the subset data dynamically
+                    if f_col in processed_df.columns:
+                        # 👇 NEW LOGIC: Standardize f_val to always be a list for .isin()
+                        filter_vals = f_val if isinstance(f_val, list) else [f_val]
+
+                        # 1. Filter out the subset data dynamically using .isin()
+                        sub_df = processed_df[processed_df[f_col].isin(filter_vals)].copy()
+
+                    # 2. Build the dynamic Pandas aggregation map and rename mapping
+                    agg_dict = {}
+                    rename_dict = {}
+
+                    for src_col, ops in cond_meta.get("aggregations", {}).items():
+                        if src_col in sub_df.columns:
+                            op_name = ops["operation"]
+
+                            # 👇 INTERCEPT CUSTOM OPERATIONS HERE
+                            if op_name == "ofsted_average":
+                                agg_dict[src_col] = MetricAggregator._calculate_ofsted_average
+                            else:
+                                agg_dict[src_col] = op_name  # Falls back to standard strings like 'sum'
+
+                            rename_dict[src_col] = ops["output_name"]
+
+                    # 3. Perform standard group-by math
+                    if agg_dict:
+                        sub_agg = sub_df.groupby(group_by_col, as_index=False).agg(agg_dict)
+                        sub_agg = sub_agg.rename(columns=rename_dict)
+                    else:
+                        sub_agg = pd.DataFrame(columns=[group_by_col])
+
+                    # 4. Handle the dynamic row counting element if requested
+                    if "count_column_name" in cond_meta:
+                        count_col_name = cond_meta["count_column_name"]
+                        counts = sub_df.groupby(group_by_col).size().reset_index(name=count_col_name)
+                        sub_agg = pd.merge(sub_agg, counts, on=group_by_col, how="outer")
+
+                    # 5. Merge the completed subset metrics back into the main pipeline dataframe
+                    processed_df = pd.merge(processed_df, sub_agg, on=group_by_col, how="left")
+
+                    # 6. Safely clean up resulting missing NaN values with 0
+                    all_new_cols = list(rename_dict.values())
+                    if "count_column_name" in cond_meta:
+                        all_new_cols.append(cond_meta["count_column_name"])
+
+                    processed_df[all_new_cols] = processed_df[all_new_cols].fillna(0)
+
+        # =========================================================================
+        #  Row Filtering
+        # =========================================================================
+        if "filter_out" in source_config:
+            filter_rules = source_config["filter_out"]
+
+            # If a user passed a single dict, wrap it in a list so the loop handles it perfectly
+            if isinstance(filter_rules, dict):
+                filter_rules = [filter_rules]
+
+            for rule in filter_rules:
+                target_col = rule["column"]
+                drop_values = rule["values"]
+
+                if target_col in processed_df.columns:
+                    # Keep only rows where the value is NOT in the dropped list
+                    processed_df = processed_df[~processed_df[target_col].isin(drop_values)]
+
         # Step 1: Text-based aggregation (Looks for 'textual_col')
         text_summary_df = None
         if "textual_col" in source_config and "groupby_cols" in source_config:
@@ -138,6 +222,18 @@ class MetricAggregator:
             df[dev_col] = df[target] - global_avg
 
         return df
+
+    @staticmethod
+    def _calculate_ofsted_average(series: pd.Series) -> float:
+        """Cleans Ofsted grading data, keeping only numeric values between 1 and 4, then averages them."""
+        # 1. Force conversion to numeric data, turning strings/errors into NaN
+        numeric_series = pd.to_numeric(series, errors="coerce")
+
+        # 2. Filter keeping strictly values >= 1 and <= 4 (automatically drops NaNs)
+        valid_scores = numeric_series[numeric_series.between(1, 4)]
+
+        # 3. Return the mean, or NaN if a borough has zero valid ratings
+        return valid_scores.mean() if not valid_scores.empty else pd.NA
 
 
 class GoldMatrixPostProcessor:

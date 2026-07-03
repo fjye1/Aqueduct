@@ -235,3 +235,5 @@ def run_pipeline(project_root: Path):
             )
         else:
             print(f"  [WARN] No data processed for pipeline: {table_name}")
+
+
