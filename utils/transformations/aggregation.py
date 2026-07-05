@@ -224,6 +224,25 @@ class MetricAggregator:
             groupby_cols = source_config["groupby_cols"]
             processed_df = pd.merge(processed_df, text_summary_df, on=groupby_cols, how="left")
 
+        # =========================================================================
+        #  Ratio / Percentage calculations (two columns -> one % column)
+        #
+        #  Different from calculate_deviation: this compares two columns WITHIN
+        #  the same row (e.g. independent_school_count vs total_school_count).
+        #  calculate_deviation compares one column against the dataset's own
+        #  average across rows. Run this BEFORE calculate_deviation if you want
+        #  to see how a ratio produced here stacks up against the London-wide
+        #  average of that ratio (see calculate_deviation config below).
+        # =========================================================================
+        if "calculate_ratio" in source_config:
+            ratio_rules = source_config["calculate_ratio"]
+
+            if isinstance(ratio_rules, dict):
+                ratio_rules = [ratio_rules]
+
+            for calc_meta in ratio_rules:
+                processed_df = MetricAggregator._compute_ratio_percentage(processed_df, calc_meta)
+
         # Step 4: Custom Math - Average and Deviation
         if "calculate_deviation" in source_config:
             dev_rules = source_config["calculate_deviation"]
@@ -297,6 +316,35 @@ class MetricAggregator:
             df[dev_col] = ((df[target] - global_avg) / global_avg) * 100
 
         return df
+
+    @staticmethod
+    def _compute_ratio_percentage(df: pd.DataFrame, calc_meta: dict) -> pd.DataFrame:
+        """Computes (numerator / denominator) * 100 as a new column.
+
+        Distinct from _compute_deviation: this creates a ratio BETWEEN TWO
+        COLUMNS in the same row (e.g. independent_school_count /
+        total_school_count). _compute_deviation compares ONE column against
+        the dataset's own average. Chain them: compute a ratio here first,
+        then optionally pass that new ratio column into _compute_deviation
+        to see how each borough's ratio compares to the London-wide average
+        ratio.
+        """
+        numerator_col = calc_meta["numerator_col"]
+        denominator_col = calc_meta["denominator_col"]
+        output_col = calc_meta["output_col"]
+
+        if numerator_col not in df.columns or denominator_col not in df.columns:
+            return df
+
+        # Guard against divide-by-zero (e.g. a borough with 0 total schools,
+        # or 0 pupil_capacity) producing inf instead of a silent bad number.
+        denominator = df[denominator_col].replace(0, pd.NA)
+
+        df[output_col] = (df[numerator_col] / denominator) * 100
+
+        return df
+
+
 
     @staticmethod
     def _calculate_ofsted_average(series: pd.Series) -> float:

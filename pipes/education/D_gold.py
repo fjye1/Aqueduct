@@ -112,7 +112,10 @@ GOLD_PIPELINES = {
                           "avg_personal_development",
                           "avg_effectiveness_of_leadership_and_management",
                           "public_funded_school_count",
-                          "total_school_count"],
+                          "total_school_count",
+                          "pct_of_total_schools_private",
+                          "public_funded_pct_capacity_filled",
+                          "independent_pct_capacity_filled"],
 
             # Use this define the function you want to use and define these parameters for use
             "calculate_deviation": [
@@ -137,8 +140,26 @@ GOLD_PIPELINES = {
                     "new_dev_col": "pct_diff_effectiveness_of_leadership_and_management",
                 },
             ],
+            "calculate_ratio": [
+                {
+                    "numerator_col": "independent_school_count",
+                    "denominator_col": "total_school_count",
+                    "output_col": "pct_of_total_schools_private",
+                },
+                {
+                    "numerator_col": "public_funded_current_pupils",  # only if you have a total across ALL schools
+                    "denominator_col": "public_funded_pupil_capacity",
+                    "output_col": "public_funded_pct_capacity_filled",
+                },
+                {
+                    "numerator_col": "independent_current_pupils",  # only if you have a total across ALL schools
+                    "denominator_col": "independent_pupil_capacity",
+                    "output_col": "independent_pct_capacity_filled",
+                },
+            ],
 
         },
+
     ]
 }
 
