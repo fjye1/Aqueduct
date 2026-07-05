@@ -22,9 +22,12 @@ from pathlib import Path
 # from pipes.education.C_silver import run_pipeline
 from pipes.education.D_gold import run_pipeline
 
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 
 run_pipeline(PROJECT_ROOT)
+
+
 
 # TODO extact pipes.market_pressure_index.C_silver into
 # date, ons_area, avg_price, total_dwell

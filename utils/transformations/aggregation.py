@@ -2,6 +2,7 @@ import functools
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 
 from utils.functions import standardise_names
 
@@ -272,6 +273,20 @@ class MetricAggregator:
         if "rename_cols" in source_config:
             processed_df = processed_df.rename(columns=source_config["rename_cols"])
 
+        # Safety net: force any column that should be numeric back to a real
+        # numeric dtype before upload. Custom aggregation/ratio functions in
+        # this file can produce object-dtype columns if they ever mix numpy
+        # floats with pd.NA/None (e.g. via .replace(0, pd.NA) or returning
+        # pd.NA from a custom agg) — pyarrow/BigQuery cannot infer a type for
+        # that and the load fails. This does not invent or alter any real
+        # values: to_numeric only converts values that are already unambiguous
+        # numbers; anything else is left as-is (see errors= choice below).
+        for col in processed_df.columns:
+            if processed_df[col].dtype == "object" and col != "borough_name":
+                try:
+                    processed_df[col] = pd.to_numeric(processed_df[col])
+                except (ValueError, TypeError):
+                    pass  # genuinely non-numeric column (e.g. free text) — leave untouched
         # TEMPORARY: skeleton join fans this table out to one row per school
         # (2,000 rows) even though every value in a row is a borough-level
         # aggregate, so all schools in a borough carry identical rows. Collapsing
@@ -287,8 +302,7 @@ class MetricAggregator:
         # grain (school-level in future).
         processed_df = processed_df.drop_duplicates()
 
-        # out = MetricAggregator.process(df, source_config)
-        # print(len(out), out["borough_name"].nunique())
+
 
         return processed_df
 
@@ -319,16 +333,7 @@ class MetricAggregator:
 
     @staticmethod
     def _compute_ratio_percentage(df: pd.DataFrame, calc_meta: dict) -> pd.DataFrame:
-        """Computes (numerator / denominator) * 100 as a new column.
-
-        Distinct from _compute_deviation: this creates a ratio BETWEEN TWO
-        COLUMNS in the same row (e.g. independent_school_count /
-        total_school_count). _compute_deviation compares ONE column against
-        the dataset's own average. Chain them: compute a ratio here first,
-        then optionally pass that new ratio column into _compute_deviation
-        to see how each borough's ratio compares to the London-wide average
-        ratio.
-        """
+        """Computes (numerator / denominator) * 100 as a new column."""
         numerator_col = calc_meta["numerator_col"]
         denominator_col = calc_meta["denominator_col"]
         output_col = calc_meta["output_col"]
@@ -336,27 +341,31 @@ class MetricAggregator:
         if numerator_col not in df.columns or denominator_col not in df.columns:
             return df
 
-        # Guard against divide-by-zero (e.g. a borough with 0 total schools,
-        # or 0 pupil_capacity) producing inf instead of a silent bad number.
-        denominator = df[denominator_col].replace(0, pd.NA)
+        # Use np.nan, not pd.NA, to guard against divide-by-zero. np.nan is
+        # numpy-native so it keeps this column float64 throughout — pd.NA
+        # silently upcasts the column to dtype "object" the moment it's
+        # introduced via .replace(), which is exactly what broke the
+        # BigQuery/pyarrow load on avg_quality_of_education previously, and
+        # is doing the same thing here via a different code path.
+        denominator = df[denominator_col].replace(0, np.nan)
 
         df[output_col] = (df[numerator_col] / denominator) * 100
 
         return df
 
-
-
     @staticmethod
     def _calculate_ofsted_average(series: pd.Series) -> float:
         """Cleans Ofsted grading data, keeping only numeric values between 1 and 4, then averages them."""
-        # 1. Force conversion to numeric data, turning strings/errors into NaN
         numeric_series = pd.to_numeric(series, errors="coerce")
-
-        # 2. Filter keeping strictly values >= 1 and <= 4 (automatically drops NaNs)
         valid_scores = numeric_series[numeric_series.between(1, 4)]
 
-        # 3. Return the mean, or NaN if a borough has zero valid ratings
-        return valid_scores.mean() if not valid_scores.empty else pd.NA
+        # Use float("nan") rather than pd.NA — np.nan is a native numpy float
+        # and keeps the resulting column a clean float64 dtype when .agg()
+        # combines results across groups. pd.NA is not numpy-native and
+        # silently downgrades the whole column to dtype "object" the moment
+        # it's mixed with real numpy.float64 values, which is exactly what
+        # broke the BigQuery/pyarrow load.
+        return valid_scores.mean() if not valid_scores.empty else float("nan")
 
 
 class GoldMatrixPostProcessor:
