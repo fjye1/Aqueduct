@@ -77,6 +77,24 @@ class MetricAggregator:
         processed_df = df.copy()
 
         # =========================================================================
+        #  Row Filtering
+        # =========================================================================
+        if "filter_out" in source_config:
+            filter_rules = source_config["filter_out"]
+
+            # If a user passed a single dict, wrap it in a list so the loop handles it perfectly
+            if isinstance(filter_rules, dict):
+                filter_rules = [filter_rules]
+
+            for rule in filter_rules:
+                target_col = rule["column"]
+                drop_values = rule["values"]
+
+                if target_col in processed_df.columns:
+                    # Keep only rows where the value is NOT in the dropped list
+                    processed_df = processed_df[~processed_df[target_col].isin(drop_values)]
+
+        # =========================================================================
         #  Conditional Aggregations
         # =========================================================================
         if "conditional_aggregations" in source_config:
@@ -100,27 +118,42 @@ class MetricAggregator:
                         # 1. Filter out the subset data dynamically using .isin()
                         sub_df = processed_df[processed_df[f_col].isin(filter_vals)].copy()
 
-                    # 2. Build the dynamic Pandas aggregation map and rename mapping
-                    agg_dict = {}
-                    rename_dict = {}
+                    # 2. Build and apply aggregations. One grouped aggregation per requested
+                    #    operation, since a single source column (e.g. ofsted_phase) can have
+                    #    multiple named ops (e.g. several count_where's) needing distinct outputs.
+                    sub_agg = None
+                    all_new_cols = []  # <-- declare before the loop, not after
 
                     for src_col, ops in cond_meta.get("aggregations", {}).items():
-                        if src_col in sub_df.columns:
-                            op_name = ops["operation"]
+                        if src_col not in sub_df.columns:
+                            continue
 
-                            # 👇 INTERCEPT CUSTOM OPERATIONS HERE
+                        op_list = ops if isinstance(ops, list) else [ops]
+
+                        for op in op_list:
+                            op_name = op["operation"]
+                            output_name = op["output_name"]
+                            all_new_cols.append(output_name)  # <-- track it here, every iteration
+
                             if op_name == "ofsted_average":
-                                agg_dict[src_col] = MetricAggregator._calculate_ofsted_average
+                                func = MetricAggregator._calculate_ofsted_average
+                            elif op_name == "count_where":
+                                target_value = op["value"]
+                                func = lambda x, val=target_value: (x == val).sum()
                             else:
-                                agg_dict[src_col] = op_name  # Falls back to standard strings like 'sum'
+                                func = op_name
 
-                            rename_dict[src_col] = ops["output_name"]
+                            result = (
+                                sub_df.groupby(group_by_col)[src_col]
+                                .agg(func)
+                                .reset_index(name=output_name)
+                            )
 
-                    # 3. Perform standard group-by math
-                    if agg_dict:
-                        sub_agg = sub_df.groupby(group_by_col, as_index=False).agg(agg_dict)
-                        sub_agg = sub_agg.rename(columns=rename_dict)
-                    else:
+                            sub_agg = result if sub_agg is None else pd.merge(
+                                sub_agg, result, on=group_by_col, how="outer"
+                            )
+
+                    if sub_agg is None:
                         sub_agg = pd.DataFrame(columns=[group_by_col])
 
                     # 4. Handle the dynamic row counting element if requested
@@ -133,29 +166,11 @@ class MetricAggregator:
                     processed_df = pd.merge(processed_df, sub_agg, on=group_by_col, how="left")
 
                     # 6. Safely clean up resulting missing NaN values with 0
-                    all_new_cols = list(rename_dict.values())
+
                     if "count_column_name" in cond_meta:
                         all_new_cols.append(cond_meta["count_column_name"])
 
                     processed_df[all_new_cols] = processed_df[all_new_cols].fillna(0)
-
-        # =========================================================================
-        #  Row Filtering
-        # =========================================================================
-        if "filter_out" in source_config:
-            filter_rules = source_config["filter_out"]
-
-            # If a user passed a single dict, wrap it in a list so the loop handles it perfectly
-            if isinstance(filter_rules, dict):
-                filter_rules = [filter_rules]
-
-            for rule in filter_rules:
-                target_col = rule["column"]
-                drop_values = rule["values"]
-
-                if target_col in processed_df.columns:
-                    # Keep only rows where the value is NOT in the dropped list
-                    processed_df = processed_df[~processed_df[target_col].isin(drop_values)]
 
         # Step 1: Text-based aggregation (Looks for 'textual_col')
         text_summary_df = None
@@ -184,14 +199,25 @@ class MetricAggregator:
 
         # Step 4: Custom Math - Average and Deviation
         if "calculate_deviation" in source_config:
-            calc_meta = source_config["calculate_deviation"]
-            processed_df = MetricAggregator._compute_deviation(processed_df, calc_meta)
+            dev_rules = source_config["calculate_deviation"]
+
+            # Same convention as filter_out / conditional_aggregations: allow a
+            # single dict for one deviation calc, or a list for several.
+            if isinstance(dev_rules, dict):
+                dev_rules = [dev_rules]
+
+            for calc_meta in dev_rules:
+                processed_df = MetricAggregator._compute_deviation(processed_df, calc_meta)
 
         # Step 5: Column Filtering
         if "keep_cols" in source_config:
             allowed_cols = list(source_config["keep_cols"])
             if "calculate_deviation" in source_config:
-                allowed_cols.extend([calc_meta["new_avg_col"], calc_meta["new_dev_col"]])
+                dev_rules = source_config["calculate_deviation"]
+                if isinstance(dev_rules, dict):
+                    dev_rules = [dev_rules]
+                for calc_meta in dev_rules:
+                    allowed_cols.extend([calc_meta["new_avg_col"], calc_meta["new_dev_col"]])
 
             cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
             processed_df = processed_df[cols_to_keep]
@@ -199,6 +225,24 @@ class MetricAggregator:
         # Step 6: Handle Column Renaming
         if "rename_cols" in source_config:
             processed_df = processed_df.rename(columns=source_config["rename_cols"])
+
+        # TEMPORARY: skeleton join fans this table out to one row per school
+        # (2,000 rows) even though every value in a row is a borough-level
+        # aggregate, so all schools in a borough carry identical rows. Collapsing
+        # here to enforce borough-grain output.
+        #
+        # NOTE: subset=None (default) means "duplicate across every column" —
+        # deliberately NOT just borough_name, so if the skeleton join is ever
+        # changed to bring in school-level data too, this will start leaving
+        # genuinely different rows per borough instead of silently discarding
+        # them.
+        #
+        # TODO: remove this once we rework the join to operate at the intended
+        # grain (school-level in future).
+        processed_df = processed_df.drop_duplicates()
+
+        # out = MetricAggregator.process(df, source_config)
+        # print(len(out), out["borough_name"].nunique())
 
         return processed_df
 
@@ -215,11 +259,15 @@ class MetricAggregator:
         """Helper method using Pandas' native columns for the math operations."""
         target = calc_meta["target_col"]
         avg_col = calc_meta["new_avg_col"]
-        dev_col = calc_meta["new_dev_col"]
+        dev_col = calc_meta["new_dev_col"]  # This will now store % difference
 
         if target in df.columns:
             global_avg = df[target].mean()
-            df[dev_col] = df[target] - global_avg
+            # uncommenting this will save the mean() of the target column as a new column
+            # df[avg_col] = global_avg
+
+            # Calculate percentage difference relative to the global average
+            df[dev_col] = ((df[target] - global_avg) / global_avg) * 100
 
         return df
 

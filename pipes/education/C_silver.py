@@ -1,11 +1,11 @@
-from pathlib import Path
 from functools import partial
+from pathlib import Path
+
 import pandas as pd
 
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.io.extraction import column_row_extractor
 from utils.transformations.filters import london_borough_filter, merge_school_and_ofsted
-
 
 JOINS = [
     # Example — leave empty/commented out unless you actually want a merge here
@@ -61,6 +61,7 @@ PIPELINES = [
         "columns": [
 
             {"col": 1, "name": "unique_reference_number", "type": "INTEGER"},
+            {"col": 4, "name": "ofsted_phase", "type": "STRING"},
             {"col": 14, "name": "borough_name", "type": "STRING"},
             {"col": 45, "name": "previous_urn", "type": "INTEGER"},
             {"col": 52, "name": "quality_of_education", "type": "INTEGER"},
@@ -179,4 +180,3 @@ def run_pipeline(project_root: Path):
                 df=merged_df,
                 dry_run=True
             )
-

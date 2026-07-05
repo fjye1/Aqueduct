@@ -19,6 +19,22 @@ GOLD_PIPELINES = {
         {
             "file": "extraction_school_with_ofsted.csv",
             "join_on": {"borough_name": "borough_name"},  # maps skeleton col -> this file's col
+            "keep_cols": [
+                "borough_name",
+                "independent_pupil_capacity",
+                "independent_current_pupils",
+                "independent_school_count",
+                "public_funded_pupil_capacity",
+                "public_funded_current_pupils",
+                "public_funded_nursery",
+                "public_funded_primary",
+                "public_funded_secondary",
+                "avg_quality_of_education",
+                "avg_behaviour_and_attitudes",
+                "avg_personal_development",
+                "avg_effectiveness_of_leadership_and_management",
+                "public_funded_school_count",
+            ],
             "filter_out": [
                 {
                     "column": "status",
@@ -50,7 +66,7 @@ GOLD_PIPELINES = {
                     "filter_column": "establishment_group",  # Using group or type depending on your column mapping
                     "filter_value": [
                         "Local authority maintained schools",
-                        "Free schools",
+                        "Free Schools",
                         "Colleges",
                         "Academies"
                     ],
@@ -59,18 +75,61 @@ GOLD_PIPELINES = {
                     "aggregations": {
                         "pupil_capacity": {"operation": "sum", "output_name": "public_funded_pupil_capacity"},
                         "current_pupils": {"operation": "sum", "output_name": "public_funded_current_pupils"},
-                        "quality_of_education": {"operation": "ofsted_average", "output_name": "avg_quality_of_education"},
-                        "behaviour_and_attitudes": {"operation": "ofsted_average", "output_name": "avg_behaviour_and_attitudes"},
-                        "personal_development": {"operation": "ofsted_average", "output_name": "avg_personal_development"},
-                        "effectiveness_of_leadership_and_management": {"operation": "ofsted_average", "output_name": "avg_effectiveness_of_leadership_and_management"},
+                        "ofsted_phase": [
+                            {"operation": "count_where", "value": "Nursery", "output_name": "public_funded_nursery"},
+                            {"operation": "count_where", "value": "Primary", "output_name": "public_funded_primary"},
+                            {"operation": "count_where", "value": "Secondary", "output_name": "public_funded_secondary"}
+                        ],
+                        "quality_of_education": {"operation": "ofsted_average",
+                                                 "output_name": "avg_quality_of_education"},
+                        "behaviour_and_attitudes": {"operation": "ofsted_average",
+                                                    "output_name": "avg_behaviour_and_attitudes"},
+                        "personal_development": {"operation": "ofsted_average",
+                                                 "output_name": "avg_personal_development"},
+                        "effectiveness_of_leadership_and_management": {"operation": "ofsted_average",
+                                                                       "output_name": "avg_effectiveness_of_leadership_and_management"},
                     }
                 }
             ],
 
-            # "keep_cols": ["borough_name", "ons_code", "type_of_establishment", "establishment_group", "status",
-            #               "stat_low_age", "stat_high_age", "pupil_capacity", "current_pupils", "quality_of_education",
-            #               "behaviour_and_attitudes", "personal_development",
-            #               "effectiveness_of_leadership_and_management"],
+            "keep_cols": ["borough_name",
+                          "independent_pupil_capacity",
+                          "independent_current_pupils",
+                          "independent_school_count",
+                          "public_funded_pupil_capacity",
+                          "public_funded_current_pupils",
+                          "public_funded_nursery",
+                          "public_funded_primary",
+                          "public_funded_secondary",
+                          "avg_quality_of_education",
+                          "avg_behaviour_and_attitudes",
+                          "avg_personal_development",
+                          "avg_effectiveness_of_leadership_and_management",
+                          "public_funded_school_count", ],
+
+            # Use this define the function you want to use and define these parameters for use
+            "calculate_deviation": [
+                {
+                    "target_col": "avg_quality_of_education",
+                    "new_avg_col": "lon_avg_quality_of_education",
+                    "new_dev_col": "pct_diff_quality_of_education",
+                },
+                {
+                    "target_col": "avg_behaviour_and_attitudes",
+                    "new_avg_col": "lon_avg_behaviour_and_attitudes",
+                    "new_dev_col": "pct_diff_behaviour_and_attitudes",
+                },
+                {
+                    "target_col": "avg_personal_development",
+                    "new_avg_col": "lon_avg_personal_development",
+                    "new_dev_col": "pct_diff_personal_development",
+                },
+                {
+                    "target_col": "avg_effectiveness_of_leadership_and_management",
+                    "new_avg_col": "lon_avg_effectiveness_of_leadership_and_management",
+                    "new_dev_col": "pct_diff_effectiveness_of_leadership_and_management",
+                },
+            ],
 
         },
     ]
