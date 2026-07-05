@@ -91,6 +91,12 @@ GOLD_PIPELINES = {
                     }
                 }
             ],
+            "sum_columns": [
+                {
+                    "inputs": ["independent_school_count", "public_funded_school_count"],
+                    "output_name": "total_school_count",
+                },
+            ],
 
             "keep_cols": ["borough_name",
                           "independent_pupil_capacity",
@@ -105,7 +111,8 @@ GOLD_PIPELINES = {
                           "avg_behaviour_and_attitudes",
                           "avg_personal_development",
                           "avg_effectiveness_of_leadership_and_management",
-                          "public_funded_school_count", ],
+                          "public_funded_school_count",
+                          "total_school_count"],
 
             # Use this define the function you want to use and define these parameters for use
             "calculate_deviation": [

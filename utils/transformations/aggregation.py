@@ -172,6 +172,33 @@ class MetricAggregator:
 
                     processed_df[all_new_cols] = processed_df[all_new_cols].fillna(0)
 
+        # =========================================================================
+        #  Row-wise Column Summing (flat addition, no grouping)
+        #
+        #  Different from the sum_columns branch inside conditional_aggregations:
+        #  that one sums raw per-school columns THEN groups by borough. This one
+        #  just adds together columns that are ALREADY at borough grain (e.g. two
+        #  count columns produced above), row by row. No groupby involved.
+        # =========================================================================
+        if "sum_columns" in source_config:
+            sum_rules = source_config["sum_columns"]
+
+            if isinstance(sum_rules, dict):
+                sum_rules = [sum_rules]
+
+            for rule in sum_rules:
+                inputs = rule["inputs"]
+                output_name = rule["output_name"]
+
+                missing = [c for c in inputs if c not in processed_df.columns]
+                if missing:
+                    raise KeyError(
+                        f"sum_columns: cannot compute '{output_name}', "
+                        f"missing input column(s): {missing}"
+                    )
+
+                processed_df[output_name] = processed_df[inputs].sum(axis=1)
+
         # Step 1: Text-based aggregation (Looks for 'textual_col')
         text_summary_df = None
         if "textual_col" in source_config and "groupby_cols" in source_config:
