@@ -295,15 +295,22 @@ class MetricAggregator:
                     dev_rules = [dev_rules]
                 for calc_meta in dev_rules:
                     allowed_cols.extend([calc_meta["new_avg_col"], calc_meta["new_dev_col"]])
-
-        if "calculate_yoy_change" in source_config:
-            yoy_rules = source_config["calculate_yoy_change"]
-            if isinstance(yoy_rules, dict):
-                yoy_rules = [yoy_rules]
-            for calc_meta in yoy_rules:
-                allowed_cols.append(calc_meta["output_col"])
-        cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
-        processed_df = processed_df[cols_to_keep]
+            if "calculate_yoy_change" in source_config:
+                yoy_rules = source_config["calculate_yoy_change"]
+                if isinstance(yoy_rules, dict):
+                    yoy_rules = [yoy_rules]
+                for calc_meta in yoy_rules:
+                    allowed_cols.append(calc_meta["output_col"])
+            # 👇 ADD THIS BLOCK TO SAVE YOUR RATIO COLUMNS 👇
+            if "calculate_ratio" in source_config:
+                ratio_rules = source_config["calculate_ratio"]
+                if isinstance(ratio_rules, dict):
+                    ratio_rules = [ratio_rules]
+                for calc_meta in ratio_rules:
+                    allowed_cols.append(calc_meta["output_col"])
+            # 👆 END NEW BLOCK 👆
+            cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
+            processed_df = processed_df[cols_to_keep]
         # TEMPORARY: skeleton join fans this table out to one row per school
         # (2,000 rows) even though every value in a row is a borough-level
         # aggregate, so all schools in a borough carry identical rows. Collapsing

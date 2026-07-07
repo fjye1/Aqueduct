@@ -29,7 +29,16 @@ GOLD_PIPELINES = {
                 "affordable_additions",
                 "band_d",
                 "average_price",
-                "net_additions"
+                "net_additions",
+                "ratio_of_total_new_house_affordable"
+            ],
+            "calculate_ratio": [
+                # TODO the assignment of total to affordable additions happens in the wrong order
+                {
+                    "numerator_col": "total",
+                    "denominator_col": "net_additions",
+                    "output_col": "ratio_of_total_new_house_affordable",
+                },
             ],
 
             "calculate_deviation": [
@@ -40,6 +49,7 @@ GOLD_PIPELINES = {
                     "group_by": ["year"],
                 },
                 {
+                    # TODO the assignment of total to affordable additions happens in the wrong order
                     "target_col": "total",
                     "new_avg_col": "lon_avg_affordable_additions",
                     "new_dev_col": "pct_diff_affordable_additions",
@@ -79,6 +89,7 @@ GOLD_PIPELINES = {
                     "output_col": "yoy_pct_change_total_dwellings",
                 },
             ],
+
         },
     ]
 }
