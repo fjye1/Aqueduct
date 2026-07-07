@@ -10,7 +10,8 @@ from pathlib import Path
 
 # Housing
 # from pipes.housing.B_bronze import run_pipeline
-from pipes.housing.C_silver import run_pipeline
+# from pipes.housing.C_silver import run_pipeline
+from pipes.housing.D_gold import run_pipeline
 
 #Infrastructure
 # from pipes.infrastructure.B_bronze import run_pipeline

@@ -256,20 +256,9 @@ class MetricAggregator:
             for calc_meta in dev_rules:
                 processed_df = MetricAggregator._compute_deviation(processed_df, calc_meta)
 
-        # Step 5: Column Filtering
-        if "keep_cols" in source_config:
-            allowed_cols = list(source_config["keep_cols"])
-            if "calculate_deviation" in source_config:
-                dev_rules = source_config["calculate_deviation"]
-                if isinstance(dev_rules, dict):
-                    dev_rules = [dev_rules]
-                for calc_meta in dev_rules:
-                    allowed_cols.extend([calc_meta["new_avg_col"], calc_meta["new_dev_col"]])
 
-            cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
-            processed_df = processed_df[cols_to_keep]
 
-        # Step 6: Handle Column Renaming
+        # Step 5: Handle Column Renaming
         if "rename_cols" in source_config:
             processed_df = processed_df.rename(columns=source_config["rename_cols"])
 
@@ -287,6 +276,17 @@ class MetricAggregator:
                     processed_df[col] = pd.to_numeric(processed_df[col])
                 except (ValueError, TypeError):
                     pass  # genuinely non-numeric column (e.g. free text) — leave untouched
+        # Step 6: Column Filtering
+        if "keep_cols" in source_config:
+            allowed_cols = list(source_config["keep_cols"])
+            if "calculate_deviation" in source_config:
+                dev_rules = source_config["calculate_deviation"]
+                if isinstance(dev_rules, dict):
+                    dev_rules = [dev_rules]
+                for calc_meta in dev_rules:
+                    allowed_cols.extend([calc_meta["new_avg_col"], calc_meta["new_dev_col"]])
+            cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
+            processed_df = processed_df[cols_to_keep]
         # TEMPORARY: skeleton join fans this table out to one row per school
         # (2,000 rows) even though every value in a row is a borough-level
         # aggregate, so all schools in a borough carry identical rows. Collapsing
@@ -316,17 +316,22 @@ class MetricAggregator:
 
     @staticmethod
     def _compute_deviation(df: pd.DataFrame, calc_meta: dict) -> pd.DataFrame:
-        """Helper method using Pandas' native columns for the math operations."""
         target = calc_meta["target_col"]
         avg_col = calc_meta["new_avg_col"]
-        dev_col = calc_meta["new_dev_col"]  # This will now store % difference
+        dev_col = calc_meta["new_dev_col"]
+        group_by = calc_meta.get("group_by")  # None if not specified
 
-        if target in df.columns:
+        if target not in df.columns:
+            return df
+
+        if group_by:
+            # Per-group average (e.g. one avg per year) instead of one global avg
+            group_avg = df.groupby(group_by)[target].transform("mean")
+            df[avg_col] = group_avg
+            df[dev_col] = ((df[target] - group_avg) / group_avg) * 100
+        else:
+            # Existing behavior — unchanged for configs with no group_by
             global_avg = df[target].mean()
-            # uncommenting this will save the mean() of the target column as a new column
-            # df[avg_col] = global_avg
-
-            # Calculate percentage difference relative to the global average
             df[dev_col] = ((df[target] - global_avg) / global_avg) * 100
 
         return df
