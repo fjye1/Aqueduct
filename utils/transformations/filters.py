@@ -46,6 +46,33 @@ def london_borough_filter(df: pd.DataFrame, filter_by_ons_code: bool = True) -> 
 
     return df
 
+
+import pandas as pd
+
+
+def melt_year_columns(df, var_name="year", value_name="net_additions"):
+    """
+    Reshape wide year columns (e.g. '2021', '2022', ...) into a long
+    'year' / value column pair. Any column whose name is purely numeric
+    digits is treated as a year column and gets melted; everything else
+    is kept as an id column.
+    """
+    year_cols = [c for c in df.columns if str(c).isdigit()]
+    id_vars = [c for c in df.columns if c not in year_cols]
+
+    melted = df.melt(
+        id_vars=id_vars,
+        value_vars=year_cols,
+        var_name=var_name,
+        value_name=value_name,
+    )
+
+    # optional but recommended: year as an int, not a string
+    melted[var_name] = melted[var_name].astype(int)
+
+    return melted
+
+
 def merge_school_and_ofsted(dfs: dict, on="unique_reference_number", how="left") -> pd.DataFrame:
     left = dfs["school_location_data"]
     right = dfs["school_ofsted_inspection"]

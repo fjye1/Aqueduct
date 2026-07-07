@@ -4,7 +4,7 @@ import pandas as pd
 
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.io.extraction import column_row_extractor
-from utils.transformations.filters import london_borough_filter, date_filter
+from utils.transformations.filters import london_borough_filter, date_filter, melt_year_columns
 
 # tables each borough appearing 5 times
 
@@ -172,17 +172,17 @@ PIPELINES = [
             }
         ],
         "table_name": "net_housing_additions",
-        "extraction_functions": [london_borough_filter],
+        "extraction_functions": [london_borough_filter, melt_year_columns],
         "data_row_start": 7,
         "data_row_end": 430,
         "columns": [
             {"col": 3, "name": "Area", "type": "STRING"},
             {"col": 2, "name": "ons_code", "type": "STRING"},
-            {"col": 23, "name": "2021_additions", "type": "FLOAT"},
-            {"col": 24, "name": "2022_additions", "type": "FLOAT"},
-            {"col": 25, "name": "2023_additions", "type": "FLOAT"},
-            {"col": 26, "name": "2024_additions", "type": "FLOAT"},
-            {"col": 27, "name": "2025_additions", "type": "FLOAT"},
+            {"col": 23, "name": "2021", "type": "FLOAT"},
+            {"col": 24, "name": "2022", "type": "FLOAT"},
+            {"col": 25, "name": "2023", "type": "FLOAT"},
+            {"col": 26, "name": "2024", "type": "FLOAT"},
+            {"col": 27, "name": "2025", "type": "FLOAT"},
             {"col": 28, "name": "_source_file", "type": "STRING"},
             {"col": 29, "name": "_sheet_name", "type": "STRING"},
             {"col": 30, "name": "_ingested_at", "type": "DATETIME"},
