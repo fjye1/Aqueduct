@@ -30,7 +30,7 @@ GOLD_PIPELINES = {
                 "band_d",
                 "average_price",
                 "net_additions",
-                "ratio_of_total_new_house_affordable"
+
             ],
             "calculate_ratio": [
                 # TODO the assignment of total to affordable additions happens in the wrong order
@@ -126,6 +126,29 @@ def run_pipeline(PROJECT_ROOT: Path):
     out_path.parent.mkdir(parents=True, exist_ok=True)
     gold.base_df.to_csv(out_path, index=False)
     print(f"  Saved Gold matrix to {out_path}")
+
+    # 5. Upload to BigQuery
+    print(f"  Uploading to BigQuery table: {PIPE_NAME}_{table_name}...")
+    load_into_bigquery(
+        project_id=PROJECT_ID,
+        layer=LAYER,
+        table_name=f"{PIPE_NAME}_{table_name}",
+        df=gold.base_df,
+        dry_run=True  # Switch to False when moving out of testing
+    )
+
+    # =========================================================================
+    # 4b. Save Secondary CSV (Latest Year Only)
+    # =========================================================================
+    if "year" in gold.base_df.columns:
+        latest_year = gold.base_df["year"].max()
+        latest_df = gold.base_df[gold.base_df["year"] == latest_year]
+
+        latest_out_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}_latest.csv"
+        latest_df.to_csv(latest_out_path, index=False)
+        print(f"  Saved Latest Year ({latest_year}) subset to {latest_out_path}")
+    else:
+        print("  Warning: 'year' column not found. Skipping latest-year CSV export.")
 
     # 5. Upload to BigQuery
     print(f"  Uploading to BigQuery table: {PIPE_NAME}_{table_name}...")
