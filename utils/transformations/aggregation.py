@@ -113,7 +113,7 @@ class MetricAggregator:
                 if f_col in processed_df.columns:
                     # 1. Filter out the subset data dynamically
                     if f_col in processed_df.columns:
-                        # 👇 NEW LOGIC: Standardize f_val to always be a list for .isin()
+
                         filter_vals = f_val if isinstance(f_val, list) else [f_val]
 
                         # 1. Filter out the subset data dynamically using .isin()
@@ -256,6 +256,16 @@ class MetricAggregator:
             for calc_meta in dev_rules:
                 processed_df = MetricAggregator._compute_deviation(processed_df, calc_meta)
 
+        # Step 4b: Custom Math - Year-on-Year Change
+        if "calculate_yoy_change" in source_config:
+            yoy_rules = source_config["calculate_yoy_change"]
+
+            if isinstance(yoy_rules, dict):
+                yoy_rules = [yoy_rules]
+
+            for calc_meta in yoy_rules:
+                processed_df = MetricAggregator._compute_yoy_change(processed_df, calc_meta)
+
 
 
         # Step 5: Handle Column Renaming
@@ -285,8 +295,15 @@ class MetricAggregator:
                     dev_rules = [dev_rules]
                 for calc_meta in dev_rules:
                     allowed_cols.extend([calc_meta["new_avg_col"], calc_meta["new_dev_col"]])
-            cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
-            processed_df = processed_df[cols_to_keep]
+
+        if "calculate_yoy_change" in source_config:
+            yoy_rules = source_config["calculate_yoy_change"]
+            if isinstance(yoy_rules, dict):
+                yoy_rules = [yoy_rules]
+            for calc_meta in yoy_rules:
+                allowed_cols.append(calc_meta["output_col"])
+        cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
+        processed_df = processed_df[cols_to_keep]
         # TEMPORARY: skeleton join fans this table out to one row per school
         # (2,000 rows) even though every value in a row is a borough-level
         # aggregate, so all schools in a borough carry identical rows. Collapsing
@@ -355,6 +372,35 @@ class MetricAggregator:
         denominator = df[denominator_col].replace(0, np.nan)
 
         df[output_col] = (df[numerator_col] / denominator) * 100
+
+        return df
+
+    @staticmethod
+    def _compute_yoy_change(df: pd.DataFrame, calc_meta: dict) -> pd.DataFrame:
+        """
+        Computes change vs. the previous year, within each group (e.g. per borough).
+
+        calc_meta keys:
+            target_col   - the column to compare year over year
+            group_col    - the column identifying the entity (e.g. 'ons_code' or 'borough_name')
+            year_col     - the column identifying the year (e.g. 'year')
+            output_col   - name for the resulting % change column
+        """
+        target_col = calc_meta["target_col"]
+        group_col = calc_meta["group_col"]
+        year_col = calc_meta["year_col"]
+        output_col = calc_meta["output_col"]
+
+        if target_col not in df.columns or group_col not in df.columns or year_col not in df.columns:
+            return df
+
+        # Sort so each group's rows are in year order before diffing —
+        # .diff()/.pct_change() operate on row ORDER, not on the year value itself,
+        # so an unsorted dataframe would compare rows in whatever order they
+        # happened to arrive from the merge, not chronological order.
+        df = df.sort_values([group_col, year_col])
+
+        df[output_col] = df.groupby(group_col)[target_col].pct_change() * 100
 
         return df
 

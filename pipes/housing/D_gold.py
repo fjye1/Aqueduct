@@ -23,7 +23,6 @@ GOLD_PIPELINES = {
                 "Area": "borough_name",
             },
             "keep_cols": [
-                "borough_name",
                 "year",
                 "ons_code",
                 "total_dwellings",
@@ -64,7 +63,22 @@ GOLD_PIPELINES = {
                     "new_dev_col": "pct_diff_band_d",
                     "group_by": ["year"],
                 },
-            ]
+
+            ],
+            "calculate_yoy_change": [
+                {
+                    "target_col": "average_price",
+                    "group_col": "ons_code",
+                    "year_col": "year",
+                    "output_col": "yoy_pct_change_average_price",
+                },
+                {
+                    "target_col": "total_dwellings",
+                    "group_col": "ons_code",
+                    "year_col": "year",
+                    "output_col": "yoy_pct_change_total_dwellings",
+                },
+            ],
         },
     ]
 }
