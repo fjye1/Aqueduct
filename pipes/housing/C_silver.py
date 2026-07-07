@@ -4,7 +4,7 @@ import pandas as pd
 
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.io.extraction import column_row_extractor
-from utils.transformations.filters import london_borough_filter, date_filter, melt_year_columns
+from utils.transformations.filters import london_borough_filter, date_filter, melt_year_columns, merge_housing_data
 
 # tables each borough appearing 5 times
 
@@ -16,6 +16,20 @@ from utils.transformations.filters import london_borough_filter, date_filter, me
 
 
 # ──pipes/housing/C_silver Config ───────────────────────────────────────────────────────────────────
+JOINS = [
+    # Example — leave empty/commented out unless you actually want a merge here
+    {
+        "name": "housing_merged",
+        "tables": [
+            "housing_stock",
+            "affordable_stock_additions",
+            "council_tax_bands",
+            "average_house_price",
+            "net_housing_additions",
+        ],
+        "merge_function": merge_housing_data,
+    },
+]
 PIPELINES = [
 
     {
@@ -200,6 +214,7 @@ OUTPUT_NAME = "extraction"
 
 def run_pipeline(project_root: Path):
     folder = project_root / "data" / "B_bronze" / PIPE_NAME
+    table_dfs = {}
 
     for config in PIPELINES:
         table_name = config["table_name"]
@@ -220,13 +235,11 @@ def run_pipeline(project_root: Path):
             raw_filters = config.get("extraction_functions") or [config.get("extraction_function")]
             raw_filters = [f for f in raw_filters if f is not None]
 
-            # Compose multiple filters into one callable if needed
             if len(raw_filters) > 1:
                 def combined_filter(df, filters=raw_filters):
                     for f in filters:
                         df = f(df)
                     return df
-
                 function_filter = combined_filter
             elif len(raw_filters) == 1:
                 function_filter = raw_filters[0]
@@ -250,9 +263,9 @@ def run_pipeline(project_root: Path):
                 print(f"  [ERROR] Failed to process {raw_file.name}: {e}")
                 continue
 
-        # Concat and upload per pipeline table
         if processed_dfs:
             final_df = pd.concat(processed_dfs, ignore_index=True)
+            table_dfs[table_name] = final_df
             min_year = int(final_df["year_name"].min())
             max_year = int(final_df["year_name"].max())
 
@@ -267,7 +280,33 @@ def run_pipeline(project_root: Path):
                 layer=LAYER,
                 table_name=f"{PIPE_NAME}_{table_name}",
                 df=final_df,
-                dry_run=True  # Set to False when ready to upload
+                dry_run=True
             )
         else:
             print(f"  [WARN] No data processed for pipeline: {table_name}")
+
+    # --- JOINS now runs ONCE, after all PIPELINES have populated table_dfs ---
+    joins = globals().get("JOINS", [])
+    for j in joins:
+        required = j["tables"]
+        missing = [t for t in required if t not in table_dfs]
+        if missing:
+            print(f"  [SKIP] Aggregation '{j['name']}' skipped, missing tables: {missing}")
+            continue
+
+        print(f"\n--- Aggregating: {j['name']} ---")
+        merged_df = j["merge_function"]({t: table_dfs[t] for t in required})
+
+        out_path = project_root / "data" / "C_silver" / PIPE_NAME / f"{OUTPUT_NAME}_{j['name']}.csv"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        merged_df.to_csv(out_path, index=False)
+        print(f"  Saved aggregation to {out_path}")
+
+        print(f"  Uploading to BigQuery table: {PIPE_NAME}_{j['name']}...")
+        load_into_bigquery(
+            project_id=PROJECT_ID,
+            layer=LAYER,
+            table_name=f"{PIPE_NAME}_{j['name']}",
+            df=merged_df,
+            dry_run=True
+        )

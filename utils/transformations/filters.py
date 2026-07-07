@@ -72,6 +72,52 @@ def melt_year_columns(df, var_name="year", value_name="net_additions"):
 
     return melted
 
+def _ensure_year_column(table_name: str, df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Normalize each housing table to have a clean integer 'year' column,
+    without touching the shared 'year_name' field used elsewhere in the pipeline.
+    """
+    df = df.copy()
+
+    if table_name == "net_housing_additions":
+        # Already melted — 'year' exists and should already be int, but be defensive
+        df["year"] = df["year"].astype(int)
+
+    elif table_name == "average_house_price":
+        # 'date' is 01/01/year — derive year from it, ignore the placeholder year_name ("9")
+        df["date"] = pd.to_datetime(df["date"])
+        df["year"] = df["date"].dt.year
+
+    elif "year_name" in df.columns:
+        # housing_stock, affordable_stock_additions, council_tax_bands
+        df["year"] = df["year_name"].astype(int)
+
+    else:
+        raise ValueError(
+            f"Don't know how to derive 'year' for table '{table_name}' — "
+            f"columns present: {list(df.columns)}"
+        )
+
+    return df
+
+
+def merge_housing_data(dfs: dict, on=("ons_code", "year"), how="left") -> pd.DataFrame:
+    on = list(on) if not isinstance(on, str) else [on]
+    table_names = list(dfs.keys())
+
+    # Normalize year column per table before merging
+    prepared = {name: _ensure_year_column(name, df) for name, df in dfs.items()}
+
+    def _merge_pair(right_name, left, right):
+        return left.merge(right, on=on, how=how, suffixes=("", f"_{right_name}"))
+
+    result = prepared[table_names[0]]
+    for name in table_names[1:]:
+        result = _merge_pair(name, result, prepared[name])
+
+    return result
+
+
 
 def merge_school_and_ofsted(dfs: dict, on="unique_reference_number", how="left") -> pd.DataFrame:
     left = dfs["school_location_data"]
