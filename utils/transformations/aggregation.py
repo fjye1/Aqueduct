@@ -272,20 +272,7 @@ class MetricAggregator:
         if "rename_cols" in source_config:
             processed_df = processed_df.rename(columns=source_config["rename_cols"])
 
-        # Safety net: force any column that should be numeric back to a real
-        # numeric dtype before upload. Custom aggregation/ratio functions in
-        # this file can produce object-dtype columns if they ever mix numpy
-        # floats with pd.NA/None (e.g. via .replace(0, pd.NA) or returning
-        # pd.NA from a custom agg) — pyarrow/BigQuery cannot infer a type for
-        # that and the load fails. This does not invent or alter any real
-        # values: to_numeric only converts values that are already unambiguous
-        # numbers; anything else is left as-is (see errors= choice below).
-        for col in processed_df.columns:
-            if processed_df[col].dtype == "object" and col != "borough_name":
-                try:
-                    processed_df[col] = pd.to_numeric(processed_df[col])
-                except (ValueError, TypeError):
-                    pass  # genuinely non-numeric column (e.g. free text) — leave untouched
+
         # Step 6: Column Filtering
         if "keep_cols" in source_config:
             allowed_cols = list(source_config["keep_cols"])
@@ -311,6 +298,21 @@ class MetricAggregator:
             # 👆 END NEW BLOCK 👆
             cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
             processed_df = processed_df[cols_to_keep]
+
+        # Safety net: force any column that should be numeric back to a real
+        # numeric dtype before upload. Custom aggregation/ratio functions in
+        # this file can produce object-dtype columns if they ever mix numpy
+        # floats with pd.NA/None (e.g. via .replace(0, pd.NA) or returning
+        # pd.NA from a custom agg) — pyarrow/BigQuery cannot infer a type for
+        # that and the load fails. This does not invent or alter any real
+        # values: to_numeric only converts values that are already unambiguous
+        # numbers; anything else is left as-is (see errors= choice below).
+        for col in processed_df.columns:
+            if processed_df[col].dtype == "object" and col != "borough_name":
+                try:
+                    processed_df[col] = pd.to_numeric(processed_df[col])
+                except (ValueError, TypeError):
+                    pass  # genuinely non-numeric column (e.g. free text) — leave untouched
         # TEMPORARY: skeleton join fans this table out to one row per school
         # (2,000 rows) even though every value in a row is a borough-level
         # aggregate, so all schools in a borough carry identical rows. Collapsing
@@ -322,6 +324,7 @@ class MetricAggregator:
         # genuinely different rows per borough instead of silently discarding
         # them.
         #
+
         # TODO: remove this once we rework the join to operate at the intended
         # grain (school-level in future).
         processed_df = processed_df.drop_duplicates()
@@ -408,6 +411,14 @@ class MetricAggregator:
         df = df.sort_values([group_col, year_col])
 
         df[output_col] = df.groupby(group_col)[target_col].pct_change() * 100
+
+        # Divide-by-zero in pct_change() produces inf/-inf, not NaN. Unlike NaN,
+        # BigQuery's CSV loader can't parse "Infinity" as a FLOAT64 value — and
+        # rather than nulling just that one cell, it appears to invalidate type
+        # inference for the whole column, nulling every row. Replacing with a
+        # real NaN here keeps both the CSV and the BigQuery load consistent and
+        # contains the damage to just the affected row.
+        df[output_col] = df[output_col].replace([np.inf, -np.inf], np.nan)
 
         return df
 

@@ -134,7 +134,7 @@ def run_pipeline(PROJECT_ROOT: Path):
         layer=LAYER,
         table_name=f"{PIPE_NAME}_{table_name}",
         df=gold.base_df,
-        dry_run=True  # Switch to False when moving out of testing
+        dry_run=False  # Switch to False when moving out of testing
     )
 
     # =========================================================================
@@ -147,15 +147,16 @@ def run_pipeline(PROJECT_ROOT: Path):
         latest_out_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}_latest.csv"
         latest_df.to_csv(latest_out_path, index=False)
         print(f"  Saved Latest Year ({latest_year}) subset to {latest_out_path}")
+        # 5. Upload to BigQuery
+        print(f"  Uploading to BigQuery table: {PIPE_NAME}_{table_name}_latest")
+        load_into_bigquery(
+            project_id=PROJECT_ID,
+            layer=LAYER,
+            table_name=f"{PIPE_NAME}_{table_name}_latest",
+            df=latest_df,
+            dry_run=False  # Switch to False when moving out of testing
+        )
     else:
         print("  Warning: 'year' column not found. Skipping latest-year CSV export.")
 
-    # 5. Upload to BigQuery
-    print(f"  Uploading to BigQuery table: {PIPE_NAME}_{table_name}...")
-    load_into_bigquery(
-        project_id=PROJECT_ID,
-        layer=LAYER,
-        table_name=f"{PIPE_NAME}_{table_name}",
-        df=gold.base_df,
-        dry_run=True  # Switch to False when moving out of testing
-    )
+
