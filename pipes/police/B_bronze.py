@@ -547,10 +547,10 @@ def fetch_and_store_crime_data():
             job_signature = f"{borough}_{month_str}"
 
             if job_signature in processed_set:
-                print(f"⏩ Skipping {borough} for {month_str} (Already processed)")
+                print(f" Skipping {borough} for {month_str} (Already processed)")
                 continue
 
-            print(f"🚀 Fetching data for {borough} ({month_str})...")
+            print(f" Fetching data for {borough} ({month_str})...")
 
             # --- Dynamic URL Assembly ---
             # We stitch the base URL, your raw polygon coordinates, and the date together here
@@ -560,11 +560,11 @@ def fetch_and_store_crime_data():
                 response = requests.get(request_url)
 
                 if response.status_code == 429:
-                    print("⚠️ Hit rate limits. Sleeping for 10 seconds...")
+                    print("Hit rate limits. Sleeping for 10 seconds...")
                     time.sleep(10)
                     continue
                 elif response.status_code != 200:
-                    print(f"❌ API Error {response.status_code} for {borough} - {month_str}. Skipping.")
+                    print(f"API Error {response.status_code} for {borough} - {month_str}. Skipping.")
                     continue
 
                 data = response.json()
@@ -582,11 +582,11 @@ def fetch_and_store_crime_data():
                 state["processed_batches"].append(job_signature)
                 save_pipeline_state(state)
 
-                print(f"✅ Successfully written to {file_path}")
+                print(f" Successfully written to {file_path}")
                 time.sleep(0.5)  # Be nice to the server
 
             except Exception as e:
-                print(f"💥 Critical crash on job {job_signature}: {str(e)}")
+                print(f" CRITICAL crash on job {job_signature}: {str(e)}")
                 continue
 
 
