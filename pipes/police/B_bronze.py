@@ -452,6 +452,7 @@ import os
 import json
 import time
 from datetime import datetime
+from collections import defaultdict
 from pathlib import Path
 import requests
 from utils.big_query.import_big_query import append_json_dataframe_to_bigquery
@@ -531,7 +532,7 @@ def gather_police_data(project_root: Path):
 
 
 def sync_local_files_to_bigquery(project_root: Path, dry_run: bool = True):
-    """Scans local folder structure and uploads un-synced data to BigQuery."""
+    """Scans local folder structure, bundles boroughs by month, and uploads to BigQuery."""
     base_path = project_root / "data" / "A_raw" / PIPE_NAME
     bq_state_file = base_path / "bigquery_sync_state.json"
 
@@ -541,52 +542,72 @@ def sync_local_files_to_bigquery(project_root: Path, dry_run: bool = True):
     source_dir = base_path / "police_crimes"
     all_json_files = list(source_dir.rglob("*.json"))
 
+    # Group files by their month key to minimize network overhead
+    # Key shape: "2023-06" -> List of file paths
+    files_by_month = defaultdict(list)
+
     for file_path in all_json_files:
         file_signature = str(file_path.relative_to(source_dir))
-
         if file_signature in synced_files:
             continue
 
-        print(f" Processing and uploading: {file_signature}")
+        # Extract the month folder name dynamically from path parts
+        # e.g., source_dir/year=2023/month=06/Brent.json -> year=2023, month=06
+        parts = file_path.relative_to(source_dir).parts
+        year_str = parts[0].split("=")[1]
+        month_str = parts[1].split("=")[1]
+        month_key = f"{year_str}-{month_str}"
 
-        try:
-            # 1. Read raw JSON directly
-            with open(file_path, "r") as f:
-                raw_records = json.load(f)
+        files_by_month[month_key].append((file_path, file_signature))
 
-            if not raw_records:
-                print(f" Empty file {file_signature}, marking as synced.")
-                if not dry_run:
-                    bq_state["synced_files"].append(file_signature)
-                    save_pipeline_state(bq_state, bq_state_file)
+    # Process month blocks sequentially
+    for month_key, file_tuples in sorted(files_by_month.items()):
+        print(f"\n=== Bundling and uploading batch for month: {month_key} ({len(file_tuples)} files) ===")
+
+        master_ids = []
+        master_dates = []
+        master_boroughs = []
+        master_details = []
+        successfully_processed_signatures = []
+
+        crime_date_ts = pd.to_datetime(month_key + "-01")
+
+        for file_path, file_signature in file_tuples:
+            try:
+                with open(file_path, "r") as f:
+                    raw_records = json.load(f)
+
+                if not raw_records:
+                    successfully_processed_signatures.append(file_signature)
+                    continue
+
+                borough = file_path.stem
+
+                for record in raw_records:
+                    master_ids.append(str(record["id"]))
+                    master_boroughs.append(borough)
+                    master_details.append(record)
+                    # Use a scalar single value to map array length later
+
+                successfully_processed_signatures.append(file_signature)
+
+            except Exception as e:
+                print(f" ❌ Failed reading file context {file_signature}: {str(e)}")
                 continue
 
+        if not master_ids:
+            continue
 
-            # Reconstruct metadata from file context
-            borough = file_path.stem  # e.g., 'Barking & Dagenham'
+        # Build one master DataFrame for the entire month context
+        bq_df = pd.DataFrame({
+            "crime_id": master_ids,
+            "crime_date": crime_date_ts,  # Pandas applies this timestamp scalar to all rows automatically
+            "borough": master_boroughs,
+            "crime_details": master_details
+        })
 
-
-            # Grabbing the month from the first entry (e.g., "2023-06")
-            raw_month = raw_records[0]["month"]
-            crime_date_ts = pd.to_datetime(raw_month + "-01")
-
-            # 2. Build lists using native Python to ensure data cleanliness
-            crime_ids = []
-            crime_details = []
-
-            for record in raw_records:
-                crime_ids.append(str(record["id"]))
-                crime_details.append(record)
-
-            # 3. Create the clean DataFrame dedicated for BigQuery
-            bq_df = pd.DataFrame({
-                "crime_id": crime_ids,
-                "crime_date": crime_date_ts,  # Applies to all rows in this file
-                "borough": borough,  # Applies to all rows in this file
-                "crime_details": crime_details  # Pristine Python dicts mapped to BQ JSON
-            })
-
-            # 4. Ship to BQ using your custom reusable function
+        try:
+            # Send the entire month block in one single network call
             append_json_dataframe_to_bigquery(
                 project_id=PROJECT_ID,
                 layer=LAYER,
@@ -598,11 +619,12 @@ def sync_local_files_to_bigquery(project_root: Path, dry_run: bool = True):
                 clustering_fields="borough"
             )
 
-            # 5. Update state only after successful BQ load
+            # Update your tracking file for all combined files at once
             if not dry_run:
-                bq_state["synced_files"].append(file_signature)
+                for sig in successfully_processed_signatures:
+                    bq_state["synced_files"].append(sig)
                 save_pipeline_state(bq_state, bq_state_file)
 
         except Exception as e:
-            print(f" ❌ Failed to sync {file_signature} to BigQuery: {str(e)}")
+            print(f" ❌ BigQuery Batch upload failed for month {month_key}: {str(e)}")
             continue
