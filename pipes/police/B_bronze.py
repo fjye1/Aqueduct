@@ -448,94 +448,26 @@ POLICE_API_URLS = {
     'Bexley': '51.4320318504898,0.075346927281361:51.4141225712095,0.107622329385488:51.4085096790104,0.148829245472368:51.4308767636362,0.155875109874604:51.4285851417043,0.164328239768569:51.4432453690505,0.17285441613958:51.4624814947336,0.210613015882027:51.4822729765553,0.223704373961525:51.4858775906829,0.210335412220196:51.4855269894788,0.184844103388802:51.5036553069726,0.172611210897319:51.5087644733555,0.157974909790061:51.5135851419853,0.118324804585738:51.4768240752872,0.124188482018644:51.4754502030002,0.098304000044042:51.4666135498487,0.082276569099735:51.4432468556606,0.08740679347224:51.4320318504898,0.075346927281361',
     'Islington': '51.5691230972286,-0.142389851073142:51.530727759698,-0.122530142527415:51.5185429333453,-0.105323965744685:51.5203363922853,-0.085191536700504:51.5329845173899,-0.097007223529823:51.547936114498,-0.076608954296041:51.5647083846451,-0.104484525294581:51.5755353517533,-0.119560023138037:51.5691230972286,-0.142389851073142'}
 
-CRIME_BUCKETS = {
-    # Violent & Serious Crime
-    "violent-crime": "Violent & Serious Crime",
-    "possession-of-weapons": "Violent & Serious Crime",
-    "robbery": "Violent & Serious Crime",
-
-    # Property & Theft Crime
-    "burglary": "Property & Theft Crime",
-    "vehicle-crime": "Property & Theft Crime",
-    "bicycle-theft": "Property & Theft Crime",
-    "shoplifting": "Property & Theft Crime",
-    "theft-from-the-person": "Property & Theft Crime",
-    "other-theft": "Property & Theft Crime",
-
-    # Quality of Life & Public Order
-    "anti-social-behaviour": "Quality of Life & Public Order",
-    "public-order": "Quality of Life & Public Order",
-    "criminal-damage-arson": "Quality of Life & Public Order",
-    "drugs": "Quality of Life & Public Order",
-
-    # Other / Catch-all
-    "other-crime": "Other",
-    "all-crime": "Other"
-}
-
-
-# Example of how you would use this down in your pipeline logic:
-def process_crime_record(api_record):
-    """
-    Takes a raw crime record from the police API and appends
-    our custom analytical category.
-    """
-    raw_category = api_record.get("category", "other-crime")
-
-    # Enrich the record with your custom bucket
-    api_record["analytical_category"] = CRIME_BUCKETS.get(raw_category, "Other")
-    return api_record
-
-
 import os
 import json
 import time
 from datetime import datetime
 from pathlib import Path
 import requests
+from utils.operational.state import load_pipeline_state, save_pipeline_state, generate_month_list
 
-# --- Hardcoded Pipeline Configurations ---
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PIPE_NAME = "police"
+PROJECT_ID = "roomreview-487913"
+LAYER = "bronze_layer"
+OUTPUT_NAME = "ingestion"
 
-BASE_DATA_DIR = PROJECT_ROOT / "data" / "B_bronze" / "police"
-STATE_FILE_PATH = BASE_DATA_DIR / "pipeline_state.json"
 START_YEAR_MONTH = "2023-06"
 
-# Your clean, coordinate-only lookup dictionary
 
-
-
-def generate_month_list(start_ym: str) -> list[str]:
-    """Generates a list of YYYY-MM strings from start_ym up to the current month."""
-    start_dt = datetime.strptime(start_ym, "%Y-%m")
-    now_dt = datetime.now()
-
-    months = []
-    current_dt = start_dt
-    while current_dt <= now_dt:
-        months.append(current_dt.strftime("%Y-%m"))
-        if current_dt.month == 12:
-            current_dt = current_dt.replace(year=current_dt.year + 1, month=1)
-        else:
-            current_dt = current_dt.replace(month=current_dt.month + 1)
-    return months
-
-
-def load_pipeline_state() -> dict:
-    if STATE_FILE_PATH.exists():
-        with open(STATE_FILE_PATH, "r") as f:
-            return json.load(f)
-    return {"processed_batches": []}
-
-
-def save_pipeline_state(state: dict):
-    STATE_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(STATE_FILE_PATH, "w") as f:
-        json.dump(state, f, indent=4)
-
-
-def fetch_and_store_crime_data():
-    state = load_pipeline_state()
+def run_pipeline(project_root: Path):
+    base_path = project_root / "data" / "A_raw" / PIPE_NAME
+    state_file_path = base_path / "pipeline_state.json"
+    state = load_pipeline_state(state_file_path)
     processed_set = set(state["processed_batches"])
 
     target_months = generate_month_list(START_YEAR_MONTH)
@@ -571,7 +503,7 @@ def fetch_and_store_crime_data():
 
                 # Setup output folders & save file
 
-                output_dir = BASE_DATA_DIR / "police_crimes" / f"year={year}" / f"month={month}"
+                output_dir = base_path / "police_crimes" / f"year={year}" / f"month={month}"
                 output_dir.mkdir(parents=True, exist_ok=True)
                 file_path = output_dir / f"{borough}.json"
 
@@ -580,7 +512,7 @@ def fetch_and_store_crime_data():
 
                 # Update tracking log immediately
                 state["processed_batches"].append(job_signature)
-                save_pipeline_state(state)
+                save_pipeline_state(state, state_file_path)
 
                 print(f" Successfully written to {file_path}")
                 time.sleep(0.5)  # Be nice to the server
@@ -590,5 +522,3 @@ def fetch_and_store_crime_data():
                 continue
 
 
-if __name__ == "__main__":
-    fetch_and_store_crime_data()
