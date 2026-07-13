@@ -495,9 +495,11 @@ from pathlib import Path
 import requests
 
 # --- Hardcoded Pipeline Configurations ---
-BASE_DATA_DIR = Path("data/bronze")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+BASE_DATA_DIR = PROJECT_ROOT / "data" / "B_bronze" / "police"
 STATE_FILE_PATH = BASE_DATA_DIR / "pipeline_state.json"
-START_YEAR_MONTH = "2020-01"
+START_YEAR_MONTH = "2023-06"
 
 # Your clean, coordinate-only lookup dictionary
 
@@ -557,7 +559,7 @@ def fetch_and_store_crime_data():
             try:
                 response = requests.get(request_url)
 
-                if response.status_code ==  :
+                if response.status_code == 429:
                     print("⚠️ Hit rate limits. Sleeping for 10 seconds...")
                     time.sleep(10)
                     continue
@@ -568,7 +570,7 @@ def fetch_and_store_crime_data():
                 data = response.json()
 
                 # Setup output folders & save file
-                # TODO update the path to match the data new location data/B_bronze/police/police_crimes
+
                 output_dir = BASE_DATA_DIR / "police_crimes" / f"year={year}" / f"month={month}"
                 output_dir.mkdir(parents=True, exist_ok=True)
                 file_path = output_dir / f"{borough}.json"
