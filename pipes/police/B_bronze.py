@@ -466,11 +466,24 @@ START_YEAR_MONTH = "2023-06"
 
 
 def run_pipeline(project_root: Path):
+    # Step 1: Gather raw assets locally
+    print("=== STARTING DATA GATHERING INGESTION ===")
+    gather_police_data(project_root)
+
+    # Step 2: Push new raw assets into the Cloud warehouse
+    print("\n=== STARTING BIGQUERY SYNC ===")
+    sync_local_files_to_bigquery(project_root)
+
+    print("\n=== PIPELINE RUN COMPLETE ===")
+
+
+def gather_police_data(project_root: Path):
+    """Fetches raw data from the Police API and caches it locally."""
     base_path = project_root / "data" / "A_raw" / PIPE_NAME
     state_file_path = base_path / "pipeline_state.json"
-    state = load_pipeline_state(state_file_path)
-    processed_set = set(state["processed_batches"])
 
+    state = load_pipeline_state(state_file_path)
+    processed_set = set(state.get("processed_batches", []))
     target_months = generate_month_list(START_YEAR_MONTH)
 
     for month_str in target_months:
@@ -480,13 +493,10 @@ def run_pipeline(project_root: Path):
             job_signature = f"{borough}_{month_str}"
 
             if job_signature in processed_set:
-                print(f" Skipping {borough} for {month_str} (Already processed)")
+                print(f" Skipping download for {borough} - {month_str} (Cached)")
                 continue
 
             print(f" Fetching data for {borough} ({month_str})...")
-
-            # --- Dynamic URL Assembly ---
-            # We stitch the base URL, your raw polygon coordinates, and the date together here
             request_url = f"https://data.police.uk/api/crimes-street/all-crime?date={month_str}&poly={poly_string}"
 
             try:
@@ -497,13 +507,12 @@ def run_pipeline(project_root: Path):
                     time.sleep(10)
                     continue
                 elif response.status_code != 200:
-                    print(f"API Error {response.status_code} for {borough} - {month_str}. Skipping.")
+                    print(f"API Error {response.status_code} for {borough}. Skipping.")
                     continue
 
                 data = response.json()
 
-                # Setup output folders & save file
-
+                # Save raw payload exactly as it arrived
                 output_dir = base_path / "police_crimes" / f"year={year}" / f"month={month}"
                 output_dir.mkdir(parents=True, exist_ok=True)
                 file_path = output_dir / f"{borough}.json"
@@ -511,20 +520,89 @@ def run_pipeline(project_root: Path):
                 with open(file_path, "w") as f:
                     json.dump(data, f, indent=4)
 
-                # Update tracking log immediately
                 state["processed_batches"].append(job_signature)
                 save_pipeline_state(state, state_file_path)
 
-                print(f" Successfully written to {file_path}")
-                time.sleep(0.5)  # Be nice to the server
+                time.sleep(0.5)
 
             except Exception as e:
-                print(f" CRITICAL crash on job {job_signature}: {str(e)}")
+                print(f" Network/IO Error on {job_signature}: {str(e)}")
                 continue
 
-            # Simulation of your file processing loop
+
+def sync_local_files_to_bigquery(project_root: Path, dry_run: bool = True):
+    """Scans local folder structure and uploads un-synced data to BigQuery."""
+    base_path = project_root / "data" / "A_raw" / PIPE_NAME
+    bq_state_file = base_path / "bigquery_sync_state.json"
+
+    bq_state = load_pipeline_state(bq_state_file)
+    synced_files = set(bq_state.get("synced_files", []))
+
+    source_dir = base_path / "police_crimes"
+    all_json_files = list(source_dir.rglob("*.json"))
+
+    for file_path in all_json_files:
+        file_signature = str(file_path.relative_to(source_dir))
+
+        if file_signature in synced_files:
+            continue
+
+        print(f" Processing and uploading: {file_signature}")
+
+        try:
+            # 1. Read raw JSON directly
+            with open(file_path, "r") as f:
+                raw_records = json.load(f)
+
+            if not raw_records:
+                print(f" Empty file {file_signature}, marking as synced.")
+                if not dry_run:
+                    bq_state["synced_files"].append(file_signature)
+                    save_pipeline_state(bq_state, bq_state_file)
+                continue
 
 
+            # Reconstruct metadata from file context
+            borough = file_path.stem  # e.g., 'Barking & Dagenham'
 
 
+            # Grabbing the month from the first entry (e.g., "2023-06")
+            raw_month = raw_records[0]["month"]
+            crime_date_ts = pd.to_datetime(raw_month + "-01")
 
+            # 2. Build lists using native Python to ensure data cleanliness
+            crime_ids = []
+            crime_details = []
+
+            for record in raw_records:
+                crime_ids.append(str(record["id"]))
+                crime_details.append(record)
+
+            # 3. Create the clean DataFrame dedicated for BigQuery
+            bq_df = pd.DataFrame({
+                "crime_id": crime_ids,
+                "crime_date": crime_date_ts,  # Applies to all rows in this file
+                "borough": borough,  # Applies to all rows in this file
+                "crime_details": crime_details  # Pristine Python dicts mapped to BQ JSON
+            })
+
+            # 4. Ship to BQ using your custom reusable function
+            append_json_dataframe_to_bigquery(
+                project_id=PROJECT_ID,
+                layer=LAYER,
+                table_name=PIPE_NAME,
+                df=bq_df,
+                json_column_name="crime_details",
+                dry_run=True,
+                partition_col="crime_date",
+                clustering_fields="borough"
+            )
+
+            # 5. Update state only after successful BQ load
+            if not dry_run:
+                bq_state["synced_files"].append(file_signature)
+                save_pipeline_state(bq_state, bq_state_file)
+
+        except Exception as e:
+            print(f" ❌ Failed to sync {file_signature} to BigQuery: {str(e)}")
+            continue

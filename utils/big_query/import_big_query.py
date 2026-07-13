@@ -64,39 +64,68 @@ def append_json_dataframe_to_bigquery(
 ) -> None:
     """
     Appends a DataFrame with a native JSON column into a partitioned/clustered BigQuery table.
-    Ensures existing data is not truncated.
+    Bypasses PyArrow limitations using load_table_from_json.
     """
     table_id = f"{project_id}.{layer}.{table_name}"
 
+    # --- FIX: Early exit local dry-run logic ---
     if dry_run:
         print(f"[DRY RUN - JSON] Would APPEND {len(df)} rows into {table_id}")
         print(f"[DRY RUN - JSON] Treating '{json_column_name}' as native BQ JSON type.")
+        if partition_col: print(f"[DRY RUN] Partitioning by column: {partition_col}")
+        if clustering_fields: print(f"[DRY RUN] Clustering by fields: {clustering_fields}")
+        print(f"[DRY RUN] Columns: {list(df.columns)}")
+        # FIX: Temporarily remove all display width and column limits
+        with pd.option_context(
+                'display.max_columns', None,
+                'display.max_colwidth', None,
+                'display.width', 1000
+        ):
+            print(f"[DRY RUN] Sample:\n{df.head(2)}")
         return
 
     client = bigquery.Client(project=project_id)
 
-    # 1. Build schema, mapping the specific column to native JSON
+    # 1. Build schema, mapping specific columns explicitly
     bq_schema = []
     for col in df.columns:
         if col == json_column_name:
             bq_schema.append(bigquery.SchemaField(col, "JSON"))
+        elif col == partition_col:
+            bq_schema.append(bigquery.SchemaField(col, "DATE"))
         else:
-            # Fall back to your existing helper for standard columns
             bq_schema.append(bigquery.SchemaField(col, _pandas_dtype_to_bq(df[col].dtype)))
 
-    # 2. Configure for streaming/appending monthly files safely
-    job_config = bigquery.LoadJobConfig(
-        write_disposition="WRITE_APPEND",  # 👈 Crucial: protects existing months/boroughs
-        schema=bq_schema,
-        time_partitioning=bigquery.TimePartitioning(
+    # 2. Configure the Load Job
+    config_args = {
+        "write_disposition": "WRITE_APPEND",
+        "create_disposition": "CREATE_IF_NEEDED",
+        "schema": bq_schema
+    }
+
+    if partition_col:
+        config_args["time_partitioning"] = bigquery.TimePartitioning(
             type_=bigquery.TimePartitioningType.DAY,
-            field=partition_col,  # BigQuery will partition by this date column
-        ),
-        clustering_cols = [clustering_fields] if isinstance(clustering_fields, str) else clustering_fields  # BigQuery will cluster by borough
-    )
+            field=partition_col,
+        )
 
-    # 3. Execute the load
-    job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
-    job.result()
+    if clustering_fields:
+        config_args["clustering_fields"] = (
+            [clustering_fields] if isinstance(clustering_fields, str) else clustering_fields
+        )
 
-    print(f"Successfully appended {job.output_rows} rows to {table_id}")
+    job_config = bigquery.LoadJobConfig(**config_args)
+
+    # 3. Format DataFrame into JSON-safe dictionary structures
+    df_to_json = df.copy()
+    if partition_col and partition_col in df_to_json.columns:
+        # Convert Pandas timestamp objects into standard 'YYYY-MM-DD' text strings
+        df_to_json[partition_col] = pd.to_datetime(df_to_json[partition_col]).dt.strftime('%Y-%m-%d')
+
+    json_rows = df_to_json.to_dict(orient="records")
+
+    # 4. Execute the load using BigQuery's native JSON loader
+    job = client.load_table_from_json(json_rows, table_id, job_config=job_config)
+    job.result()  # Wait for load to finish
+
+    print(f"Successfully appended {len(df)} rows to {table_id}")
