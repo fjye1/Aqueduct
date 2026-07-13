@@ -89,29 +89,4 @@ run_pipeline(PROJECT_ROOT)
 
 
 
-# TODO Flatten JSon Crime report into Usable information
-# ~~~~~~~~~~
-# 18/06/2026 notes for flatterning the crime data json into stats about crime.
-# ~~~~~~~~~~
-# import json
-# import pandas as pd
-#
-# # 1. Load your raw API JSON data
-# # (Replace 'response.json' with your file or direct API response)
-# with open('response.json', 'r') as f:
-#     data = json.load(f)
-#
-# # 2. Flatten the nested JSON structure into a clean dataframe
-# df = pd.json_normalize(data)
-#
-# # 3. Export the flattened data directly to a CSV file
-# df.to_csv('london_crimes_flat.csv', index=False)
-# print("CSV File successfully created!")
-#
-# # 4. Count the instances of each crime type
-# print("\n--- Crime Type Counts ---")
-# crime_counts = df['category'].value_counts()
-# print(crime_counts)
-#
-# # (Optional) Save the aggregated counts to its own CSV
-# crime_counts.to_csv('crime_type_summary.csv')
+
