@@ -4,60 +4,58 @@ import pandas as pd
 
 from utils.big_query.import_big_query import load_into_bigquery
 from utils.transformations.aggregation import GoldGrain, MetricAggregator
+from utils.transformations.filters import pivot_raw_police_categories
 
-
-# "join_on": { "SKELETON_COLUMN": "METRIC_SHEET_COLUMN" }
-
-# "join_on": {
-#     "borough_name": "BOROUGH",
-#     "calendar_year": "Year_Reported"
-# }
+RAW_CATEGORIES = [
+    "anti_social_behaviour",
+    "bicycle_theft",
+    "burglary",
+    "criminal_damage_arson",
+    "drugs",
+    "other_crime",
+    "other_theft",
+    "possession_of_weapons",
+    "public_order",
+    "robbery",
+    "shoplifting",
+    "theft_from_the_person",
+    "vehicle_crime",
+    "violent_crime",
+]
 
 GOLD_PIPELINES = {
     "table_name": "police",
     "metric_sources": [
         {
             "file": "extraction_crimes.csv",
-            "join_on": {"BOROUGH": "borough"},
-            "rename_cols": {
-                "total": "affordable_additions",
-                "borough": "borough_name",
-            },
+            "join_on": {"borough_name": "borough"},
+
             "keep_cols": [
+                "borough",
                 "year",
-                "ons_code",
+                *[f"{c}_annualised_rate" for c in RAW_CATEGORIES],
 
-
-            ],
-            "calculate_ratio": [
-                # TODO the assignment of total to affordable additions happens in the wrong order
-                {
-                    "numerator_col": "total",
-                    "denominator_col": "net_additions",
-                    "output_col": "ratio_of_total_new_house_affordable",
-                },
             ],
 
             "calculate_deviation": [
                 {
-                    "target_col": "average_price",
-                    "new_avg_col": "lon_average_price",
-                    "new_dev_col": "pct_diff_average_price",
+                    "target_col": f"{c}_annualised_rate",
+                    "new_avg_col": f"lon_avg_{c}_annualised_rate",
+                    "new_dev_col": f"pct_diff_{c}_annualised_rate",
                     "group_by": ["year"],
-                },
-
-
+                }
+                for c in RAW_CATEGORIES
             ],
+
             "calculate_yoy_change": [
                 {
-                    "target_col": "average_price",
-                    "group_col": "ons_code",
+                    "target_col": f"{c}_annualised_rate",
+                    "group_col": "borough",
                     "year_col": "year",
-                    "output_col": "yoy_pct_change_average_price",
-                },
-
+                    "output_col": f"yoy_pct_change_{c}_annualised_rate",
+                }
+                for c in RAW_CATEGORIES
             ],
-
         },
     ]
 }
@@ -66,6 +64,7 @@ PIPE_NAME = "police"
 PROJECT_ID = "roomreview-487913"
 LAYER = "gold_layer_borough"
 OUTPUT_NAME = "Aggregation"  # Suffix or prefix handler depending on your naming style
+DRY_RUN = True  # Select False when ready to upload
 
 
 def run_pipeline(PROJECT_ROOT: Path):
@@ -79,6 +78,12 @@ def run_pipeline(PROJECT_ROOT: Path):
         metric_df = pd.read_csv(folder / source["file"])
 
         # Transform current metric file
+
+        metric_df, category_lookup = pivot_raw_police_categories(metric_df)
+        # save the lookup once, e.g. alongside your gold output — it's reference data,
+        # not something that needs deviation/yoy calcs run on it
+        lookup_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / "category_lookup.csv"
+        category_lookup.to_csv(lookup_path, index=False)
         metric_df = MetricAggregator.process(metric_df, source_config=source)
 
         # Attach cleanly to skeleton
@@ -102,7 +107,7 @@ def run_pipeline(PROJECT_ROOT: Path):
         layer=LAYER,
         table_name=f"{PIPE_NAME}_{table_name}",
         df=gold.base_df,
-        dry_run=False  # Switch to False when moving out of testing
+        dry_run=DRY_RUN  # Switch to False when moving out of testing
     )
 
     # =========================================================================
@@ -122,111 +127,98 @@ def run_pipeline(PROJECT_ROOT: Path):
             layer=LAYER,
             table_name=f"{PIPE_NAME}_{table_name}_latest",
             df=latest_df,
-            dry_run=False  # Switch to False when moving out of testing
+            dry_run=DRY_RUN  # Switch to False when moving out of testing
         )
     else:
         print("  Warning: 'year' column not found. Skipping latest-year CSV export.")
 
-
-
-
-
-
-
-
-
-
-
-
-
-def process_crime_record(api_record):
-    """
-    Takes a raw crime record from the police API and appends
-    our custom analytical category.
-    """
-    raw_category = api_record.get("category", "other-crime")
-
-    # Enrich the record with your custom bucket
-    api_record["analytical_category"] = CRIME_BUCKETS.get(raw_category, "Other")
-    return api_record
-
+# def process_crime_record(api_record):
+#     """
+#     Takes a raw crime record from the police API and appends
+#     our custom analytical category.
+#     """
+#     raw_category = api_record.get("category", "other-crime")
+#
+#     # Enrich the record with your custom bucket
+#     api_record["analytical_category"] = CRIME_BUCKETS.get(raw_category, "Other")
+#     return api_record
+#
 
 # TODO Flatten JSon Crime report into Usable information
 # ~~~~~~~~~~
 # 18/06/2026 notes for flatterning the crime data json into stats about crime.
 # ~~~~~~~~~~
-import json
-from pathlib import Path
-
-import pandas as pd
-
-
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-file_path = (
-        PROJECT_ROOT
-        / "data"
-        / "A_raw"
-        / "police"
-        / "police_crimes"
-        / "year=2026"
-        / "month=05"
-        / "Croydon.json"
-)
-
-print(file_path)
-print(file_path.exists())
-print(PROJECT_ROOT)
-
-with open(file_path, 'r') as f:
-    data = json.load(f)
-# 2. Flatten the nested JSON structure into a clean dataframe
-df = pd.json_normalize(data)
-
-# 3. Export the flattened data directly to a CSV file
-df.to_csv('london_crimes_flat.csv', index=False)
-print("CSV File successfully created!")
-
-# 4. Count the instances of each crime type
-print("\n--- Crime Type Counts ---")
-crime_counts = df['category'].value_counts()
-print(crime_counts)
-# (Optional) Save the aggregated counts to its own CSV
-crime_counts.to_csv('crime_type_summary.csv')
-
-outcomes = pd.json_normalize(df["outcome_status"])
-outcomes = outcomes.rename(columns={
-    "category": "outcome_status.category",
-    "date": "outcome_status.date"
-})
-# --- Your existing code leaves off here ---
-df = pd.concat([df.drop(columns=["outcome_status"]), outcomes], axis=1)
-df.to_csv('crime_outcomes.csv', index=False)
-
-# =====================================================================
-# NEW: Create the Outcome Summary CSV
-# =====================================================================
-
-# 1. Fill missing outcomes so active investigations aren't excluded from counts
-df['outcome_status.category'] = df['outcome_status.category'].fillna('Under Investigation / No Outcome')
-
-print("\n--- Crime Outcome Counts ---")
-# 2. Group, count, and immediately format into a structured DataFrame
-outcome_counts = (
-    df['outcome_status.category']
-    .value_counts()
-    .reset_index(name='count')  # Names the summary column 'count'
-)
-
-# Print it out to your terminal console so you can see it right away
-print(outcome_counts)
-
-# 3. Export the clean aggregated outcome table to its own CSV
-outcome_counts.to_csv('outcome_types_summary.csv', index=False)
-print("\n✅ 'outcome_types_summary.csv' successfully created!")
+# import json
+# from pathlib import Path
+#
+# import pandas as pd
+#
+#
+#
+# PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# file_path = (
+#         PROJECT_ROOT
+#         / "data"
+#         / "A_raw"
+#         / "police"
+#         / "police_crimes"
+#         / "year=2026"
+#         / "month=05"
+#         / "Croydon.json"
+# )
+#
+# print(file_path)
+# print(file_path.exists())
+# print(PROJECT_ROOT)
+#
+# with open(file_path, 'r') as f:
+#     data = json.load(f)
+# # 2. Flatten the nested JSON structure into a clean dataframe
+# df = pd.json_normalize(data)
+#
+# # 3. Export the flattened data directly to a CSV file
+# df.to_csv('london_crimes_flat.csv', index=False)
+# print("CSV File successfully created!")
+#
+# # 4. Count the instances of each crime type
+# print("\n--- Crime Type Counts ---")
+# crime_counts = df['category'].value_counts()
+# print(crime_counts)
+# # (Optional) Save the aggregated counts to its own CSV
+# crime_counts.to_csv('crime_type_summary.csv')
+#
+# outcomes = pd.json_normalize(df["outcome_status"])
+# outcomes = outcomes.rename(columns={
+#     "category": "outcome_status.category",
+#     "date": "outcome_status.date"
+# })
+# # --- Your existing code leaves off here ---
+# df = pd.concat([df.drop(columns=["outcome_status"]), outcomes], axis=1)
+# df.to_csv('crime_outcomes.csv', index=False)
+#
+# # =====================================================================
+# # NEW: Create the Outcome Summary CSV
+# # =====================================================================
+#
+# # 1. Fill missing outcomes so active investigations aren't excluded from counts
+# df['outcome_status.category'] = df['outcome_status.category'].fillna('Under Investigation / No Outcome')
+#
+# print("\n--- Crime Outcome Counts ---")
+# # 2. Group, count, and immediately format into a structured DataFrame
+# outcome_counts = (
+#     df['outcome_status.category']
+#     .value_counts()
+#     .reset_index(name='count')  # Names the summary column 'count'
+# )
+#
+# # Print it out to your terminal console so you can see it right away
+# print(outcome_counts)
+#
+# # 3. Export the clean aggregated outcome table to its own CSV
+# outcome_counts.to_csv('outcome_types_summary.csv', index=False)
+# print("\n✅ 'outcome_types_summary.csv' successfully created!")
 
 # TODO column suggestions
-
 
 
 # ons_area, year,

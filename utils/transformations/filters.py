@@ -246,3 +246,40 @@ def process_crime_df(df):
     )
 
     return df
+
+def pivot_raw_police_categories(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Pivots on the 14 raw categories (not analytical_category), so each
+    category keeps its own annualised_rate column and nothing gets summed
+    away. Also returns a static category -> analytical_category lookup
+    so that grouping info isn't lost, just relocated out of the grain table.
+    """
+    df = df.copy()
+
+    # 1. Slugify raw category names -> column-safe strings
+    #    e.g. "criminal-damage-arson" -> "criminal_damage_arson"
+    df["category_slug"] = (
+        df["category"]
+        .str.lower()
+        .str.replace(r"[^a-z0-9]+", "_", regex=True)
+        .str.strip("_")
+    )
+
+    # 2. Category -> analytical_category lookup (one row per raw category,
+    #    since this mapping is static and doesn't vary by year/borough)
+    category_lookup = (
+        df[["category", "category_slug", "analytical_category"]]
+        .drop_duplicates()
+        .reset_index(drop=True)
+    )
+
+    # 3. Pivot: one row per year/borough, one annualised_rate column per raw category
+    wide = df.pivot_table(
+        index=["year", "borough"],
+        columns="category_slug",
+        values="annualised_rate",
+    )
+    wide.columns = [f"{c}_annualised_rate" for c in wide.columns]
+    wide = wide.reset_index()
+
+    return wide, category_lookup

@@ -134,7 +134,7 @@ def run_pipeline(PROJECT_ROOT: Path):
         layer=LAYER,
         table_name=f"{PIPE_NAME}_{table_name}",
         df=gold.base_df,
-        dry_run=False  # Switch to False when moving out of testing
+        dry_run=True  # Switch to False when moving out of testing
     )
 
     # =========================================================================
