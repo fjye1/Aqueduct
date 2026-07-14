@@ -11,7 +11,7 @@ PROJECT_ID = "roomreview-487913"
 LAYER = "silver_layer"
 OUTPUT_NAME = "extraction"
 table_name = "crimes"
-
+DRY_RUN = True  # Select False when ready to upload
 
 def run_pipeline(project_root: Path):
     base_path = project_root / f"data/A_raw/{PIPE_NAME}/police_crimes"
@@ -71,7 +71,7 @@ def run_pipeline(project_root: Path):
             layer=LAYER,
             table_name=f"{PIPE_NAME}_{table_name}",
             df=final_df,
-            dry_run=True
+            dry_run=DRY_RUN
         )
 
     else:
