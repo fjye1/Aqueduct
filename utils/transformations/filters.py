@@ -2,6 +2,31 @@ import pandas as pd
 from pyproj import Transformer
 import geopandas as gpd
 
+CRIME_BUCKETS = {
+    # Violent & Serious Crime
+    "violent-crime": "Violent & Serious Crime",
+    "possession-of-weapons": "Violent & Serious Crime",
+    "robbery": "Violent & Serious Crime",
+
+    # Property & Theft Crime
+    "burglary": "Property & Theft Crime",
+    "vehicle-crime": "Property & Theft Crime",
+    "bicycle-theft": "Property & Theft Crime",
+    "shoplifting": "Property & Theft Crime",
+    "theft-from-the-person": "Property & Theft Crime",
+    "other-theft": "Property & Theft Crime",
+
+    # Quality of Life & Public Order
+    "anti-social-behaviour": "Quality of Life & Public Order",
+    "public-order": "Quality of Life & Public Order",
+    "criminal-damage-arson": "Quality of Life & Public Order",
+    "drugs": "Quality of Life & Public Order",
+
+    # Other / Catch-all
+    "other-crime": "Other",
+    "all-crime": "Other"
+}
+
 LONDON_BOROUGHS_UK = [
     "K02000001", "E09000002", "E09000003", "E09000004", "E09000005",
     "E09000006", "E09000007", "E09000001", "E09000008", "E09000009",
@@ -47,7 +72,7 @@ def london_borough_filter(df: pd.DataFrame, filter_by_ons_code: bool = True) -> 
     return df
 
 
-import pandas as pd
+
 
 
 def melt_year_columns(df, var_name="year", value_name="net_additions"):
@@ -205,3 +230,19 @@ def get_borough_from_lat_lon(df: pd.DataFrame) -> pd.DataFrame:
 
     # Convert back to a standard DataFrame and return
     return pd.DataFrame(joined)
+
+
+def process_crime_df(df):
+    """
+    Takes a raw crime DataFrame and appends
+    our custom analytical category.
+    """
+    # 1. Map the 'category' column to CRIME_BUCKETS.
+    # 2. .fillna('Other') replaces anything not found in the dictionary.
+    df["analytical_category"] = (
+        df["category"]
+        .map(CRIME_BUCKETS)
+        .fillna("Other")
+    )
+
+    return df

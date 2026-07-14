@@ -1,15 +1,16 @@
 import json
 from pathlib import Path
-from utils.big_query.import_big_query import load_into_bigquery
+
 import numpy as np
 import pandas as pd
+from utils.transformations.filters import process_crime_df
+from utils.big_query.import_big_query import load_into_bigquery
 
 PIPE_NAME = "police"
 PROJECT_ID = "roomreview-487913"
 LAYER = "silver_layer"
 OUTPUT_NAME = "extraction"
 table_name = "crimes"
-
 
 
 def run_pipeline(project_root: Path):
@@ -57,22 +58,21 @@ def run_pipeline(project_root: Path):
                                     df["total_count"] / df["months_present"].replace(0,
                                                                                      np.nan)
                             ) * 12
+
+    final_df = process_crime_df(df)
     out_path = project_root / "data" / "C_silver" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}.csv"
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(out_path, index=False)
+    final_df.to_csv(out_path, index=False)
 
-    if not df.empty:
+    if not final_df.empty:
         print(f"  Uploading to BigQuery table: {PIPE_NAME}_{table_name}...")
         load_into_bigquery(
             project_id=PROJECT_ID,
             layer=LAYER,
             table_name=f"{PIPE_NAME}_{table_name}",
-            df=df,
+            df=final_df,
             dry_run=True
         )
 
     else:
         print(f"  [WARN] No data processed for pipeline: {table_name}")
-
-
-
