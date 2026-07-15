@@ -20,7 +20,7 @@ def export_big_query(project_id: str, layer: str, table_name: str) -> None:
     query = f"""
         SELECT *
         FROM `{project_id}.{layer}.{table_name}`
-        ORDER BY _row_number
+        
     """
 
     print(f"Fetching data from {layer}.{table_name}...")
