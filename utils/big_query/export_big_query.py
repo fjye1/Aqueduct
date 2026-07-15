@@ -1,37 +1,35 @@
 from utils.helper import sanitise
 from datetime import datetime
-from google.cloud import bigquery
-
+import pandas as pd
+from utils.big_query.connection import big_query_engine
 """
 This function exports data from Big Query down to your local machine
 
 Big query -> local machine. 
 """
 #TODO Write a test for this function
+
+
 def export_big_query(project_id: str, layer: str, table_name: str) -> None:
     """
-    Exports a BigQuery table to a sanitized, timestamped CSV.
+    Exports a BigQuery table to a sanitized, timestamped CSV using SQLAlchemy.
     """
-    client = bigquery.Client()
+    # Simply pass the project ID. SQLAlchemy will find your local gcloud login!
+    engine = big_query_engine(project_id)
 
-    # 1. Prepare Query
     query = f"""
         SELECT *
         FROM `{project_id}.{layer}.{table_name}`
         ORDER BY _row_number
     """
 
-    # 2. Extract Data
-    print(f"Fetching data from {table_name}...")
-    df_exported = client.query(query).to_dataframe()
-
-
-    # 3. sanitise file name and create time stamp for extraction.
+    print(f"Fetching data from {layer}.{table_name}...")
+    with engine.connect() as connection:
+        df_exported = pd.read_sql_query(query, con=connection)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     clean_name = f"{sanitise(project_id)}_{sanitise(layer)}_{sanitise(table_name)}_{timestamp}.csv"
 
-    # 4. Save
     df_exported.to_csv(clean_name, index=False)
     print(f"Successfully exported {len(df_exported)} rows to: {clean_name}")
 
