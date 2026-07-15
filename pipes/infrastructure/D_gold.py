@@ -1,9 +1,9 @@
 from pathlib import Path
+
 import pandas as pd
-from utils.transformations.aggregation import GoldGrain, MetricAggregator, GoldMatrixPostProcessor
+
 from utils.big_query.import_big_query import load_into_bigquery
-
-
+from utils.transformations.aggregation import GoldGrain, MetricAggregator, GoldMatrixPostProcessor
 
 # "join_on": { "SKELETON_COLUMN": "METRIC_SHEET_COLUMN" }
 
@@ -71,6 +71,15 @@ GOLD_PIPELINES = {
             }
         },
         {
+            "file": "extraction_dlr_stop_data.csv",
+            "join_on": {"borough_name": "BOROUGH"},
+            "groupby_cols": ["BOROUGH"],
+            "use_size": True,
+            "rename_cols": {
+                "size": "dlr_count"
+            }
+        },
+        {
             "file": "extraction_tube_stop_data.csv",
             "join_on": {"borough_name": "BOROUGH"},
             "groupby_cols": ["BOROUGH"],
@@ -89,6 +98,7 @@ PIPE_NAME = "infrastructure"
 PROJECT_ID = "roomreview-487913"
 LAYER = "gold_layer_borough"
 OUTPUT_NAME = "Aggregation"  # Suffix or prefix handler depending on your naming style
+
 
 def run_pipeline(PROJECT_ROOT: Path):
     gold = GoldGrain(project_root=PROJECT_ROOT, pipe_name=PIPE_NAME, grain_columns=["borough_name", "ons_code"])
@@ -125,6 +135,5 @@ def run_pipeline(PROJECT_ROOT: Path):
         layer=LAYER,
         table_name=f"{PIPE_NAME}_{table_name}",
         df=gold.base_df,
-        dry_run=True  # Switch to False when moving out of testing
+        dry_run=False  # Switch to False when moving out of testing
     )
-

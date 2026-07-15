@@ -1,6 +1,7 @@
+from typing import List, Union
 import pandas as pd
 from google.cloud import bigquery
-from typing import Union, List
+from utils.big_query.connection import big_query_engine
 from utils.helper import _pandas_dtype_to_bq
 
 """
@@ -28,9 +29,13 @@ def load_into_bigquery(
         print(f"[DRY RUN] table_id:\n{table_id}")
         return
 
-    client = bigquery.Client(project=project_id)  # only created when needed
+    # 1. Initialize SQLAlchemy Engine and extract its underlying BigQuery Client connection
+    engine = big_query_engine(project_id)
 
-    # allow _pandas_dtype_to_bq to determine type.
+    # This reaches through the SQLAlchemy wrapper to get the configured client
+    client = engine.dialect.dbapi.connect()._client
+
+    # Allow _pandas_dtype_to_bq to determine type
     job_config = bigquery.LoadJobConfig(
         write_disposition="WRITE_TRUNCATE",
         schema=[
@@ -40,10 +45,10 @@ def load_into_bigquery(
     )
     job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
     job.result()
+
     # ── Add table description ─────────────────────────────────────────────────
     table = client.get_table(table_id)
     table.description = (
-
         "Rows are not guaranteed to be in original order. "
         "Use ORDER BY _row_number to restore original row sequence."
     )
@@ -75,7 +80,6 @@ def append_json_dataframe_to_bigquery(
         if partition_col: print(f"[DRY RUN] Partitioning by column: {partition_col}")
         if clustering_fields: print(f"[DRY RUN] Clustering by fields: {clustering_fields}")
         print(f"[DRY RUN] Columns: {list(df.columns)}")
-        # FIX: Temporarily remove all display width and column limits
         with pd.option_context(
                 'display.max_columns', None,
                 'display.max_colwidth', None,
@@ -84,9 +88,11 @@ def append_json_dataframe_to_bigquery(
             print(f"[DRY RUN] Sample:\n{df.head(2)}")
         return
 
-    client = bigquery.Client(project=project_id)
+    # 1. Initialize SQLAlchemy Engine and extract its underlying BigQuery Client connection
+    engine = big_query_engine(project_id)
+    client = engine.dialect.dbapi.connect()._client
 
-    # 1. Build schema, mapping specific columns explicitly
+    # 2. Build schema, mapping specific columns explicitly
     bq_schema = []
     for col in df.columns:
         if col == json_column_name:
@@ -96,7 +102,7 @@ def append_json_dataframe_to_bigquery(
         else:
             bq_schema.append(bigquery.SchemaField(col, _pandas_dtype_to_bq(df[col].dtype)))
 
-    # 2. Configure the Load Job
+    # 3. Configure the Load Job
     config_args = {
         "write_disposition": "WRITE_APPEND",
         "create_disposition": "CREATE_IF_NEEDED",
@@ -116,7 +122,7 @@ def append_json_dataframe_to_bigquery(
 
     job_config = bigquery.LoadJobConfig(**config_args)
 
-    # 3. Format DataFrame into JSON-safe dictionary structures
+    # 4. Format DataFrame into JSON-safe dictionary structures
     df_to_json = df.copy()
     if partition_col and partition_col in df_to_json.columns:
         # Convert Pandas timestamp objects into standard 'YYYY-MM-DD' text strings
@@ -124,7 +130,7 @@ def append_json_dataframe_to_bigquery(
 
     json_rows = df_to_json.to_dict(orient="records")
 
-    # 4. Execute the load using BigQuery's native JSON loader
+    # 5. Execute the load using BigQuery's native JSON loader
     job = client.load_table_from_json(json_rows, table_id, job_config=job_config)
     job.result()  # Wait for load to finish
 
