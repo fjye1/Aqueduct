@@ -161,7 +161,7 @@ def date_filter(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def year_filter(df: pd.DataFrame) -> pd.DataFrame:
-    a_df = df[df['year'].between('2023', '2026')]
+    a_df = df[df['year'].between(2023, 2026)]
     df = a_df
     return df
 

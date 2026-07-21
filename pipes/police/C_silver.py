@@ -25,8 +25,8 @@ PIPELINES = [
         "columns": [
             {"col": 0, "name": "ons_code", "type": "STRING"},
             {"col": 1, "name": "local_authority", "type": "STRING"},
-            {"col": 2, "name": "year", "type": "DATETIME"},
-            {"col": 5, "name": "population", "type": "INTERGER"},
+            {"col": 2, "name": "year", "type": "INTEGER"},
+            {"col": 4, "name": "population", "type": "INTEGER"},
             {"col": 10, "name": "_source_file", "type": "STRING"},
             {"col": 11, "name": "_sheet_name", "type": "STRING"},
             {"col": 12, "name": "_ingested_at", "type": "DATETIME"},

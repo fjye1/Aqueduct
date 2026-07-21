@@ -27,9 +27,20 @@ GOLD_PIPELINES = {
     "table_name": "police",
     "metric_sources": [
         {
+            "file": "extraction_population.csv",
+            "join_on": {
+                "ons_code": "ons_code",
+            },  # maps skeleton col -> this file's col
+            "keep_cols": ["ons_code", "population", "year"],
+            "pivot": False,  # <--- Bypasses pivoting
+        },
+        {
             "file": "extraction_crimes.csv",
-            "join_on": {"borough_name": "borough"},
-
+            "join_on": {
+                "borough_name": "borough",
+                "year": "year"  # NOW 'year' exists in base_df to join against!
+            },
+            "pivot": True,
             "keep_cols": [
                 "borough",
                 "year",
@@ -78,12 +89,16 @@ def run_pipeline(PROJECT_ROOT: Path):
         metric_df = pd.read_csv(folder / source["file"])
 
         # Transform current metric file
+        # 1. Pivot ONLY if the source explicitly requires it
+        if source.get("pivot", False):
+            metric_df, category_lookup = pivot_raw_police_categories(metric_df)
 
-        metric_df, category_lookup = pivot_raw_police_categories(metric_df)
-        # save the lookup once, e.g. alongside your gold output — it's reference data,
-        # not something that needs deviation/yoy calcs run on it
-        lookup_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / "category_lookup.csv"
-        category_lookup.to_csv(lookup_path, index=False)
+            # save the lookup once, e.g. alongside your gold output — it's reference data,
+            # not something that needs deviation/yoy calcs run on it
+            # Save lookup reference data
+            lookup_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / "category_lookup.csv"
+            lookup_path.parent.mkdir(parents=True, exist_ok=True)
+            category_lookup.to_csv(lookup_path, index=False)
         metric_df = MetricAggregator.process(metric_df, source_config=source)
 
         # Attach cleanly to skeleton
@@ -131,4 +146,3 @@ def run_pipeline(PROJECT_ROOT: Path):
         )
     else:
         print("  Warning: 'year' column not found. Skipping latest-year CSV export.")
-

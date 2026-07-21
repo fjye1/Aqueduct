@@ -486,14 +486,14 @@ START_YEAR_MONTH = "2023-06"
 def run_pipeline(project_root: Path):
     # Step 1: Gather raw assets locally
     print("=== STARTING DATA GATHERING INGESTION ===")
-    gather_police_data(project_root)
+    # gather_police_data(project_root)
 
     print("=== STARTING CSV DATA INGESTION ===")
     gather_CSV_Data(project_root)
 
     # Step 2: Push new raw assets into the Cloud warehouse
     print("\n=== STARTING BIGQUERY SYNC ===")
-    sync_local_files_to_bigquery(project_root)
+    # sync_local_files_to_bigquery(project_root)
 
     print("\n=== PIPELINE RUN COMPLETE ===")
 

@@ -25,8 +25,8 @@ from pathlib import Path
 
 #Police
 # from pipes.police.B_bronze import run_pipeline
-from pipes.police.C_silver import run_pipeline
-# from pipes.police.D_gold import run_pipeline
+# from pipes.police.C_silver import run_pipeline
+from pipes.police.D_gold import run_pipeline
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
