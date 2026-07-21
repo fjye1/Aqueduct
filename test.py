@@ -24,8 +24,8 @@ from pathlib import Path
 # from pipes.education.D_gold import run_pipeline
 
 #Police
-from pipes.police.B_bronze import run_pipeline
-# from pipes.police.C_silver import run_pipeline
+# from pipes.police.B_bronze import run_pipeline
+from pipes.police.C_silver import run_pipeline
 # from pipes.police.D_gold import run_pipeline
 
 
