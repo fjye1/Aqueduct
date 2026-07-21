@@ -5,7 +5,7 @@ import pandas as pd
 
 # 1. Grab your existing BigQuery client/engine setup from your utils!
 # (Assuming you have a BQ engine in utils/big_query/...)
-from utils.big_query.connection import bq_engine
+from utils.big_query.connection import big_query_engine
 
 
 def etl_pipeline():
@@ -15,8 +15,8 @@ def etl_pipeline():
 
     print("Reading data from BigQuery...")
     # Read tables from BQ
-    df_transport = pd.read_sql("SELECT * FROM `your_dataset.transport`", con=bq_engine)
-    df_housing = pd.read_sql("SELECT * FROM `your_dataset.housing`", con=bq_engine)
+    df_transport = pd.read_sql("SELECT * FROM `your_dataset.transport`", con=big_query_engine)
+    df_housing = pd.read_sql("SELECT * FROM `your_dataset.housing`", con=big_query_engine)
 
     # Initialize a clean session
     session = SessionLocal()

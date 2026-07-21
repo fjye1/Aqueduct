@@ -447,22 +447,39 @@ POLICE_API_URLS = {
     'Harrow': '51.5565847226484,-0.335562160691732:51.569656468121,-0.32213138320031:51.5787742328784,-0.326649033737532:51.5870559732846,-0.304822955600485:51.5851026488507,-0.282410243428705:51.5935704125511,-0.290398228008509:51.6003731988738,-0.267131433352826:51.6363510649435,-0.304458776590612:51.6405357637357,-0.316672191458161:51.6131841259274,-0.40405012091933:51.5549458421656,-0.377873365884929:51.5565847226484,-0.335562160691732',
     'Bexley': '51.4320318504898,0.075346927281361:51.4141225712095,0.107622329385488:51.4085096790104,0.148829245472368:51.4308767636362,0.155875109874604:51.4285851417043,0.164328239768569:51.4432453690505,0.17285441613958:51.4624814947336,0.210613015882027:51.4822729765553,0.223704373961525:51.4858775906829,0.210335412220196:51.4855269894788,0.184844103388802:51.5036553069726,0.172611210897319:51.5087644733555,0.157974909790061:51.5135851419853,0.118324804585738:51.4768240752872,0.124188482018644:51.4754502030002,0.098304000044042:51.4666135498487,0.082276569099735:51.4432468556606,0.08740679347224:51.4320318504898,0.075346927281361',
     'Islington': '51.5691230972286,-0.142389851073142:51.530727759698,-0.122530142527415:51.5185429333453,-0.105323965744685:51.5203363922853,-0.085191536700504:51.5329845173899,-0.097007223529823:51.547936114498,-0.076608954296041:51.5647083846451,-0.104484525294581:51.5755353517533,-0.119560023138037:51.5691230972286,-0.142389851073142'}
-import pandas as pd
-import os
 import json
 import time
-from datetime import datetime
 from collections import defaultdict
 from pathlib import Path
+
+import pandas as pd
 import requests
-from utils.big_query.import_big_query import append_json_dataframe_to_bigquery
+
+from utils.big_query.import_big_query import append_json_dataframe_to_bigquery, load_into_bigquery
+from utils.helper import sanitise
+from utils.io.ingestion import batch_ingestion_csv
 from utils.operational.state import load_pipeline_state, save_pipeline_state, generate_month_list
+
+PIPELINES = [
+
+    {
+        "sources": [
+            {
+                "file": "housing-density-borough.csv",
+                "sheet_index": "na",
+                "year_name": "2011"
+            },
+
+        ],
+        "table_name": "population",
+        "ingestion_function": batch_ingestion_csv,
+    }]
 
 PIPE_NAME = "police"
 PROJECT_ID = "roomreview-487913"
 LAYER = "bronze_layer"
 OUTPUT_NAME = "ingestion"
-
+DRY_RUN =True #Set to False when you want to upload to Big Query
 START_YEAR_MONTH = "2023-06"
 
 
@@ -471,11 +488,52 @@ def run_pipeline(project_root: Path):
     print("=== STARTING DATA GATHERING INGESTION ===")
     gather_police_data(project_root)
 
+    print("=== STARTING CSV DATA INGESTION ===")
+    gather_CSV_Data(project_root)
+
     # Step 2: Push new raw assets into the Cloud warehouse
     print("\n=== STARTING BIGQUERY SYNC ===")
     sync_local_files_to_bigquery(project_root)
 
     print("\n=== PIPELINE RUN COMPLETE ===")
+
+
+def gather_CSV_Data(project_root: Path):
+    for config in PIPELINES:
+        # 1. Resolve full paths for all sources in this pipeline
+        base_path = project_root / "data" / "A_raw" / PIPE_NAME
+
+        resolved_sources = []
+        for src in config["sources"]:
+            resolved_sources.append({
+                "file": base_path / src["file"],  # Converts just the filename to a full Path object
+                "sheet_index": src.get("sheet_index", 0),
+                "year_name": src.get("year_name")
+            })
+
+        dfs_to_upload = config["ingestion_function"](
+            sources=resolved_sources,  # Matches the 'sources' parameter name
+            pipe_name=PIPE_NAME,
+            output_name=OUTPUT_NAME,
+            table_name=config["table_name"],
+        )
+        for year_name, df in dfs_to_upload.items():
+            clean_table_name = sanitise(config["table_name"])
+
+            target_table = f"{PIPE_NAME}_{clean_table_name}_{year_name}"
+
+            print(
+                f"Uploading sheet '{year_name}' "
+                f"to BigQuery table: {target_table}..."
+            )
+
+            load_into_bigquery(
+                project_id=PROJECT_ID,
+                layer=LAYER,
+                table_name=target_table,
+                df=df,
+                dry_run=DRY_RUN  # Set to false when you want to upload
+            )
 
 
 def gather_police_data(project_root: Path):
@@ -614,7 +672,7 @@ def sync_local_files_to_bigquery(project_root: Path, dry_run: bool = True):
                 table_name=PIPE_NAME,
                 df=bq_df,
                 json_column_name="crime_details",
-                dry_run=True,
+                dry_run=DRY_RUN,
                 partition_col="crime_date",
                 clustering_fields="borough"
             )

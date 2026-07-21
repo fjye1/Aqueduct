@@ -7,7 +7,7 @@ from utils.big_query.import_big_query import load_into_bigquery
 from utils.io.extraction import column_row_extractor
 from utils.transformations.filters import london_borough_filter, date_filter
 
-# ──pipes/council_budget/C_silver Config ───────────────────────────────────────────────────────────────────
+# ──pipes/market_pressure_index/C_silver Config ───────────────────────────────────────────────────────────────────
 PIPELINES = [
 
     {

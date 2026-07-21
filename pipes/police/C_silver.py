@@ -6,6 +6,33 @@ import pandas as pd
 from utils.transformations.filters import process_crime_df
 from utils.big_query.import_big_query import load_into_bigquery
 
+# ──pipes/police/C_silver Config ───────────────────────────────────────────────────────────────────
+PIPELINES = [
+    {
+        "sources": [
+            {
+                "file": "housing-density-borough.csv",
+
+            },
+
+        ],
+        "table_name": "average_prices",
+        "extraction_functions": [london_borough_filter, date_filter],
+        "data_row_start": 6,
+        "data_row_end": 150302,
+        "columns": [
+            {"col": 0, "name": "date", "type": "DATETIME"},
+            {"col": 2, "name": "ons_code", "type": "STRING"},
+            {"col": 3, "name": "average_price", "type": "FLOAT"},
+            {"col": 7, "name": "_source_file", "type": "STRING"},
+            {"col": 8, "name": "_sheet_name", "type": "STRING"},
+            {"col": 9, "name": "_ingested_at", "type": "DATETIME"},
+            {"col": 10, "name": "_row_number", "type": "INTEGER"},
+        ]
+    },
+
+]
+
 PIPE_NAME = "police"
 PROJECT_ID = "roomreview-487913"
 LAYER = "silver_layer"
