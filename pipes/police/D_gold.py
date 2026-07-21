@@ -25,50 +25,106 @@ RAW_CATEGORIES = [
 
 GOLD_PIPELINES = {
     "table_name": "police",
+
     "metric_sources": [
         {
             "file": "extraction_population.csv",
             "join_on": {
                 "ons_code": "ons_code",
-            },  # maps skeleton col -> this file's col
-            "keep_cols": ["ons_code", "population", "year"],
-            "pivot": False,  # <--- Bypasses pivoting
+            },
+            "keep_cols": [
+                "ons_code",
+                "population",
+                "year"
+            ],
+            "pivot": False,
         },
+
         {
             "file": "extraction_crimes.csv",
             "join_on": {
                 "borough_name": "borough",
-                "year": "year"  # NOW 'year' exists in base_df to join against!
+                "year": "year"
             },
             "pivot": True,
             "keep_cols": [
                 "borough",
                 "year",
                 *[f"{c}_annualised_rate" for c in RAW_CATEGORIES],
-
             ],
 
-            "calculate_deviation": [
+        },
+    ],
+
+    # Runs after all metric_sources have been joined
+    "post_processing": {
+
+        "sum_columns": [
+            {
+                "inputs": [
+                    f"{c}_annualised_rate" for c in RAW_CATEGORIES
+                ],
+                "output_name": "total_crimes_annualised"
+            }
+        ],
+
+        # Total crimes
+        "calculate_ratio_per_1k": [
+            {
+                "numerator_col": "total_crimes_annualised",
+                "denominator_col": "population",
+                "output_col": "total_crimes_per_1000",
+            },
+
+            # Individual crime categories
+            *[
                 {
-                    "target_col": f"{c}_annualised_rate",
-                    "new_avg_col": f"lon_avg_{c}_annualised_rate",
-                    "new_dev_col": f"pct_diff_{c}_annualised_rate",
+                    "numerator_col": f"{c}_annualised_rate",
+                    "denominator_col": "population",
+                    "output_col": f"{c}_per_1000",
+                }
+                for c in RAW_CATEGORIES
+            ]
+        ],
+
+        "calculate_deviation": [
+            {
+                "target_col": "total_crimes_per_1000",
+                "new_avg_col": "lon_avg_total_crimes_per_1000",
+                "new_dev_col": "pct_diff_total_crimes_per_1000",
+                "group_by": ["year"],
+            },
+
+            *[
+                {
+                    "target_col": f"{c}_per_1000",
+                    "new_avg_col": f"lon_avg_{c}_per_1000",
+                    "new_dev_col": f"pct_diff_{c}_per_1000",
                     "group_by": ["year"],
                 }
                 for c in RAW_CATEGORIES
-            ],
+            ]
+        ],
 
-            "calculate_yoy_change": [
+        "calculate_yoy_change": [
+            {
+                "target_col": "total_crimes_per_1000",
+                "group_col": "borough_name",
+                "year_col": "year",
+                "output_col": "yoy_pct_change_total_crimes_per_1000",
+            },
+
+            *[
                 {
-                    "target_col": f"{c}_annualised_rate",
-                    "group_col": "borough",
+                    "target_col": f"{c}_per_1000",
+                    "group_col": "borough_name",
                     "year_col": "year",
-                    "output_col": f"yoy_pct_change_{c}_annualised_rate",
+                    "output_col": f"yoy_pct_change_{c}_per_1000",
                 }
                 for c in RAW_CATEGORIES
-            ],
-        },
-    ]
+            ]
+        ],
+    }
 }
 
 PIPE_NAME = "police"
@@ -99,6 +155,7 @@ def run_pipeline(PROJECT_ROOT: Path):
             lookup_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / "category_lookup.csv"
             lookup_path.parent.mkdir(parents=True, exist_ok=True)
             category_lookup.to_csv(lookup_path, index=False)
+
         metric_df = MetricAggregator.process(metric_df, source_config=source)
 
         # Attach cleanly to skeleton
@@ -108,10 +165,15 @@ def run_pipeline(PROJECT_ROOT: Path):
     # 3. Post-Processing (THE NEW STEP CALLED HERE)
     # =========================================================================
     print("Finalizing consolidated gold matrix data...")
-
+    if "post_processing" in pipeline_config:
+        gold.base_df = MetricAggregator.process(
+            gold.base_df,
+            source_config=pipeline_config["post_processing"]
+        )
     # 4. Save final consolidated table
     out_path = PROJECT_ROOT / "data" / "D_gold" / PIPE_NAME / f"{OUTPUT_NAME}_{table_name}.csv"
     out_path.parent.mkdir(parents=True, exist_ok=True)
+
     gold.base_df.to_csv(out_path, index=False)
     print(f"  Saved Gold matrix to {out_path}")
 

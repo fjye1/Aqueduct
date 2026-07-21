@@ -244,6 +244,17 @@ class MetricAggregator:
             for calc_meta in ratio_rules:
                 processed_df = MetricAggregator._compute_ratio_percentage(processed_df, calc_meta)
 
+        if "calculate_ratio_per_1k" in source_config:
+            ratio_rules = source_config["calculate_ratio_per_1k"]
+
+            if isinstance(ratio_rules, dict):
+                ratio_rules = [ratio_rules]
+
+            for calc_meta in ratio_rules:
+                processed_df = MetricAggregator._compute_ratio_per_1000(
+                    processed_df, calc_meta
+                )
+
         # Step 4: Custom Math - Average and Deviation
         if "calculate_deviation" in source_config:
             dev_rules = source_config["calculate_deviation"]
@@ -291,6 +302,12 @@ class MetricAggregator:
             # 👇 ADD THIS BLOCK TO SAVE YOUR RATIO COLUMNS 👇
             if "calculate_ratio" in source_config:
                 ratio_rules = source_config["calculate_ratio"]
+                if isinstance(ratio_rules, dict):
+                    ratio_rules = [ratio_rules]
+                for calc_meta in ratio_rules:
+                    allowed_cols.append(calc_meta["output_col"])
+            if "calculate_ratio_per_1k" in source_config:
+                ratio_rules = source_config["calculate_ratio_per_1k"]
                 if isinstance(ratio_rules, dict):
                     ratio_rules = [ratio_rules]
                 for calc_meta in ratio_rules:
@@ -382,6 +399,28 @@ class MetricAggregator:
         denominator = df[denominator_col].replace(0, np.nan)
 
         df[output_col] = (df[numerator_col] / denominator) * 100
+
+        return df
+
+    @staticmethod
+    def _compute_ratio_per_1000(df: pd.DataFrame, calc_meta: dict) -> pd.DataFrame:
+        """Computes (numerator / denominator) * 1000 as a rate per 1,000 people."""
+        numerator_col = calc_meta["numerator_col"]
+        denominator_col = calc_meta["denominator_col"]
+        output_col = calc_meta["output_col"]
+
+        if numerator_col not in df.columns or denominator_col not in df.columns:
+            return df
+
+        # Use np.nan, not pd.NA, to guard against divide-by-zero. np.nan is
+        # numpy-native so it keeps this column float64 throughout — pd.NA
+        # silently upcasts the column to dtype "object" the moment it's
+        # introduced via .replace(), which is exactly what broke the
+        # BigQuery/pyarrow load on avg_quality_of_education previously, and
+        # is doing the same thing here via a different code path.
+        denominator = df[denominator_col].replace(0, np.nan)
+
+        df[output_col] = (df[numerator_col] / denominator) * 1000
 
         return df
 
