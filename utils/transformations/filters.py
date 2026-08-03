@@ -63,7 +63,7 @@ def london_borough_filter(df: pd.DataFrame, filter_by_ons_code: bool = True) -> 
         df = df[df['ons_code'].isin(LONDON_BOROUGHS_UK)]
     else:
         # Filter using the string names (Assumes 'LA (name)' matches your GIAS dataset)
-        df = df[df['borough_name'].isin(LONDON_BOROUGH_NAMES_UK)]
+        df = df[df['BOROUGH'].isin(LONDON_BOROUGH_NAMES_UK)]
 
     # # Rule 2: Check the LONDON_BOROUGHS for date logic example
     # # (Assuming clean_and_cast already converted this column to datetime)
@@ -206,7 +206,7 @@ def get_borough_from_lat_lon(df: pd.DataFrame) -> pd.DataFrame:
     # 1. Convert the input DataFrame into a temporary GeoDataFrame
     stops = gpd.GeoDataFrame(
         df.copy(),
-        geometry=gpd.points_from_xy(df["lon"], df["lat"]),
+        geometry=gpd.points_from_xy(df["Longitude"], df["Latitude"]),
         crs="EPSG:4326"
     )
 
