@@ -8,3 +8,4 @@ load_dotenv(os.path.join(basedir, '.env'))
 class Config:
     # Get the DB connection string from your .env
     DATABASE_URL = os.environ.get("DATABASE_URL")
+    PROJECT_ID = os.environ.get("PROJECT_ID")

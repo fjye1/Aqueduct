@@ -124,6 +124,21 @@ GOLD_PIPELINES = {
                 for c in RAW_CATEGORIES
             ]
         ],
+        "calculate_rank": [
+            {
+                "target_col": "total_crimes_per_1000",
+                "group_by": ["year"],
+                "new_rank_col": "rank_total_crimes_per_1000",
+                # ascending=False (default) → rank 1 = most crime
+            },
+            {
+                "target_col": "total_crimes_annualised",
+                "group_by": ["year"],
+                "new_rank_col": "rank_total_crimes_annualised",
+                # ascending=False (default) → rank 1 = most crime
+            },
+
+        ]
     }
 }
 
@@ -131,7 +146,7 @@ PIPE_NAME = "police"
 PROJECT_ID = "roomreview-487913"
 LAYER = "gold_layer_borough"
 OUTPUT_NAME = "Aggregation"  # Suffix or prefix handler depending on your naming style
-DRY_RUN = True  # Select False when ready to upload
+DRY_RUN = False  # Select False when ready to upload
 
 
 def run_pipeline(PROJECT_ROOT: Path):

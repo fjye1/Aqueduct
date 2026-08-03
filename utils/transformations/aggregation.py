@@ -267,7 +267,15 @@ class MetricAggregator:
             for calc_meta in dev_rules:
                 processed_df = MetricAggregator._compute_deviation(processed_df, calc_meta)
 
-        # Step 4b: Custom Math - Year-on-Year Change
+        # Step 4b: Custom Math - Rank / Position Index
+        if "calculate_rank" in source_config:
+            rank_rules = source_config["calculate_rank"]
+            if isinstance(rank_rules, dict):
+                rank_rules = [rank_rules]
+            for calc_meta in rank_rules:
+                processed_df = MetricAggregator._compute_rank(processed_df, calc_meta)
+
+        # Step 4c: Custom Math - Year-on-Year Change
         if "calculate_yoy_change" in source_config:
             yoy_rules = source_config["calculate_yoy_change"]
 
@@ -312,6 +320,13 @@ class MetricAggregator:
                     ratio_rules = [ratio_rules]
                 for calc_meta in ratio_rules:
                     allowed_cols.append(calc_meta["output_col"])
+
+            if "calculate_rank" in source_config:
+                rank_rules = source_config["calculate_rank"]
+                if isinstance(rank_rules, dict):
+                    rank_rules = [rank_rules]
+                for calc_meta in rank_rules:
+                    allowed_cols.append(calc_meta["new_rank_col"])
             # 👆 END NEW BLOCK 👆
             cols_to_keep = [c for c in allowed_cols if c in processed_df.columns]
             processed_df = processed_df[cols_to_keep]
@@ -458,6 +473,40 @@ class MetricAggregator:
         # real NaN here keeps both the CSV and the BigQuery load consistent and
         # contains the damage to just the affected row.
         df[output_col] = df[output_col].replace([np.inf, -np.inf], np.nan)
+
+        return df
+
+    @staticmethod
+    def _compute_rank(df: pd.DataFrame, calc_meta: dict) -> pd.DataFrame:
+        """
+        Computes each row's rank vs. its peers within a group (e.g. per year),
+        based on a target column — e.g. "this borough is 5th for crime in 2026".
+
+        calc_meta keys:
+            target_col   - the column to rank on (e.g. 'total_crimes_per_1000')
+            group_by     - list of cols defining the peer group (e.g. ['year'])
+            new_rank_col - name for the resulting rank column
+            ascending    - optional, default False. False means the HIGHEST
+                           value gets rank 1 (rank 1 = most crime). Set True
+                           for metrics where the lowest value should be rank 1.
+        """
+        target = calc_meta["target_col"]
+        group_by = calc_meta["group_by"]
+        rank_col = calc_meta["new_rank_col"]
+        ascending = calc_meta.get("ascending", False)
+
+        if target not in df.columns:
+            return df
+
+        # method="min" gives standard competition ranking (1, 2, 2, 4 on a tie)
+        # rather than "average" ranking (1, 2.5, 2.5, 4), which reads more
+        # naturally as a position index ("joint 2nd") and keeps the column
+        # integer-friendly instead of forcing floats on any tie.
+        df[rank_col] = (
+            df.groupby(group_by)[target]
+            .rank(method="min", ascending=ascending)
+            .astype(int)
+        )
 
         return df
 
