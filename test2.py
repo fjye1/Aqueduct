@@ -18,14 +18,14 @@ import pandas as pd
 # df = df.drop(df[~df['ladnm'].isin(LONDON_BOROUGH_NAMES_UK)].index)
 # print(df.shape)
 # print(df.head)
-#
-#
-# df =df.drop_duplicates(subset=['oa21cd'])
-#
-# print(df.shape)
-# print(df.head)
 
-# df.to_csv("OA-LAD.csv")
+
+df =df.drop_duplicates(subset=['oa21cd'])
+
+print(df.shape)
+print(df.head)
+
+df.to_csv("OA-LAD.csv")
 
 df = pd.read_csv('OA-LAD.csv')
 
@@ -37,7 +37,12 @@ df = df.drop(columns=cols_to_drop)
 print(df.shape)
 print(df.head)
 
+# df['lsoa21cd'].nunique()
+# df.groupby('ladnm')['lsoa21cd'].nunique()
+
 df.to_csv("OA-LAD.csv")
+
+
 
 # import csv
 # import json
