@@ -18,30 +18,53 @@ import pandas as pd
 # df = df.drop(df[~df['ladnm'].isin(LONDON_BOROUGH_NAMES_UK)].index)
 # print(df.shape)
 # print(df.head)
+#
+#
+# df =df.drop_duplicates(subset=['oa21cd'])
+#
+# print(df.shape)
+# print(df.head)
+#
+# df.to_csv("OA-LAD.csv")
+##################################
+# df = pd.read_csv('OA-LAD.csv')
+#
+# # Drop the unnamed column at index position 0 along with your other columns
+# cols_to_drop = [ "lsoa21nm", "msoa21nm", "ladnmw"]
+#
+# df = df.drop(columns=cols_to_drop)
+#
+# print(df.shape)
+# print(df.head)
+#
+# # df['lsoa21cd'].nunique()
+# # df.groupby('ladnm')['lsoa21cd'].nunique()
+#
+# df.to_csv("OA-LAD.csv")
+##################################
+# df = pd.read_csv('OA-LAD.csv')
+#
+# cols_to_drop = ["oa21cd", "Unnamed: 0"]
+# df = df.drop(columns=cols_to_drop)
+#
+# # THIS is the missing step — collapse OA-grain rows down to one per LSOA
+# df = df.drop_duplicates(subset=['lsoa21cd'])
+#
+# print(df.shape)
+# print(df.head())
+#
+# print(df['lsoa21cd'].nunique())
+# print(df.groupby('ladnm')['lsoa21cd'].nunique())
+#
+# df.to_csv("LSOA-LAD.csv", index=False)   # index=False to avoid another Unnamed: 0
+##################################
+# Produce a list of just the LSOA values
+df = pd.read_csv('LSOA-LAD.csv')
 
-
-df =df.drop_duplicates(subset=['oa21cd'])
-
-print(df.shape)
-print(df.head)
-
-df.to_csv("OA-LAD.csv")
-
-df = pd.read_csv('OA-LAD.csv')
-
-# Drop the unnamed column at index position 0 along with your other columns
-cols_to_drop = [ "lsoa21nm", "msoa21nm", "ladnmw"]
-
+cols_to_drop = ["Unnamed: 0.1", "msoa21cd", "ladcd", "ladnm"]
 df = df.drop(columns=cols_to_drop)
 
-print(df.shape)
-print(df.head)
-
-# df['lsoa21cd'].nunique()
-# df.groupby('ladnm')['lsoa21cd'].nunique()
-
-df.to_csv("OA-LAD.csv")
-
+df.to_csv("LSOA_skeleton.csv", index=False)
 
 
 # import csv

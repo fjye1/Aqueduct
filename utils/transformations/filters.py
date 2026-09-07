@@ -71,6 +71,18 @@ def london_borough_filter(df: pd.DataFrame, filter_by_ons_code: bool = True) -> 
 
     return df
 
+def london_lsoa_filter(df: pd.DataFrame, lsoa_column: str = "lsoa21cd") -> pd.DataFrame:
+    """
+    Filters the DataFrame to rows whose LSOA code is one of London's LSOAs.
+
+    :param df: Input DataFrame containing an LSOA code column.
+    :param lsoa_column: Name of the column in df holding the LSOA code to filter on.
+    """
+    london_lsoas = pd.read_csv("LSOA_skeleton.csv")["lsoa21cd"]
+
+    df = df[df[lsoa_column].isin(london_lsoas)]
+
+    return df
 
 
 
