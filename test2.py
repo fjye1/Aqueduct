@@ -59,7 +59,7 @@ import pandas as pd
 # df.to_csv("LSOA-LAD.csv", index=False)   # index=False to avoid another Unnamed: 0
 ##################################
 # Produce a list of just the LSOA values
-df = pd.read_csv('LSOA-LAD.csv')
+df = pd.read_csv('data/LSOA-LAD.csv')
 
 cols_to_drop = ["Unnamed: 0.1", "msoa21cd", "ladcd", "ladnm"]
 df = df.drop(columns=cols_to_drop)
