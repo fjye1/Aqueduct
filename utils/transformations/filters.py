@@ -73,24 +73,13 @@ def london_borough_filter(df: pd.DataFrame, filter_by_ons_code: bool = True) -> 
 
     return df
 
-
-
-
-DATA_DIR = Path(__file__).resolve().parent / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 LSOA_SKELETON_PATH = DATA_DIR / "LSOA_skeleton.csv"
 
 LONDON_LSOA_CODES = set(pd.read_csv(LSOA_SKELETON_PATH)["lsoa21cd"])
 
 def london_lsoa_filter(df: pd.DataFrame, lsoa_column: str = "lsoa21cd") -> pd.DataFrame:
-    """
-    Filters the DataFrame to rows whose LSOA code is one of London's LSOAs.
-
-    :param df: Input DataFrame containing an LSOA code column.
-    :param lsoa_column: Name of the column in df holding the LSOA code to filter on.
-    """
     return df[df[lsoa_column].isin(LONDON_LSOA_CODES)]
-
-
 
 
 def melt_year_columns(df, var_name="year", value_name="net_additions"):

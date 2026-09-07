@@ -33,8 +33,12 @@ from pathlib import Path
 # Infrastructure_map
 # from pipes.infrastructure_map.B_bronze import run_pipeline
 # from pipes.infrastructure_map.C_silver import run_pipeline
-from pipes.infrastructure_map.D_gold import run_pipeline
-from pipes.infrastructure_map.download_osm import run_download
+# from pipes.infrastructure_map.D_gold import run_pipeline
+# from pipes.infrastructure_map.download_osm import run_download
+
+#LSOA_demographics
+# from pipes.lsoa_demographics.B_bronze import run_pipeline
+from pipes.lsoa_demographics.C_silver import run_pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
