@@ -26,7 +26,7 @@ PIPE_NAME = "lsoa_demographics"
 PROJECT_ID = "roomreview-487913"
 LAYER = "bronze_layer"
 OUTPUT_NAME = "ingestion"
-
+DRY_RUN = True  # Select False when ready to upload
 
 def run_pipeline(project_root: Path):
     for config in PIPELINES:
@@ -63,5 +63,5 @@ def run_pipeline(project_root: Path):
                 layer=LAYER,
                 table_name=target_table,
                 df=df,
-                dry_run=True  # Set to false when you want to upload
+                dry_run=DRY_RUN
             )
