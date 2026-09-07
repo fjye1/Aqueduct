@@ -42,6 +42,7 @@ from pathlib import Path
 
 #LSOA_housing
 from pipes.lsoa_housing.B_bronze import run_pipeline
+from pipes.lsoa_housing.C_silver import run_pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
