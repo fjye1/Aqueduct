@@ -31,6 +31,7 @@ PIPELINES = [
         "data_row_end": 52403,
         "columns": [
             {"col": 0, "name": "unique_reference_number", "type": "INTEGER"},
+            {"col": 4, "name": "school_name", "type": "STRING"},
             {"col": 2, "name": "borough_name", "type": "STRING"},
             {"col": 101, "name": "ons_code", "type": "STRING"},
             {"col": 6, "name": "type_of_establishment", "type": "STRING"},
@@ -40,6 +41,10 @@ PIPELINES = [
             {"col": 20, "name": "stat_high_age", "type": "INTEGER"},
             {"col": 35, "name": "pupil_capacity", "type": "INTEGER"},
             {"col": 39, "name": "current_pupils", "type": "INTEGER"},
+            {"col": 110, "name": "easting", "type": "FLOAT"},
+            {"col": 111, "name": "northing", "type": "FLOAT"},
+            {"col": 113, "name": "lsoa_name", "type": "STRING"},
+            {"col": 132, "name": "lsoa_code", "type": "STRING"},
             {"col": 135, "name": "_source_file", "type": "STRING"},
             {"col": 136, "name": "_sheet_name", "type": "STRING"},
             {"col": 137, "name": "_ingested_at", "type": "DATETIME"},

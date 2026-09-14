@@ -243,6 +243,40 @@ def get_borough_from_lat_lon(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(joined)
 
 
+def get_lsoa_from_lat_lon(df: pd.DataFrame, lat_col: str = "latitude", lon_col: str = "longitude") -> pd.DataFrame:
+    """
+    Performs a spatial join to find the LSOA for each lat/lon point.
+    Safely drops shapefile clutter without disturbing any original columns.
+    """
+    # 1. Convert the input DataFrame into a temporary GeoDataFrame
+    points = gpd.GeoDataFrame(
+        df.copy(),
+        geometry=gpd.points_from_xy(df[lon_col], df[lat_col]),
+        crs="EPSG:4326"
+    )
+
+    # 2. Load the LSOA shapefiles (one per borough) and combine them
+    lsoa_dir = DATA_DIR / "A_raw" / "lsoa_police"
+    lsoas = pd.concat(
+        [gpd.read_file(shp_path) for shp_path in sorted(lsoa_dir.glob("*.shp"))],
+        ignore_index=True
+    )
+
+    # Ensure the shapefile is in the exact same coordinate system
+    if lsoas.crs != "EPSG:4326":
+        lsoas = lsoas.to_crs("EPSG:4326")
+
+    # 3. Perform the spatial join, keeping only the LSOA identifier columns
+    joined = gpd.sjoin(points, lsoas[["lsoa21cd", "lsoa21nm", "geometry"]], how="left", predicate="within")
+
+    # 4. Explicitly drop ONLY the junk columns brought in by the shapefile
+    columns_to_drop = ["geometry", "index_right"]
+    joined = joined.drop(columns=[col for col in columns_to_drop if col in joined.columns])
+
+    # Convert back to a standard DataFrame and return
+    return pd.DataFrame(joined)
+
+
 def process_crime_df(df):
     """
     Takes a raw crime DataFrame and appends

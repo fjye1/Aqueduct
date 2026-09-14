@@ -1,0 +1,14 @@
+Source in A_raw
+
+LSOA (2021) boundary shapefiles, one per London borough, downloaded from:
+https://data.london.gov.uk/dataset/statistical-gis-boundary-files-for-london-20od9
+
+One shapefile per London borough under data/A_raw/lsoa_map/<Borough Name>.shp
+Columns: lsoa21cd, lsoa21nm, msoa21cd, msoa21nm, lad22cd, lad22nm, geometry
+
+This pipe also draws on tables already built by other pipes rather than
+re-ingesting anything itself:
+  - transport_stops  (data/C_silver/infrastructure_map/extraction_transport_stops.csv)
+  - GTFS bus schedule (data/A_raw/infrastructure_map/itm_london_gtfs)
+  - cached OSM street/station extracts (data/A_raw/infrastructure_map/osm_*_<borough>.rds)
+  - school_location_data (data/C_silver/education/extraction_school_location_data.csv)

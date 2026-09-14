@@ -8,6 +8,7 @@ dist/
 build/
 
 pipes/infrastructure_map/images
+pipes/lsoa_map/images
 
 data/
 
