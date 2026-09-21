@@ -1,0 +1,25 @@
+Source in A_raw (all read-only - this pipe owns no raw files of its own)
+
+Simplified "Transport & schools nearby" card per LSOA: a list of the buses that
+serve the area (number + the two ends of the route), the nearest schools, and
+the nearest station - instead of drawing bus routes on a map.
+
+Reads, without modifying:
+  - GTFS bus timetable   data/A_raw/infrastructure_map/itm_london_gtfs
+      routes.txt / agency.txt / trips.txt / stop_times.txt / stops.txt / feed_info.txt
+      (only route_type 3 = bus is used; coaches/tube/DLR/etc. are ignored)
+  - OSM station cache    data/A_raw/infrastructure_map/osm_stations_<borough>.rds
+  - Schools (silver)     data/C_silver/education/extraction_school_location_data.csv
+  - School addresses     data/B_bronze/education/ingestion_school_location_data_2026.csv
+      (Street / Locality / Town / Postcode / PhaseOfEducation columns)
+  - LSOA boundaries      data/A_raw/lsoa_map/<Borough>.shp
+  - Postcode centroids   data/C_silver/postcodes/extraction_postcode_centroids.csv
+      (only for looking up a searched postcode's point)
+
+Known limits, on purpose stated here rather than hidden in code:
+  - Route ends are the first/last STOP of each route's most common trip pattern
+    (many TfL trips have a blank trip_headsign, so headsigns can't be relied on).
+  - "Serves the area" = a stop within BUS_STOP_BUFFER_M of the LSOA boundary.
+  - Distances are straight-line from a reference point (LSOA centre, or a searched
+    postcode's centroid) - not walking routes. Walk time is an estimate.
+  - The timetable is a snapshot (see feed_info); it goes stale.

@@ -41,8 +41,11 @@ from pathlib import Path
 # from pipes.lsoa_demographics.C_silver import run_pipeline
 
 #LSOA_housing
-from pipes.lsoa_housing.B_bronze import run_pipeline
-from pipes.lsoa_housing.C_silver import run_pipeline
+# from pipes.lsoa_housing.B_bronze import run_pipeline
+# from pipes.lsoa_housing.C_silver import run_pipeline
+
+# LSOA Police
+from pipes.lsoa_police.C_silver import run_pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
