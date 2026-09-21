@@ -82,6 +82,19 @@ def london_lsoa_filter(df: pd.DataFrame, lsoa_column: str = "lsoa21cd") -> pd.Da
     return df[df[lsoa_column].isin(LONDON_LSOA_CODES)]
 
 
+def derive_postcode_sector(df: pd.DataFrame, postcode_column: str = "pcds",
+                            sector_column: str = "postcode_sector") -> pd.DataFrame:
+    """
+    Derives the postcode sector from a full unit postcode in standard
+    single-space format, e.g. "SW1A 1AA" -> "SW1A 1" (outward code + the
+    first character of the inward code).
+    """
+    df = df.copy()
+    parts = df[postcode_column].str.split(" ", n=1, expand=True)
+    df[sector_column] = parts[0] + " " + parts[1].str[0]
+    return df
+
+
 def melt_year_columns(df, var_name="year", value_name="net_additions"):
     """
     Reshape wide year columns (e.g. '2021', '2022', ...) into a long

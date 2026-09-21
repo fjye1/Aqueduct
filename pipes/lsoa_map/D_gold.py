@@ -22,6 +22,7 @@ LSOA_SHP_DIR_REL  = Path("data") / "A_raw" / "lsoa_map"
 NAPTAN_CSV_REL    = Path("data") / "C_silver" / "infrastructure_map" / "extraction_transport_stops.csv"
 GTFS_DIR_REL      = Path("data") / "A_raw" / "infrastructure_map" / "itm_london_gtfs"
 SCHOOLS_CSV_REL   = Path("data") / "C_silver" / "education" / "extraction_school_location_data.csv"
+POSTCODES_CSV_REL = Path("data") / "C_silver" / "postcodes" / "extraction_postcode_centroids.csv"
 OSM_CACHE_DIR_REL = Path("data") / "A_raw" / "infrastructure_map"
 
 
@@ -57,6 +58,7 @@ def run_pipeline(PROJECT_ROOT: Path, borough_filter: list[str] | None = None, ls
     naptan_csv    = PROJECT_ROOT / NAPTAN_CSV_REL
     gtfs_dir      = PROJECT_ROOT / GTFS_DIR_REL
     schools_csv   = PROJECT_ROOT / SCHOOLS_CSV_REL
+    postcodes_csv = PROJECT_ROOT / POSTCODES_CSV_REL
     osm_cache_dir = PROJECT_ROOT / OSM_CACHE_DIR_REL
 
     boroughs = _discover_boroughs(lsoa_shp_dir)
@@ -80,6 +82,7 @@ def run_pipeline(PROJECT_ROOT: Path, borough_filter: list[str] | None = None, ls
             f"naptan_csv = {_r_string_literal(naptan_csv.as_posix())}, "
             f"gtfs_dir = {_r_string_literal(gtfs_dir.as_posix())}, "
             f"schools_csv = {_r_string_literal(schools_csv.as_posix())}, "
+            f"postcodes_csv = {_r_string_literal(postcodes_csv.as_posix())}, "
             f"osm_cache_dir = {_r_string_literal(osm_cache_dir.as_posix())}, "
             f"output_dir = {_r_string_literal(images_dir.as_posix())}, "
             f"lsoa_limit = {lsoa_limit_literal}"

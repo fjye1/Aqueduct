@@ -44,6 +44,7 @@ LSOA_SHP_DIR_DEFAULT   <- "data/A_raw/lsoa_map"
 NAPTAN_CSV_DEFAULT     <- "data/C_silver/infrastructure_map/extraction_transport_stops.csv"
 GTFS_DIR_DEFAULT       <- "data/A_raw/infrastructure_map/itm_london_gtfs"
 SCHOOLS_CSV_DEFAULT    <- "data/C_silver/education/extraction_school_location_data.csv"
+POSTCODES_CSV_DEFAULT  <- "data/C_silver/postcodes/extraction_postcode_centroids.csv"
 OSM_CACHE_DIR_DEFAULT  <- "data/A_raw/infrastructure_map"
 OUTPUT_DIR_DEFAULT     <- "pipes/lsoa_map/images"
 DEFAULT_BOROUGH_NAME   <- "City of London"
@@ -57,16 +58,43 @@ BUFFER_M_DEFAULT <- 200
 # styled as "major" routes, everything else as "other".
 MAJOR_ROUTE_QUANTILE_DEFAULT <- 0.75
 
-# Only label schools/streets individually when there aren't too many in
-# frame - ggrepel gets unreadable past this many labels in a small image.
+# Only label schools individually when there aren't too many in frame -
+# ggrepel gets unreadable past this many labels in a small image.
 MAX_SCHOOL_LABELS <- 8
-MAX_STREET_LABELS <- 6
+
+# Street label count scales with the LSOA's own area rather than being
+# fixed - a tiny LSOA and a sprawling one both need "enough labels to
+# orient yourself", which isn't the same number of streets. Based on the
+# actual area distribution (median ~0.2 km^2, 95th pct ~0.83 km^2):
+# below STREET_LABEL_AREA_BASE_KM2 you get the floor (10); above it, labels
+# scale up at STREET_LABEL_SLOPE per km^2, capped at STREET_LABEL_MAX so the
+# rare very large (mostly park/industrial) LSOAs don't get flooded with labels.
+STREET_LABEL_MIN <- 10
+STREET_LABEL_MAX <- 20
+STREET_LABEL_AREA_BASE_KM2 <- 0.1
+STREET_LABEL_SLOPE <- 15
+
+# Postcode district shading/outlines are approximate (Voronoi-dissolved from
+# unit centroids, grouped by each postcode's own ONS-assigned LSOA - see
+# .load_borough_data()) and are ALWAYS drawn, however many districts an LSOA
+# touches (typically 1-2, occasionally a dozen or more in dense commercial
+# areas) - every map should have the same postcode layer present, never an
+# all-or-nothing drop. What's capped is the TEXT LABEL, same pattern as
+# MAX_SCHOOL_LABELS: past this many districts, only the largest (by area)
+# get a code label, so the layer never goes fully unlabelled or fully absent.
+MAX_POSTCODE_DISTRICT_LABELS <- 8
 
 # --- Dark dashboard-style palette (matches infrastructure_map's style) ---
 BG_COLOR       <- "#0a0e1a"
 STREET_COLOR   <- "#3a4354"
 STREET_LABEL_COLOR <- "#9aa5b6"
 LSOA_COLOR     <- "#7c6a99"
+DISTRICT_COLOR   <- "#8b96ab"
+DISTRICT_LABEL_COLOR <- "#a9b3c4"
+# Cycled across districts within one LSOA (by draw order) to give each a
+# subtly different shaded fill, so neighbouring districts read as distinct
+# areas rather than one uniform tint over the whole frame.
+DISTRICT_SHADE_PALETTE <- c("#2d3348", "#2a3d42", "#3a3348", "#26384a")
 MAJOR_COLOR    <- "#b446f0"
 OTHER_COLOR    <- "#2f8fe0"
 STOP_COLOR     <- "#ff3b3b"
@@ -76,28 +104,38 @@ TARGET_COLOR   <- "#fbbf24"
 TEXT_COLOR     <- "#e5e7eb"
 SUBTEXT_COLOR  <- "#9ca3af"
 
-# Single shared legend, rendered identically on every LSOA regardless of
-# whether that particular LSOA happens to have (e.g.) a station in frame -
-# every level below is always drawn as its own (possibly empty) layer in
-# .render_one_lsoa() so the legend never changes shape.
-LEGEND_LEVELS <- c("Searched location", "LSOA boundary", "Major bus route", "Other bus route", "Bus stop", "Station", "School")
-LEGEND_COLORS <- c(
-  "Searched location" = TARGET_COLOR,
+# Shared legend, rendered identically on every LSOA regardless of whether
+# that particular LSOA happens to have (e.g.) a station in frame - every
+# level below is always drawn as its own (possibly empty) layer in
+# .render_one_lsoa() so the legend never changes shape *for these entries*.
+# "Searched location" is NOT included here - it's only added (in
+# .render_one_lsoa()) when a target_lon/target_lat is actually supplied for
+# that render, since otherwise it's a legend key for something that never
+# appears on any of these maps (today's bulk pre-render has no per-property
+# input - see render_lsoa_maps_for_borough()'s `targets` argument).
+BASE_LEGEND_LEVELS <- c("LSOA boundary", "Postcode district", "Major bus route", "Other bus route", "Bus stop", "Station", "School")
+BASE_LEGEND_COLORS <- c(
   "LSOA boundary"     = LSOA_COLOR,
+  "Postcode district" = DISTRICT_COLOR,
   "Major bus route"   = MAJOR_COLOR,
   "Other bus route"   = OTHER_COLOR,
   "Bus stop"          = STOP_COLOR,
   "Station"           = STATION_COLOR,
   "School"            = SCHOOL_COLOR
 )
-# Matched positionally to LEGEND_LEVELS - controls what glyph each legend
-# key actually shows (line vs point), independent of any one layer's style.
-LEGEND_OVERRIDE_AES <- list(
-  linetype  = c(0,   2,   1,   1,   0,   0,   0),
-  linewidth = c(1,   0.8, 1.0, 0.8, 1,   1,   1),
-  shape     = c(18,  NA,  NA,  NA,  19,  15,  17),
-  size      = c(3.2, 1,   1,   1,   2.5, 2.5, 2.8)
+# Matched positionally to BASE_LEGEND_LEVELS - controls what glyph each
+# legend key actually shows (line vs point), independent of any one layer's
+# own drawing style.
+BASE_LEGEND_OVERRIDE_AES <- list(
+  linetype  = c(2,   3,   1,   1,   0,   0,   0),
+  linewidth = c(0.8, 0.9, 1.0, 0.8, 1,   1,   1),
+  shape     = c(NA,  NA,  NA,  NA,  19,  15,  17),
+  size      = c(1,   1,   1,   1,   2.5, 2.5, 2.8)
 )
+
+TARGET_LEGEND_LEVEL <- "Searched location"
+TARGET_LEGEND_COLOR <- c("Searched location" = TARGET_COLOR)
+TARGET_LEGEND_OVERRIDE_AES <- list(linetype = 0, linewidth = 1, shape = 18, size = 3.2)
 
 ROUTE_PROFILE_DEFAULT <- "motorcar"
 # ==================================================
@@ -118,13 +156,14 @@ slugify_borough <- function(borough_name) {
 #     this once per borough (instead of once per LSOA) is what keeps ~4,800
 #     LSOA renders tractable - see file header. ---
 .load_borough_data <- function(borough_name, lsoa_shp_dir, naptan_csv, gtfs_dir,
-                                schools_csv, osm_cache_dir, major_route_quantile) {
+                                schools_csv, postcodes_csv, osm_cache_dir, major_route_quantile) {
 
   slug <- slugify_borough(borough_name)
 
   # --- LSOA polygons for this borough ---
   shp_path <- file.path(lsoa_shp_dir, paste0(borough_name, ".shp"))
   lsoas <- st_read(shp_path, quiet = TRUE) %>% st_transform(crs = 4326)
+  borough_code <- lsoas$lad22cd[1]
 
   # --- NaPTAN stops for this borough ---
   naptan_raw <- read_csv(naptan_csv, show_col_types = FALSE)
@@ -259,13 +298,61 @@ slugify_borough <- function(borough_name) {
       select(school_name, geometry)
   }
 
+  # --- Postcode district shapes for this borough. There's no official
+  #     postcode boundary product (postcodes are sets of delivery points,
+  #     not areas), so this approximates one: take every live unit-postcode
+  #     centroid in the borough, Voronoi-tessellate them (each cell = the
+  #     space closer to that point than to any other), then dissolve cells
+  #     that share BOTH the same postcode DISTRICT (the outward code, e.g.
+  #     "EC4Y" from "EC4Y 0AA" - one level coarser than sector, e.g. "EC4Y 0")
+  #     AND the same ONS-assigned LSOA into one polygon. District rather
+  #     than sector because sector-level fragments (an earlier version of
+  #     this) turned out too numerous/busy in dense areas even after
+  #     confining them to their own LSOA - grouping one level coarser
+  #     roughly halves the median fragment count with no other change.
+  #
+  #     The LSOA condition matters on its own too: a unit postcode gets a
+  #     clean 1:1 "best fit" LSOA assignment from ONS, but a whole district
+  #     (or sector) aggregates many units and routinely spans several LSOAs
+  #     (LSOAs are sized for ~1,500 residents; a district covers far more).
+  #     Dissolving by district alone would produce one sprawling shape per
+  #     district that cuts across LSOA lines with no regard for them.
+  #     Dissolving by (LSOA, district) instead means a district that spans
+  #     3 LSOAs becomes 3 separate fragments - each built only from
+  #     postcodes ONS actually assigns to that LSOA, so each fragment is
+  #     naturally contained within it. The trade-off: what's shown is "this
+  #     LSOA's share of district X", not district X's true full extent.
+  #
+  #     Built once per borough, like everything else here, and split out
+  #     per-LSOA (by the lsoa21cd column, not spatial clipping) in
+  #     .render_one_lsoa(). ---
+  postcode_districts_sf <- st_sf(lsoa21cd = character(), postcode_district = character(), geometry = st_sfc(crs = 4326))
+  postcodes_borough <- read_csv(postcodes_csv, show_col_types = FALSE) %>%
+    filter(lad25cd == borough_code, !is.na(easting), !is.na(northing))
+
+  if (nrow(postcodes_borough) > 0) {
+    pc_pts <- postcodes_borough %>%
+      mutate(postcode_district = sub(" .*", "", postcode_sector)) %>%
+      st_as_sf(coords = c("easting", "northing"), crs = 27700, remove = FALSE)
+
+    voronoi_cells <- st_voronoi(st_union(pc_pts)) %>% st_collection_extract("POLYGON")
+    voronoi_sf <- st_sf(geometry = voronoi_cells)
+
+    postcode_districts_sf <- st_join(voronoi_sf, pc_pts[c("postcode_district", "lsoa21cd")], join = st_intersects, left = FALSE) %>%
+      group_by(lsoa21cd, postcode_district) %>%
+      summarise(geometry = st_union(geometry), .groups = "drop") %>%
+      st_as_sf() %>%
+      st_transform(crs = 4326)
+  }
+
   list(
-    lsoas       = lsoas,
-    stops_sf    = stops_sf,
-    edges_sf    = edges_sf,
-    streets_sf  = streets_sf,
-    stations_sf = stations_sf,
-    schools_sf  = schools_sf
+    lsoas                 = lsoas,
+    stops_sf              = stops_sf,
+    edges_sf              = edges_sf,
+    streets_sf            = streets_sf,
+    stations_sf           = stations_sf,
+    schools_sf            = schools_sf,
+    postcode_districts_sf = postcode_districts_sf
   )
 }
 
@@ -278,6 +365,7 @@ slugify_borough <- function(borough_name) {
   borough_name <- lsoa_row$lad22nm[1]
 
   target_png <- file.path(output_dir, sprintf("%s.png", lsoa_code))
+  has_target <- !is.null(target_lon) && !is.null(target_lat)
 
   area <- lsoa_row %>%
     st_transform(crs = 27700) %>%
@@ -286,6 +374,10 @@ slugify_borough <- function(borough_name) {
   area_geom <- st_geometry(area)
   bbox <- st_bbox(area)
 
+  lsoa_area_km2 <- as.numeric(st_area(st_transform(lsoa_row, 27700))) / 1e6
+  street_label_cap <- min(STREET_LABEL_MAX, max(STREET_LABEL_MIN,
+    round(STREET_LABEL_MIN + (lsoa_area_km2 - STREET_LABEL_AREA_BASE_KM2) * STREET_LABEL_SLOPE)))
+
   in_area <- function(sf_obj) {
     if (is.null(sf_obj) || nrow(sf_obj) == 0) return(sf_obj)
     suppressWarnings(sf_obj[st_intersects(sf_obj, area_geom, sparse = FALSE)[, 1], ])
@@ -293,6 +385,7 @@ slugify_borough <- function(borough_name) {
 
   stops_in_area <- in_area(borough_data$stops_sf)
   active_ids <- if (nrow(stops_in_area) > 0) unique(as.character(stops_in_area$ATCOCode)) else character()
+  n_stops_real <- nrow(stops_in_area)
 
   edges_in_area <- borough_data$edges_sf
   if (nrow(edges_in_area) > 0) {
@@ -303,6 +396,19 @@ slugify_borough <- function(borough_name) {
   streets_in_area  <- in_area(borough_data$streets_sf)
   stations_in_area <- in_area(borough_data$stations_sf)
   schools_in_area  <- in_area(borough_data$schools_sf)
+  n_schools_real <- if (is.null(schools_in_area)) 0 else nrow(schools_in_area)
+
+  # Selected by the postcode's own ONS-assigned LSOA (see .load_borough_data()'s
+  # comment), not spatial clipping - every fragment here is guaranteed built
+  # only from postcodes officially belonging to this LSOA. Always kept and
+  # drawn in full, however many there are; only the text label is capped
+  # further down (MAX_POSTCODE_DISTRICT_LABELS), so the layer is never
+  # dropped outright.
+  postcode_districts_in_area <- borough_data$postcode_districts_sf %>% filter(lsoa21cd == !!lsoa_code)
+  if (nrow(postcode_districts_in_area) > MAX_POSTCODE_DISTRICT_LABELS) {
+    cat(sprintf("  [NOTE] %s: %d postcode districts (> %d labelled) - shading/outlines shown for all, only the largest are labelled.\n",
+                lsoa_code, nrow(postcode_districts_in_area), MAX_POSTCODE_DISTRICT_LABELS))
+  }
 
   major_edges <- edges_in_area %>% filter(route_tier == "major")
   other_edges <- edges_in_area %>% filter(route_tier == "other")
@@ -322,33 +428,45 @@ slugify_borough <- function(borough_name) {
         slice_max(order_by = .len, n = 1, with_ties = FALSE) %>%
         ungroup() %>%
         arrange(desc(.len)) %>%
-        slice_head(n = MAX_STREET_LABELS) %>%
+        slice_head(n = street_label_cap) %>%
         select(name, geometry)
     }
   }
 
-  # --- The searched postcode/property location, if one was passed in for
-  #     this render (see render_lsoa_maps_for_borough()'s target_lon/
-  #     target_lat args). When there isn't one, use a placeholder point well
-  #     outside the visible frame (coord_sf() below clips it out) rather
-  #     than a genuinely empty layer - an empty sf layer has no discernible
-  #     point/line geometry type, so its legend key falls back to a plain
-  #     box instead of the diamond used everywhere else for this level. ---
-  target_sf <- st_sf(geometry = st_sfc(st_point(c(0, 0)), crs = 4326))
-  if (!is.null(target_lon) && !is.null(target_lat)) {
+  # --- The searched postcode/property location, only present (and only
+  #     added to the legend) when this specific render actually has one -
+  #     see render_lsoa_maps_for_borough()'s `targets` argument and
+  #     BASE_LEGEND_LEVELS's comment above for why. ---
+  if (has_target) {
     target_sf <- st_sf(geometry = st_sfc(st_point(c(target_lon, target_lat)), crs = 4326))
   }
 
   # Placeholder empty sf frames for any layer with nothing in this LSOA, so
   # every geom_sf() call below always runs (a 0-row layer draws nothing but
   # still registers its legend level) - that's what keeps the legend
-  # identical across every LSOA. See LEGEND_LEVELS/LEGEND_COLORS.
+  # identical across every LSOA. See BASE_LEGEND_LEVELS/BASE_LEGEND_COLORS.
   empty_lines  <- st_sf(geometry = st_sfc(crs = 4326))
   if (nrow(other_edges) == 0) other_edges <- empty_lines
   if (nrow(major_edges) == 0) major_edges <- empty_lines
-  if (is.null(stops_in_area) || nrow(stops_in_area) == 0) stops_in_area <- st_sf(geometry = st_sfc(crs = 4326))
-  if (is.null(stations_in_area) || nrow(stations_in_area) == 0) stations_in_area <- st_sf(name = character(), geometry = st_sfc(crs = 4326))
-  if (is.null(schools_in_area) || nrow(schools_in_area) == 0) schools_in_area <- st_sf(school_name = character(), geometry = st_sfc(crs = 4326))
+  # NOTE: point-type placeholders use an off-frame dummy point (clipped out
+  # by coord_sf() below), not a genuinely empty (0-row) layer - an empty sf
+  # column has no determinable point/line/polygon type, which makes GeomSf's
+  # legend key fall back to a nonsense glyph (a literal "a") instead of the
+  # shape set in BASE_LEGEND_OVERRIDE_AES. Line-type layers (edges, sectors)
+  # are fine empty since their geometry type is still known from the source data.
+  off_frame_point <- st_sfc(st_point(c(0, 0)), crs = 4326)
+  if (is.null(stops_in_area) || nrow(stops_in_area) == 0) stops_in_area <- st_sf(ATCOCode = NA_character_, geometry = off_frame_point)
+  if (is.null(stations_in_area) || nrow(stations_in_area) == 0) stations_in_area <- st_sf(name = NA_character_, geometry = off_frame_point)
+  if (is.null(schools_in_area) || nrow(schools_in_area) == 0) schools_in_area <- st_sf(school_name = NA_character_, geometry = off_frame_point)
+  if (is.null(postcode_districts_in_area) || nrow(postcode_districts_in_area) == 0) postcode_districts_in_area <- st_sf(lsoa21cd = character(), postcode_district = character(), geometry = st_sfc(crs = 4326))
+
+  # Cycle a small palette across districts (by draw order) so adjacent ones
+  # shade differently and read as distinct areas, not one uniform tint.
+  postcode_districts_in_area$shade_color <- if (nrow(postcode_districts_in_area) > 0) {
+    DISTRICT_SHADE_PALETTE[((seq_len(nrow(postcode_districts_in_area)) - 1) %% length(DISTRICT_SHADE_PALETTE)) + 1]
+  } else {
+    character(0)
+  }
 
   # --- Every label source (street/station/school names) is combined into
   #     ONE geom_text_repel() layer below, added last so it draws on top of
@@ -372,6 +490,13 @@ slugify_borough <- function(borough_name) {
     label_parts[["school"]] <- schools_in_area %>%
       transmute(label = school_name, label_color = SCHOOL_COLOR, label_face = "plain", label_size = 2.6, geometry = geometry)
   }
+  if (nrow(postcode_districts_in_area) > 0) {
+    label_parts[["district"]] <- postcode_districts_in_area %>%
+      mutate(.area = st_area(geometry)) %>%
+      arrange(desc(.area)) %>%
+      slice_head(n = MAX_POSTCODE_DISTRICT_LABELS) %>%
+      transmute(label = postcode_district, label_color = DISTRICT_LABEL_COLOR, label_face = "bold", label_size = 2.6, geometry = geometry)
+  }
 
   label_points <- st_sf(label = character(), label_color = character(), label_face = character(),
                          label_size = numeric(), geometry = st_sfc(crs = 4326))
@@ -386,24 +511,31 @@ slugify_borough <- function(borough_name) {
     p <- p + geom_sf(data = streets_in_area, color = STREET_COLOR, linewidth = 0.3, alpha = 0.85)
   }
 
-  # --- Every layer below maps `color` to one of LEGEND_LEVELS so a single
-  #     shared scale/legend covers every symbol type (see
-  #     LEGEND_OVERRIDE_AES for what glyph each one renders as). The LSOA
+  # --- Every layer below maps `color` to one of BASE_LEGEND_LEVELS (plus
+  #     "Searched location" when has_target) so a single shared scale/legend
+  #     covers every symbol type (see the override.aes built further down
+  #     for what glyph each one renders as). The LSOA
   #     boundary is intentionally understated (thin, dashed, muted) - most
   #     users don't know what an LSOA is, so it's context, not a headline
   #     feature. Bus routes are toned down slightly from their first pass
   #     for the same reason: readability of the whole map over any one layer. ---
   p <- p +
     geom_sf(data = lsoa_row, aes(color = "LSOA boundary"), fill = NA, linewidth = 0.7, linetype = "dashed", alpha = 0.65) +
+    geom_sf(data = postcode_districts_in_area, aes(fill = I(shade_color)), color = NA, alpha = 0.55) +
+    geom_sf(data = postcode_districts_in_area, aes(color = "Postcode district"), fill = NA, linewidth = 0.9, linetype = "dotted", alpha = 0.85) +
     geom_sf(data = other_edges, aes(color = "Other bus route"), linewidth = 0.4, alpha = 0.6, lineend = "round") +
     geom_sf(data = major_edges, aes(color = "Major bus route"), linewidth = 2.2, alpha = 0.07, lineend = "round", show.legend = FALSE) +
     geom_sf(data = major_edges, aes(color = "Major bus route"), linewidth = 0.85, alpha = 0.85, lineend = "round") +
     geom_sf(data = stops_in_area, aes(color = "Bus stop"), size = 3, alpha = 0.15, show.legend = FALSE) +
     geom_sf(data = stops_in_area, aes(color = "Bus stop"), size = 1.1, alpha = 0.9) +
     geom_sf(data = stations_in_area, aes(color = "Station"), shape = 15, size = 2.2) +
-    geom_sf(data = schools_in_area, aes(color = "School"), shape = 17, size = 2.4) +
-    geom_sf(data = target_sf, aes(color = "Searched location"), shape = 18, size = 3.2, show.legend = FALSE) +
-    geom_sf(data = target_sf, aes(color = "Searched location"), shape = 5, size = 5.5, stroke = 1)
+    geom_sf(data = schools_in_area, aes(color = "School"), shape = 17, size = 2.4)
+
+  if (has_target) {
+    p <- p +
+      geom_sf(data = target_sf, aes(color = "Searched location"), shape = 18, size = 3.2, show.legend = FALSE) +
+      geom_sf(data = target_sf, aes(color = "Searched location"), shape = 5, size = 5.5, stroke = 1)
+  }
 
   if (nrow(label_points) > 0) {
     p <- p + geom_text_repel(
@@ -414,15 +546,32 @@ slugify_borough <- function(borough_name) {
     )
   }
 
+  # Legend only gains the "Searched location" entry when this render
+  # actually has one - see BASE_LEGEND_LEVELS's comment above.
+  if (has_target) {
+    legend_levels <- c(TARGET_LEGEND_LEVEL, BASE_LEGEND_LEVELS)
+    legend_colors <- c(TARGET_LEGEND_COLOR, BASE_LEGEND_COLORS)
+    legend_override <- list(
+      linetype  = c(TARGET_LEGEND_OVERRIDE_AES$linetype, BASE_LEGEND_OVERRIDE_AES$linetype),
+      linewidth = c(TARGET_LEGEND_OVERRIDE_AES$linewidth, BASE_LEGEND_OVERRIDE_AES$linewidth),
+      shape     = c(TARGET_LEGEND_OVERRIDE_AES$shape, BASE_LEGEND_OVERRIDE_AES$shape),
+      size      = c(TARGET_LEGEND_OVERRIDE_AES$size, BASE_LEGEND_OVERRIDE_AES$size)
+    )
+  } else {
+    legend_levels <- BASE_LEGEND_LEVELS
+    legend_colors <- BASE_LEGEND_COLORS
+    legend_override <- BASE_LEGEND_OVERRIDE_AES
+  }
+
   p <- p +
     scale_color_manual(
       name = "Legend",
-      values = LEGEND_COLORS,
-      breaks = LEGEND_LEVELS,
-      limits = LEGEND_LEVELS,
+      values = legend_colors,
+      breaks = legend_levels,
+      limits = legend_levels,
       drop = FALSE
     ) +
-    guides(color = guide_legend(override.aes = LEGEND_OVERRIDE_AES)) +
+    guides(color = guide_legend(override.aes = legend_override)) +
     coord_sf(xlim = c(bbox["xmin"], bbox["xmax"]), ylim = c(bbox["ymin"], bbox["ymax"]), expand = FALSE) +
     theme_void() +
     labs(
@@ -442,11 +591,11 @@ slugify_borough <- function(borough_name) {
       plot.margin = margin(t = 8, r = 8, b = 8, l = 8)
     )
 
-  ggsave(target_png, plot = p, dpi = 150, width = 7.5, height = 6)
+  ggsave(target_png, plot = p, dpi = 200, width = 7.5, height = 6)
 
   list(
     lsoa_code = lsoa_code, png = target_png,
-    n_edges = nrow(edges_in_area), n_stops = nrow(stops_in_area), n_schools = nrow(schools_in_area)
+    n_edges = nrow(edges_in_area), n_stops = n_stops_real, n_schools = n_schools_real
   )
 }
 
@@ -468,6 +617,7 @@ render_lsoa_maps_for_borough <- function(borough_name,
                                           naptan_csv    = NAPTAN_CSV_DEFAULT,
                                           gtfs_dir      = GTFS_DIR_DEFAULT,
                                           schools_csv   = SCHOOLS_CSV_DEFAULT,
+                                          postcodes_csv = POSTCODES_CSV_DEFAULT,
                                           osm_cache_dir = OSM_CACHE_DIR_DEFAULT,
                                           output_dir    = OUTPUT_DIR_DEFAULT,
                                           buffer_m      = BUFFER_M_DEFAULT,
@@ -482,7 +632,7 @@ render_lsoa_maps_for_borough <- function(borough_name,
 
   cat(sprintf("\n=== Loading borough data: %s ===\n", borough_name))
   borough_data <- .load_borough_data(
-    borough_name, lsoa_shp_dir, naptan_csv, gtfs_dir, schools_csv, osm_cache_dir, major_route_quantile
+    borough_name, lsoa_shp_dir, naptan_csv, gtfs_dir, schools_csv, postcodes_csv, osm_cache_dir, major_route_quantile
   )
 
   lsoa_codes <- borough_data$lsoas$lsoa21cd

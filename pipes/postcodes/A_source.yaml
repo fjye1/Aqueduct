@@ -1,0 +1,19 @@
+Source in A_raw
+
+NSPL (National Statistics Postcode Lookup), Online Latest Centroids, downloaded
+from the ONS Open Geography portal: https://geoportal.statistics.gov.uk/
+
+One row per UK postcode UNIT (e.g. "SW1A 1AA"), live and terminated, with:
+  - PCDS: postcode in standard single-space format
+  - DOINTR / DOTERM: introduced / terminated dates (DOTERM blank = still live)
+  - EAST1M / NORTH1M: OSGB36 (EPSG:27700) centroid
+  - LAT / LONG: WGS84 (EPSG:4326) centroid
+  - OA21CD / LSOA21CD / MSOA21CD / LAD25CD: 2021 Census geography codes
+
+This is postcode-UNIT resolution only - there is no official postcode SECTOR
+or DISTRICT boundary product (postcodes aren't defined as areas, only as sets
+of delivery points), so pipes/postcodes/C_silver.py derives a sector code
+(e.g. "SW1A 1") per row, and consumers that want sector-level shapes (see
+pipes/lsoa_map/r_lsoa_map.R) build them by Voronoi-tessellating these unit
+centroids and dissolving cells that share a sector - an approximation, not a
+real boundary.
